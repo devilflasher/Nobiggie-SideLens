@@ -227,7 +227,7 @@ test('copy uses saved drafts only and reports clipboard errors truthfully',async
 });
 
 test('interface language follows X automatically while a manual choice takes precedence',async () => {
-  const page = fixture();await page.controller.start();await page.runtime({type:'UI_LANGUAGE_CHANGED',language:'zh-CN'});assert.equal(page.document.documentElement.lang,'zh-CN');assert.equal(page.document.title,'SuperX · 浏览历史');
+  const page = fixture();await page.controller.start();await page.runtime({type:'UI_LANGUAGE_CHANGED',language:'zh-CN'});assert.equal(page.document.documentElement.lang,'zh-CN');assert.equal(page.document.title,'SideLens · 浏览历史');
   await page.storage({settings:{newValue:core.normalizeSettings({interfaceLanguage:'ja'})}});assert.equal(page.document.documentElement.lang,'ja');
   await page.runtime({type:'UI_LANGUAGE_CHANGED',language:'ar'});assert.equal(page.document.documentElement.lang,'ja');
   await page.storage({settings:{newValue:core.normalizeSettings({interfaceLanguage:'auto'})}});assert.equal(page.document.documentElement.lang,'ar');assert.equal(page.document.documentElement.dir,'rtl');

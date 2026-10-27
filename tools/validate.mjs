@@ -13,7 +13,7 @@ function fail(message) { errors.push(message); }
 
 try {
   const release = await inspectPackage(root);
-  console.log(`✓ Release package: SuperX ${release.version}, ${release.files.length} allowlisted files`);
+  console.log(`✓ Release package: SideLens ${release.version}, ${release.files.length} allowlisted files`);
   console.log(`✓ Manifest descriptions: English default, ${Object.keys(release.localization.descriptions).join(', ')} (≤132 characters each)`);
 } catch (error) {
   fail(`Release package validation failed: ${error.message}`);
@@ -55,7 +55,7 @@ function iconPaths(icons) {
 try {
   const manifest = JSON.parse(await readFile(resolve(extension, 'manifest.json'), 'utf8'));
   if (manifest.manifest_version !== 3) fail('manifest.json: expected Manifest V3');
-  if (manifest.name !== 'SuperX') fail('manifest.json: expected product name SuperX');
+  if (manifest.name !== 'Nobiggie SideLens') fail('manifest.json: expected product name Nobiggie SideLens');
   const declared = [
     manifest.background?.service_worker,
     manifest.action?.default_popup,
@@ -132,5 +132,5 @@ if (errors.length) {
   for (const error of errors) console.error(`✗ ${error}`);
   process.exitCode = 1;
 } else {
-  console.log('SuperX validation passed.');
+  console.log('SideLens validation passed.');
 }

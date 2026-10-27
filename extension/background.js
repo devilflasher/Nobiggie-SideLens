@@ -30,7 +30,7 @@ async function initialize() {
   // Diagnostic storage is optional. Its reads/writes never gate credentials,
   // analysis or normal extension startup.
   apiDiagnosticsReady=loadAPIDiagnostics();
-  const local = await chrome.storage.local.get(['settings','uiLanguage','apiKey','apiKeyEncrypted','apiKeyVault','rememberApiKey','buildConnectionEncrypted','invalidAnswerSource']);
+  const local = await chrome.storage.local.get(['settings','uiLanguage','apiKey','apiKeyEncrypted','apiKeyVault','rememberApiKey','buildConnectionEncrypted','invalidAnswerSource','sidelensCache']);
   const session = await chrome.storage.session.get(['quotas','railStates','uiLanguage','apiKey','cache','securityFault','apiBudgetPause','apiCapacityPause']);
   const hasSettings=local.settings&&typeof local.settings==='object'&&!Array.isArray(local.settings)&&Object.keys(local.settings).length>0;
   const legacyConnection=KeyStore.envelopePresent(local.apiKeyEncrypted)||validKey(local.apiKey)||local.apiKeyVault!==undefined||validKey(session.apiKey)||BuildKeyStore.envelopePresent(local.buildConnectionEncrypted);
@@ -74,12 +74,13 @@ async function initialize() {
   const stored=await chrome.storage.local.get(['apiKey','apiKeyEncrypted','apiKeyVault']);
   hasSavedKey=KeyStore.envelopePresent(stored.apiKeyEncrypted)||validKey(stored.apiKey)||stored.apiKeyVault!==undefined;
   credentialReady=validKey(session.apiKey);
-  cache = pruneCache(session.cache); quotas = session.quotas || {};railStates = session.railStates || {};
-  // Delete the old persistent post cache without reading or migrating its data.
+  cache = pruneCache(Object.hasOwn(local,'sidelensCache')?local.sidelensCache:session.cache); quotas = session.quotas || {};railStates = session.railStates || {};
+  // Remove retired storage keys; SideLens keeps its bounded 24-hour cache locally.
   await chrome.storage.local.remove('cache');
-  // Browser-session data expires after 24 hours, without a provider call.
-  if(session.cache!==undefined&&(!session.cache||typeof session.cache!=='object'||Array.isArray(session.cache)||Object.keys(session.cache).length!==Object.keys(cache).length)) {
-    try{await persistCache(cacheEpoch);}catch{/* Clean memory stays usable if session cleanup fails; later cache writes retry. */}
+  await chrome.storage.session.remove('cache');
+  const storedCache=Object.hasOwn(local,'sidelensCache')?local.sidelensCache:session.cache;
+  if(storedCache!==undefined&&(local.sidelensCache===undefined||!storedCache||typeof storedCache!=='object'||Array.isArray(storedCache)||Object.keys(storedCache).length!==Object.keys(cache).length)) {
+    try{await persistCache(cacheEpoch);}catch{/* A cache failure never blocks analysis. */}
   }
   // Only X reports are persisted; browser locale remains a fresh-install fallback.
   uiLanguage = UI.normalizeLanguage(session.uiLanguage || local.uiLanguage || uiLanguage);
@@ -223,7 +224,7 @@ function securityStatus() {
 function isX(url) { try { return ['x.com','twitter.com'].includes(new URL(url).hostname) && new URL(url).protocol === 'https:'; } catch { return false; } }
 function isFeed(url) { return isX(url) && !/^\/(?:messages|i\/(?:chat|grok|flow|premium|settings))\b/.test(new URL(url).pathname); }
 function trustedUI(sender) { try { const url=new URL(sender.url),base=new URL(chrome.runtime.getURL(''));return sender.id===chrome.runtime.id&&url.protocol===base.protocol&&url.host===base.host&&['/options.html','/popup.html','/history.html','/setup.html'].includes(url.pathname); }catch{return false;} }
-function trustedFeed(sender) { return sender.id===chrome.runtime.id && sender.frameId===0 && Number.isInteger(sender.tab?.id) && isFeed(sender.url); }
+function trustedFeed(sender) { return sender?.id===chrome.runtime.id && sender.frameId===0 && Number.isInteger(sender.tab?.id) && isFeed(sender.url); }
 function send(port, message) { try { port.postMessage(message); } catch { /* Tab closed. */ } }
 async function publicConfig() {
   const generation=securityGeneration,canRefresh=securityPending===0;
@@ -274,6 +275,20 @@ function updateUILanguage(client,value) {
     await chrome.runtime.sendMessage({type:'UI_LANGUAGE_CHANGED',language}).catch(()=>{});
   });
   return uiLanguageWrites;
+}
+function sanitizeFollowup(message,post){
+  if(!['suggestions','answer','reply'].includes(message.mode))throw new Error('Invalid follow-up mode');
+  if(typeof message.analysis?.text!=='string'||!message.analysis.text.trim()||message.analysis.text.length>20000)throw new Error('Invalid analysis');
+  if(!Array.isArray(message.turns)||message.turns.length>8)throw new Error('Invalid conversation');
+  const turns=message.turns.map((turn,index)=>{
+    if(turn?.role!==(index%2?'assistant':'user')||typeof turn.content!=='string'||!turn.content.trim()||turn.content.length>5000)throw new Error('Invalid turn');
+    return {role:turn.role,content:turn.content};
+  });
+  if(turns.length%2||turns.reduce((sum,turn)=>sum+turn.content.length,0)>24000)throw new Error('Conversation too long');
+  if(message.mode==='answer'&&(typeof message.question!=='string'||!message.question.trim()||message.question.length>2000))throw new Error('Invalid question');
+  const preferences=message.mode==='reply'?Core.replyPreferences(message.preferences):null;
+  if(message.mode==='reply'&&!preferences)throw new Error('Invalid reply preferences');
+  return {...post,kind:'followup',mode:message.mode,analysis:sanitizeAnalysis(message.analysis),turns,question:message.mode==='answer'?message.question.trim():'',...(preferences?{preferences}:{})};
 }
 function sanitizePostImages(raw) {
   const images=[],seen=new Set();
@@ -397,7 +412,7 @@ function sanitizeDraft(raw) {
 }
 function cacheKey(post, s, inputFingerprint) {
   const mode=Core.explanationMode(s);
-  const prompts=['fact-check-prompts-v2-deeper',mode==='preset'?Core.DEFAULT_PROMPTS.verify:s.verifyPrompt];
+  const prompts=['fact-check-prompts-v3-priorities-markdown',mode==='preset'?Core.DEFAULT_PROMPTS.verify:s.verifyPrompt];
   return JSON.stringify(['GrokFirst-v1',s.provider,s.provider==='build'?['official-ws-v1',s.buildPort,s.buildModel]:s.provider==='oauth'?[s.oauthCredentialId,s.oauthModel]:s.apiModel,s.language,s.webSearch,s.xSearch,
     'api-v11-context-images',mode,'only',
     Core.apiPostIdentity(post,s),...prompts,selectedEffort(s)]);
@@ -414,7 +429,9 @@ function commentCacheKey(post,s,inputFingerprint,analysis) {
   return JSON.stringify(['GrokFirst-comments-v2-language',s.provider,s.provider==='build'?['official-ws-v1',s.buildPort,s.buildModel]:s.provider==='oauth'?[s.oauthCredentialId,s.oauthModel]:s.apiModel,s.language,Core.postFingerprint(post),analysis,...prompts,selectedEffort(s)]);
 }
 function commentsJob(job) { return job.settings.task==='comments'; }
-function draftJob(job) { return job.settings.task==='draft'; }
+// Both unpublished drafts and follow-up conversations stay out of history and diagnostics.
+function draftJob(job) { return ['draft','followup'].includes(job.settings.task); }
+function suggestionJob(job) { return job.settings.task==='followup'&&job.post.mode==='suggestions'; }
 function billingMetadata(value,provider) { return ['api','build','oauth'].includes(provider)?GrokFirstAPI.sanitizedMetadata(value):{}; }
 function requestMetadata(value,provider) {
   if(!['api','oauth'].includes(provider))return {};
@@ -512,13 +529,13 @@ function persistQuotas() {
   return quotaWrites;
 }
 function persistCache(epoch) {
-  cacheWrites=cacheWrites.catch(()=>{}).then(()=>epoch===cacheEpoch?chrome.storage.session.set({cache:{...cache}}):undefined);
+  cacheWrites=cacheWrites.catch(()=>{}).then(()=>epoch===cacheEpoch?chrome.storage.local.set({sidelensCache:pruneCache(cache)}):undefined);
   return cacheWrites;
 }
 function clearStoredCache() {
   cache={};cacheEpoch++;
   cacheWrites=cacheWrites.catch(()=>{}).then(async()=>{
-    const results=await Promise.allSettled([chrome.storage.session.remove('cache'),chrome.storage.local.remove('cache')]);
+    const results=await Promise.allSettled([chrome.storage.session.remove('cache'),chrome.storage.local.remove(['cache','sidelensCache'])]);
     const failed=results.find(value=>value.status==='rejected');
     if(failed)throw failed.reason;
   });
@@ -556,10 +573,11 @@ async function openSettings(focus) {
 }
 async function openHistory(){await chrome.tabs.create({url:chrome.runtime.getURL('history.html')});}
 chrome.runtime.onConnect.addListener(port => {
-  if (port.name !== 'GROKFIRST_FEED' || port.sender?.frameId !== 0 || !isFeed(port.sender?.url)) { port.disconnect(); return; }
+  if (port.name !== 'GROKFIRST_FEED' || !trustedFeed(port.sender)) { port.disconnect(); return; }
   const client = {port,tabId:port.sender.tab.id,cancelEpoch:0,uiLanguage:null,requestCancellations:new Map()}; clients.add(client);
   ready.then(async()=>{client.uiLanguage=UI.normalizeLanguage(client.uiLanguage || uiLanguage);send(port,{type:'CONFIG',...await publicConfig(),used:quotas[client.tabId] || 0,collapsed:Boolean(railStates[client.tabId]),uiLanguage:client.uiLanguage});}).catch(()=>send(port,{type:'FATAL',error:'扩展初始化失败，请重新加载扩展。'}));
   port.onMessage.addListener(message=>{
+    if(!message||typeof message!=='object'||Array.isArray(message))return;
     const receivedEpoch=client.cancelEpoch,receivedRevision=revision,receivedCredentialGeneration=securityGeneration,receivedBuildGeneration=buildConnectionGeneration,receivedOAuthGeneration=oauthGeneration;
     const messageRequestId=String(message.requestId || '').slice(0,80);
     // Cancellation can arrive before an asynchronous readiness lookup has
@@ -570,6 +588,12 @@ chrome.runtime.onConnect.addListener(port => {
     ready.then(async()=>{
       if(!clients.has(client))return;
       if(message.type==='PING') { send(port,{type:'PONG'}); return; }
+      if(message.type==='SET_APPEARANCE'){
+        if(!['light','dim','dark'].includes(message.theme))return;
+        const saved=await chrome.storage.local.get('sidelensAppearance');
+        if(saved.sidelensAppearance!==message.theme)await chrome.storage.local.set({sidelensAppearance:message.theme});
+        return;
+      }
       if(message.type==='UI_LANGUAGE') { await updateUILanguage(client,message.language);return; }
       if(message.type==='CANCEL_ALL') { cancelClient(client); return; }
       if(message.type==='OPEN_SETTINGS') { await openSettings(message.focus); return; }
@@ -605,9 +629,9 @@ chrome.runtime.onConnect.addListener(port => {
         if(job?.client===client)abortJob(job);
         send(port,{type:'ERROR',requestId:messageRequestId,error:'未开始的分析已暂停。',code:'CANCELLED'});return;
       }
-      if(!['ANALYZE','ANALYZE_DRAFT','GENERATE_COMMENTS'].includes(message.type)) return;
+      if(!['ANALYZE','ANALYZE_DRAFT','GENERATE_COMMENTS','FOLLOW_UP'].includes(message.type)) return;
       const comments=message.type==='GENERATE_COMMENTS';
-      const draft=message.type==='ANALYZE_DRAFT';
+      const draft=message.type==='ANALYZE_DRAFT',followup=message.type==='FOLLOW_UP',suggesting=followup&&message.mode==='suggestions';
       const report=(error,code,extra={})=>send(port,{type:comments?'COMMENT_ERROR':'ERROR',requestId,error,code,...extra});
       const requestId=messageRequestId;
       if(!requestId) return;
@@ -615,18 +639,21 @@ chrome.runtime.onConnect.addListener(port => {
       const currentCredentials=()=>settings.provider==='oauth'?receivedOAuthGeneration===oauthGeneration:settings.provider==='build'?receivedBuildGeneration===buildConnectionGeneration:receivedCredentialGeneration===securityGeneration;
       if(client.cancelEpoch!==receivedEpoch || receivedRevision!==revision||!currentCredentials()){report('任务已取消。','CANCELLED');return;}
       if(settings.provider==='api'&&(securityPending || securityFault)) { report('API Key 设置需要重新确认，请在设置中重试。','NEEDS_KEY');return; }
-      const snapshot={...settings,...(settings.provider==='oauth'?{oauthCredentialId:oauth.status().credentialId||''}:{}),...(comments?{task:'comments'}:draft?{task:'draft',language:'auto'}:{})};
+      const snapshot={...settings,...(settings.provider==='oauth'?{oauthCredentialId:oauth.status().credentialId||''}:{}),...(comments?{task:'comments'}:draft?{task:'draft',language:'auto'}:followup?{task:'followup',...(['suggestions','reply'].includes(message.mode)?{webSearch:false,xSearch:false}:{})}:{})};
       if(Core.isNonTextGenerationModel(Core.providerModel(snapshot))){report(GrokFirstAPI.publicError({code:'MODEL_UNSUPPORTED'}).error,'MODEL_UNSUPPORTED');return;}
       if(!settings.enabled&&!comments&&!draft) { report('已暂停自动分析。','PAUSED'); return; }
       if(railStates[client.tabId]&&!draft){report('右栏已收起。','RAIL_COLLAPSED');return;}
       let post,inputFingerprint;
       try { if(draft)post=sanitizeDraft(message.draft);else {inputFingerprint=Core.postFingerprint(message.post);post=sanitizePost(message.post);} } catch(e) { report(draft?'请输入有效的草稿和回复上下文。':e.message,draft?'DRAFT_INVALID':'POST_INVALID'); return; }
-      if(!comments&&!draft&&!snapshot.webSearch&&!snapshot.xSearch) { report('通过帖子链接读取全文需要启用 X 搜索或网页搜索。','URL_SEARCH_REQUIRED');return; }
+      if(!comments&&!draft&&!followup&&!snapshot.webSearch&&!snapshot.xSearch) { report('通过帖子链接读取全文需要启用 X 搜索或网页搜索。','URL_SEARCH_REQUIRED');return; }
+      if(followup){
+        try{post=sanitizeFollowup(message,post);}catch{report('追问内容或上下文无效。','FOLLOWUP_INVALID');return;}
+      }
       const analysis=comments?sanitizeAnalysis(message.analysis):undefined;
-      const fingerprint=draft?null:comments?commentCacheKey(post,snapshot,inputFingerprint,analysis):cacheKey(post,snapshot,inputFingerprint);
-      const ticket=draft?null:historyTicket(post,snapshot),historyLanguage=draft?'':Core.resolvePostLanguage(snapshot.language,post);
-      const cached=draft||message.force ? null : cachedResult(fingerprint);
-      if(cached) { rememberHistoryResult(ticket,cached,comments,historyLanguage);send(port,comments?{type:'COMMENT_RESULT',requestId,comments:cached.comments,cached:true,...billingMetadata(cached,snapshot.provider)}:{type:'RESULT',requestId,result:withBillingMetadata(cached,snapshot.provider,snapshot.apiVerification),cached:true}); return; }
+      const fingerprint=followup?(suggesting&&!post.turns.length?JSON.stringify(['SideLens-suggestions-v1',cacheKey(post,snapshot),post.analysis]):null):draft?null:comments?commentCacheKey(post,snapshot,inputFingerprint,analysis):cacheKey(post,snapshot,inputFingerprint);
+      const ticket=draft||followup?null:historyTicket(post,snapshot),historyLanguage=draft?'':Core.resolvePostLanguage(snapshot.language,post);
+      const cached=draft||followup&&!fingerprint||message.force ? null : cachedResult(fingerprint);
+      if(cached) { if(!followup)rememberHistoryResult(ticket,cached,comments,historyLanguage);send(port,comments?{type:'COMMENT_RESULT',requestId,comments:cached.comments,cached:true,...billingMetadata(cached,snapshot.provider)}:{type:'RESULT',requestId,result:withBillingMetadata(cached,snapshot.provider,snapshot.apiVerification),cached:true}); return; }
       const config=await publicConfig();
       if(!clients.has(client)||client.cancelEpoch!==receivedEpoch||receivedRevision!==revision||client.requestCancellations.get(requestId)!==receivedCancellation||!currentCredentials())return;
       if(railStates[client.tabId]&&!draft){report('右栏已收起。','RAIL_COLLAPSED');return;}
@@ -806,6 +833,7 @@ async function executeJob(job) {
       }
       result.text=reader.text.slice(0,30000);
     }
+    if(suggestionJob(job))result.suggestions=GrokFirstAPI.parseComments(result.text);
     if(['incomplete','failed'].includes(result.verificationStatus)){
       rememberAPIDiagnostics(job,result,result.verificationFailure?.errorCode||'API_INCOMPLETE');
       if(job.retryAttempts<Core.AUTO_RETRY_LIMIT&&Core.autoRetryDecision({...result,provider:job.settings.provider}).retryable)throw Object.assign(new Error('Fact Check incomplete.'),{code:result.verificationFailure?.errorCode||'API_INCOMPLETE',partialResult:result,verificationFailure:result.verificationFailure,...job.billing});
@@ -814,7 +842,7 @@ async function executeJob(job) {
     releaseAPISlot(job);pump();
     result.completedAt=Date.now();
     if(!draftJob(job))rememberHistoryResult(job.historyTicket,result,commentsJob(job),job.historyLanguage);
-    if(!draftJob(job)&&epoch===cacheEpoch && !['incomplete','failed'].includes(result.verificationStatus)) {
+    if((!draftJob(job)||suggestionJob(job)&&job.fingerprint)&&epoch===cacheEpoch && !['incomplete','failed'].includes(result.verificationStatus)) {
       cache[job.fingerprint]=result;
       cache=pruneCache(cache);
       // Display a completed answer immediately. Optional serialized cache I/O

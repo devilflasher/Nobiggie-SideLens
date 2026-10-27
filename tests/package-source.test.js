@@ -101,16 +101,16 @@ test('public source keeps both README PNGs unchanged and excludes private output
   const entries = entriesFromZip(archive);
   const names = entries.map(entry => entry.name);
   for (const [name, data] of Object.entries(previewImages)) {
-    assert.deepEqual(entries.find(entry => entry.name === `SuperX-1.2.3/docs/assets/${name}`).data, data);
+    assert.deepEqual(entries.find(entry => entry.name === `SideLens-1.2.3/docs/assets/${name}`).data, data);
   }
-  assert.ok(names.includes('SuperX-1.2.3/docs/RELEASE_CHANNELS.md'));
-  assert.ok(names.includes('SuperX-1.2.3/tools/package-release.mjs'));
-  assert.ok(names.includes('SuperX-1.2.3/tests/build-ws-fixture.js'));
+  assert.ok(names.includes('SideLens-1.2.3/docs/RELEASE_CHANNELS.md'));
+  assert.ok(names.includes('SideLens-1.2.3/tools/package-release.mjs'));
+  assert.ok(names.includes('SideLens-1.2.3/tests/build-ws-fixture.js'));
   const {MANIFEST_LOCALES}=await installationPackager;
-  assert.deepEqual(names.filter(name=>name.includes('/extension/_locales/')),MANIFEST_LOCALES.map(locale=>`SuperX-1.2.3/extension/_locales/${locale}/messages.json`).sort());
-  for(const locale of MANIFEST_LOCALES)assert.equal(entries.find(entry=>entry.name===`SuperX-1.2.3/extension/_locales/${locale}/messages.json`).data.toString('utf8'),(await readFile(join(root,'extension','_locales',locale,'messages.json'),'utf8')).replace(/\r\n/g,'\n'));
-  assert.equal(names.includes('SuperX-1.2.3/tests/private-helper.js'),false);
-  assert.equal(names.some(name=>name.startsWith('SuperX-1.2.3/connector/')),false);
+  assert.deepEqual(names.filter(name=>name.includes('/extension/_locales/')),MANIFEST_LOCALES.map(locale=>`SideLens-1.2.3/extension/_locales/${locale}/messages.json`).sort());
+  for(const locale of MANIFEST_LOCALES)assert.equal(entries.find(entry=>entry.name===`SideLens-1.2.3/extension/_locales/${locale}/messages.json`).data.toString('utf8'),(await readFile(join(root,'extension','_locales',locale,'messages.json'),'utf8')).replace(/\r\n/g,'\n'));
+  assert.equal(names.includes('SideLens-1.2.3/tests/private-helper.js'),false);
+  assert.equal(names.some(name=>name.startsWith('SideLens-1.2.3/connector/')),false);
   assert.equal(archive.includes(Buffer.from('PRIVATE_CONNECTOR_DO_NOT_EXPORT')),false);
   assert.equal(names.some(name => /\/(?:website|chrome-web-store)\//.test(name)),false);
   assert.equal(names.some(name => /docs\/SuperX-private-review|tools\/(?:check-privacy-site|render-store-assets)\.mjs/.test(name)),false);
@@ -161,7 +161,7 @@ test('public source refuses missing README images, embedded credentials and mism
     assert.equal(error.message.includes(fakeCredential), false);
     return true;
   });
-  await assert.rejects(readFile(join(root, 'artifacts', 'SuperX-1.2.3-source.zip')), { code: 'ENOENT' });
+  await assert.rejects(readFile(join(root, 'artifacts', 'SideLens-1.2.3-source.zip')), { code: 'ENOENT' });
 });
 
 test('public source does not traverse a symlinked public root', async t => {
@@ -187,8 +187,8 @@ test('release candidate includes a fixed ZIP alias with identical bytes and a ve
   assert.deepEqual(alias, installation);
   assert.equal(hash(alias), release.installation.sha256);
   const sums = await readFile(join(outputDir, release.installation.sumsName), 'utf8');
-  assert.ok(sums.includes(`${hash(alias)}  SuperX.zip\n`));
-  assert.ok(sums.includes(`${hash(installation)}  SuperX-1.2.3.zip\n`));
+  assert.ok(sums.includes(`${hash(alias)}  SideLens.zip\n`));
+  assert.ok(sums.includes(`${hash(installation)}  SideLens-1.2.3.zip\n`));
   const source = await readFile(join(outputDir, release.source.archiveName));
   assert.equal(hash(source), release.source.sha256);
   const before = sums;
@@ -200,7 +200,7 @@ test('release packaging refuses output within public source directories', async 
   const root = await fixture(t);
   const { packageRelease } = await releasePackager;
   await assert.rejects(packageRelease({ root, outputDir: join(root, 'docs', 'build') }), /outside public source directories/);
-  await assert.rejects(readFile(join(root, 'docs', 'build', 'SuperX-1.2.3.zip')), { code: 'ENOENT' });
+  await assert.rejects(readFile(join(root, 'docs', 'build', 'SideLens-1.2.3.zip')), { code: 'ENOENT' });
 });
 
 test('release packaging fails its source preflight without leaving installation candidates', async t => {
@@ -212,7 +212,7 @@ test('release packaging fails its source preflight without leaving installation 
   await put(root, 'README.md', '![Preview](docs/assets/superx-preview-en.png)\n');
   await rm(join(root, 'docs/assets/superx-preview-zh-CN.png'));
   await assert.rejects(packageRelease({ root, outputDir }), /Missing public README image/);
-  for (const name of ['SuperX-1.2.3.zip', 'SuperX.zip', 'SuperX-1.2.3-source.zip']) {
+  for (const name of ['SideLens-1.2.3.zip', 'SideLens.zip', 'SideLens-1.2.3-source.zip']) {
     await assert.rejects(readFile(join(outputDir, name)), { code: 'ENOENT' });
   }
 });
@@ -231,7 +231,7 @@ test('release workflow notes use the actual repository and explain installation,
   });
   assert.equal(result.status, 0, result.stderr || result.error?.message);
   const notes = await readFile(join(directory, 'superx-release-notes.md'), 'utf8');
-  assert.ok(notes.includes('https://github.com/example-owner/example-superx/releases/download/v1.2.3/SuperX.zip'));
+  assert.ok(notes.includes('https://github.com/example-owner/example-superx/releases/download/v1.2.3/SideLens.zip'));
   assert.ok(notes.includes('https://github.com/example-owner/example-superx/issues/new/choose'));
   assert.ok(notes.includes('/blob/v1.2.3/README.zh-CN.md'));
   assert.ok(notes.includes('Preview installations update manually'));

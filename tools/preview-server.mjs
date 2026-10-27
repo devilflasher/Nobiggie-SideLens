@@ -29,5 +29,5 @@ const server=http.createServer(async(req,res)=>{
     res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});res.end(body);
   }catch{res.writeHead(404);res.end('Not found');}
 });
-server.listen(0,'127.0.0.1',()=>console.log(`SuperX preview: http://127.0.0.1:${server.address().port}/demo/index.html (PID ${process.pid})`));
+server.listen(0,'127.0.0.1',()=>console.log(`SideLens preview: http://127.0.0.1:${server.address().port}/demo/index.html (PID ${process.pid})`));
 process.on('SIGINT',()=>server.close(()=>process.exit()));

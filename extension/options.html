@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SuperX · Settings</title>
+    <title>SideLens · Settings</title>
     <link rel="stylesheet" href="options.css">
+    <link rel="stylesheet" href="sidelens-theme.css">
     <script src="feed-core.js" defer></script>
     <script src="ui-i18n.js" defer></script>
     <script src="options.js" defer></script>
@@ -12,8 +13,8 @@
   <body>
     <div class="page">
       <aside class="settings-sidebar" data-i18n-aria="common.settings" aria-label="Settings">
-        <div class="brand"><span class="brand-logo" role="img" aria-label="SuperX"></span></div>
-        <p class="brand-tagline" data-i18n="options.tagline">Understand X. Fact-check as you scroll.</p>
+        <div class="brand"><span class="brand-logo" role="img" aria-label="SideLens"></span></div>
+        <p class="brand-tagline" data-i18n="options.tagline">Read. Check. Think.</p>
         <h2 class="sidebar-title" data-i18n="common.settings">Settings</h2>
         <nav class="section-nav" data-i18n-aria="common.settings" aria-label="Settings">
           <a href="#source-heading" data-i18n="options.source">Connection</a>
@@ -33,7 +34,7 @@
         </header>
       <form id="settings-form" autocomplete="off" novalidate>
         <div class="settings-overview">
-          <label class="switch-label"><span data-i18n="options.enable">Enable SuperX</span><input id="enabled" type="checkbox" role="switch"><span class="switch-track" aria-hidden="true"></span></label>
+          <label class="switch-label"><span data-i18n="options.enable">Enable SideLens</span><input id="enabled" type="checkbox" role="switch"><span class="switch-track" aria-hidden="true"></span></label>
         </div>
         <section class="settings-section" aria-labelledby="source-heading">
           <div class="section-heading">
@@ -157,7 +158,7 @@
               <div class="launch-actions"><button id="generate-build-command" class="secondary-button" type="button" data-i18n="build.generate">Generate launch command</button></div>
               <div id="build-launch" hidden><div class="launch-command"><code id="build-command" dir="ltr" tabindex="0"></code><button id="copy-build-command" class="secondary-button" type="button" data-i18n="common.copy">Copy</button></div><p class="help" data-i18n="build.commandPrivate"></p></div>
               <p class="help" data-i18n="build.commandHelp">Run the command in PowerShell (Windows) or Terminal (macOS). Close that window to stop the local service.</p>
-              <p class="help" data-i18n="build.localPrivacy">The service listens only on this computer. SuperX connects directly to official Grok; no SuperX relay or additional SuperX software is installed.</p>
+              <p class="help" data-i18n="build.localPrivacy">The service listens only on this computer. SideLens connects directly to official Grok; no SideLens relay or additional SideLens software is installed.</p>
             </div>
             <details class="connection-details"><summary data-i18n="build.details">Connection details (optional)</summary><div class="field connection-fields">
               <div><label for="build-port" data-i18n="build.port">Local port</label><input id="build-port" type="number" min="1024" max="65535" step="1" value="2419" required aria-describedby="build-address"><p id="build-address" class="help" dir="ltr"></p></div>
@@ -182,7 +183,7 @@
               <p class="help" data-i18n="options.connectionHelp">Checks the local connector and login state. No fact-check request is sent.</p>
             </div>
           </div>
-          <div class="field analysis-dwell-field">
+          <div class="field analysis-dwell-field" hidden>
             <label for="analysis-dwell" data-i18n="options.dwell">Analyze after (seconds)</label>
             <input id="analysis-dwell" type="number" min="0" max="30" step="any" value="1" required aria-describedby="analysis-dwell-help">
             <p id="analysis-dwell-help" class="help" data-i18n="options.dwellHelp">After scrolling stops, posts must stay visible for this long before automatic analysis. Default: 1 second; 0 starts immediately. Manual actions do not wait.</p>
@@ -205,7 +206,7 @@
             <p id="language-help" class="help" data-i18n="options.languageHelp">Auto follows the post’s displayed text and updates when you switch between the original and translation. A selected language overrides Auto.</p>
           </div>
           <div class="field">
-            <label for="interface-language" data-i18n="options.interfaceLanguage">SuperX interface language</label>
+            <label for="interface-language" data-i18n="options.interfaceLanguage">SideLens interface language</label>
             <select id="interface-language" aria-describedby="interface-language-help"></select>
             <p id="interface-language-help" class="help" data-i18n="options.interfaceLanguageHelp">Auto follows X’s interface language, using the browser language when unavailable. A selected language overrides Auto.</p>
           </div>
@@ -219,7 +220,7 @@
           <div id="explanation-mode-field" class="field mode-field">
             <label for="explanation-mode" data-i18n="options.explanationMode">Fact-check style</label>
             <select id="explanation-mode" aria-describedby="explanation-mode-help">
-              <option value="preset" data-i18n="options.presetMode">SuperX built-in prompts</option>
+              <option value="preset" data-i18n="options.presetMode">SideLens built-in prompts</option>
               <option value="custom" data-i18n="options.customMode">Custom prompts</option>
             </select>
             <p id="explanation-mode-help" class="help"></p>
@@ -254,7 +255,7 @@
               <textarea id="reply-draft-prompt" rows="4" maxlength="12000" spellcheck="false" dir="auto" aria-describedby="reply-draft-prompt-help prompt-rules-help"></textarea>
             </div>
           </div>
-          <details id="comments-customization" class="prompt-customization">
+          <details id="comments-customization" class="prompt-customization" hidden>
             <summary data-i18n="options.commentsCustomize">Customize comment prompt</summary>
             <p id="comments-prompt-help" class="help" data-i18n="options.promptEditingHelp">Leave blank to use the default. Save applies to new comment suggestions.</p>
           <div class="field prompt-field">
@@ -304,11 +305,16 @@
         </section>
 
       </form>
+      <section class="settings-credits" aria-labelledby="credits-title">
+        <h2 id="credits-title">关于与致谢 / Credits</h2>
+        <p lang="zh-CN">SideLens 基于开源项目 <a href="https://github.com/bwjoke/SuperX" target="_blank" rel="noopener noreferrer">SuperX</a>（MIT）二次开发。感谢原作者 <a href="https://x.com/coolish" target="_blank" rel="noopener noreferrer">@coolish</a> 的贡献。</p>
+        <p lang="en" class="credits-note">Based on SuperX (MIT). Thanks to the original author @coolish for their contribution.</p>
+        <a class="credits-license" href="LICENSE.txt" target="_blank" rel="noopener noreferrer">开源许可 / MIT License ↗</a>
+      </section>
       <footer class="settings-footer">
-        <p class="footer-note"><span data-i18n="note.possibleErrors">Grok can make mistakes; check the sources.</span><a href="privacy.html" target="_blank" rel="noopener noreferrer" data-i18n="options.privacyLink">SuperX privacy notice</a></p>
-        <p class="settings-author"><span data-i18n="options.author">By</span><a href="https://x.com/coolish" target="_blank" rel="noopener noreferrer" dir="ltr">PaulWei</a></p>
+        <p class="footer-note"><a href="privacy.html" target="_blank" rel="noopener noreferrer" data-i18n="options.privacyLink">SideLens privacy notice</a></p>
       </footer>
       </main>
     </div>
-  </body>
+  <script src="sidelens-appearance.js"></script></body>
 </html>

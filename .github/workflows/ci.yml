@@ -35,11 +35,11 @@ jobs:
         run: node tools/package-release.mjs
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: SuperX-${{ matrix.os }}
+          name: SideLens-${{ matrix.os }}
           path: |
-            artifacts/SuperX-*.zip
-            artifacts/SuperX.zip
-            artifacts/SuperX-*-files.json
-            artifacts/SuperX-*-SHA256SUMS.txt
+            artifacts/SideLens-*.zip
+            artifacts/SideLens.zip
+            artifacts/SideLens-*-files.json
+            artifacts/SideLens-*-SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 14

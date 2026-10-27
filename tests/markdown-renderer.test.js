@@ -255,3 +255,10 @@ test('a resource-heavy rendered chunk falls back atomically rather than leaving 
   assert.equal(elements(page.target).length, 0);
   assert.doesNotMatch(page.target.textContent, /Previous completed answer/);
 });
+test('long fully-bold paragraphs are marked as body copy while short emphasis and headings stay intact',()=>{
+  const page=fixture(),paragraph='这是一段完整加粗的长段落。'.repeat(5);
+  page.render('**'+paragraph+'**\n\n**重点结论**\n\n## 真正的标题\n\n普通正文包含 **关键词**。');
+  const paragraphs=elements(page.target,'p');assert.equal(paragraphs[0].className,'md-body-emphasis');assert.equal(paragraphs[0].textContent,paragraph);
+  assert.notEqual(paragraphs[1].className,'md-body-emphasis');assert.notEqual(paragraphs[2].className,'md-body-emphasis');
+  assert.equal(elements(page.target,'h2')[0].textContent,'真正的标题');assert.equal(elements(page.target,'strong').length,3);
+});

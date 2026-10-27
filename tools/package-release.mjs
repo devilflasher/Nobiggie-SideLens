@@ -11,7 +11,7 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export async function packageRelease({ root = projectRoot, outputDir = resolve(root, 'artifacts'), expectedVersion } = {}) {
   const source = await packageSource({ root, outputDir, expectedVersion });
   const installation = await packageExtension({ root, outputDir, expectedVersion });
-  const aliasName = 'SuperX.zip';
+  const aliasName = 'SideLens.zip';
   await copyFile(resolve(installation.outputDir, installation.archiveName), resolve(installation.outputDir, aliasName));
   const sumsPath = resolve(installation.outputDir, installation.sumsName);
   const sums = await readFile(sumsPath, 'utf8');

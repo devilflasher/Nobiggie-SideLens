@@ -20,7 +20,7 @@
   function section(keys, translations) {
     for (const language of SUPPORTED_LANGUAGES) {
       const values = translations[language];
-      if (!values || values.length !== keys.length) throw new Error(`SuperX UI dictionary mismatch: ${language} (${values?.length}/${keys.length})`);
+      if (!values || values.length !== keys.length) throw new Error(`SideLens UI dictionary mismatch: ${language} (${values?.length}/${keys.length})`);
       keys.forEach((key, index) => { catalog[language][key] = values[index]; });
     }
   }
@@ -39,18 +39,18 @@
     "hi": ["सेटिंग","रोकें","फिर शुरू करें","फिर कोशिश करें","मूल पोस्ट ↗","बंद करें","व्याख्या","तथ्य जाँच","भाषा","xAI API","स्वतः · दिख रही पोस्ट की भाषा","लोड हो रहा है…","सेटिंग सहेजें","कैश साफ़ करें","सहेजी गई Key हटाएँ","एक्सटेंशन फिर लोड करें","सेटिंग खोलें","स्वचालित तथ्य जाँच चालू है","स्वचालित तथ्य जाँच रुकी है","विश्लेषण के लिए तैयार","कतार में","जाँच जारी…","जाँच जारी…","जाँच जारी…","पूरा हुआ","कैश से","सत्यापित नहीं","स्वचालित विश्लेषण रुका है","सेटिंग में Grok API Key दर्ज करें","कनेक्शन टूट गया; फिर कोशिश करें","विश्लेषण विफल","रद्द हुआ; फिर कोशिश कर सकते हैं","सेवा की सीमा पूरी हो गई"]
   });
   section(["common.enterKey","common.collapse","common.expand","common.copy","common.copied","common.copyFailed","common.comments","common.generateComments","common.analysisUnavailable","common.retryComments","common.diagnostics","common.started","status.thinking","status.verificationQueued","status.inline","status.searched","status.incomplete","status.runningBusy","note.possibleErrors","note.checkIncomplete","note.preserved","note.cancelled","note.settingsRequired","tooltip.apiMode","aria.rail","aria.result","aria.outputLanguage","aria.comments","comments.placeholder","comments.loading","comments.pending"], {
-    "en": ["Enter Grok API Key","Collapse","Expand","Copy","Copied","Copy failed","Comments","Generate comments","Analysis unavailable","Retry comments","Diagnostics","Started","Thinking…","Fact check queued","Fact-checking…","Search used","Fact check incomplete","Waiting for the current analysis","Grok can make mistakes; check the sources.","Fact check incomplete.","Partial result retained.","Cancelled; you can retry.","Set a Grok API Key in Settings.","Use xAI API","SuperX post analysis","Analysis result","Answer language","Generated comments","Generate comments based on this post.","Generating comments…","Comments queued…"],
-    "zh-CN": ["填写 Grok API Key","折叠","展开","复制","已复制","复制失败","评论","生成评论","分析暂不可用","重试评论","诊断","已开始","正在思考…","求证已进入队列","正在求证…","已使用搜索","求证未完成","等待当前分析完成","Grok 可能出错，请核对来源。","求证尚未完成。","已保留部分结果。","已取消，可以重试。","请先在设置中填写 Grok API Key。","使用 xAI API","SuperX 帖子分析","分析结果","回答语言","生成的评论","根据这条帖子生成评论。","正在生成评论…","评论已进入队列…"],
-    "zh-TW": ["填入 Grok API Key","收合","展開","複製","已複製","複製失敗","留言","產生留言","分析暫時無法使用","重試留言","診斷","已開始","正在思考…","查證已加入佇列","正在查證…","已使用搜尋","查證未完成","等待目前分析完成","Grok 可能出錯，請核對來源。","查證尚未完成。","已保留部分結果。","已取消，可以重試。","請先在設定填入 Grok API Key。","使用 xAI API","SuperX 貼文分析","分析結果","回答語言","產生的留言","根據這篇貼文產生留言。","正在產生留言…","留言已加入佇列…"],
-    "ja": ["Grok API Key を入力","折りたたむ","展開","コピー","コピー済み","コピー失敗","コメント","コメントを生成","分析を利用できません","コメントを再試行","診断","開始済み","思考中…","事実確認待ち","確認中…","検索を使用","事実確認は未完了","現在の分析の完了を待っています","Grok は誤ることがあります。情報源を確認してください。","事実確認が未完了です。","部分的な結果を保持しました。","キャンセルしました。再試行できます。","設定で Grok API Key を入力してください。","xAI API を使用","SuperX 投稿分析","分析結果","回答言語","生成されたコメント","この投稿に基づいてコメントを生成します。","コメントを生成中…","コメント生成の待機中…"],
-    "ko": ["Grok API Key 입력","접기","펼치기","복사","복사됨","복사 실패","댓글","댓글 생성","분석을 사용할 수 없음","댓글 다시 시도","진단","시작됨","생각 중…","사실 확인 대기 중","검증 중…","검색 사용됨","사실 확인 미완료","현재 분석이 끝나기를 기다리는 중","Grok은 틀릴 수 있습니다. 출처를 확인하세요.","사실 확인이 완료되지 않았습니다.","일부 결과를 보존했습니다.","취소되었습니다. 다시 시도할 수 있습니다.","설정에서 Grok API Key를 입력하세요.","xAI API 사용","SuperX 게시물 분석","분석 결과","답변 언어","생성된 댓글","이 게시물을 바탕으로 댓글을 생성합니다.","댓글 생성 중…","댓글 생성 대기 중…"],
-    "es": ["Introducir Grok API Key","Contraer","Expandir","Copiar","Copiado","Error al copiar","Comentarios","Generar comentarios","Análisis no disponible","Reintentar comentarios","Diagnóstico","Iniciado","Pensando…","Verificación en cola","Verificando…","Búsqueda utilizada","Verificación incompleta","Esperando el análisis actual","Grok puede equivocarse; consulta las fuentes.","Verificación incompleta.","Se conserva el resultado parcial.","Cancelado; puedes reintentar.","Introduce una Grok API Key en Ajustes.","Usar xAI API","Análisis de publicaciones SuperX","Resultado del análisis","Idioma de respuesta","Comentarios generados","Genera comentarios basados en esta publicación.","Generando comentarios…","Comentarios en cola…"],
-    "fr": ["Saisir une Grok API Key","Réduire","Développer","Copier","Copié","Échec de la copie","Commentaires","Générer des commentaires","Analyse indisponible","Réessayer les commentaires","Diagnostic","Démarré","Réflexion…","Vérification en attente","Vérification…","Recherche utilisée","Vérification incomplète","Attente de l’analyse en cours","Grok peut se tromper ; consultez les sources.","Vérification incomplète.","Résultat partiel conservé.","Annulé ; vous pouvez réessayer.","Saisissez une Grok API Key dans les paramètres.","Utiliser xAI API","Analyse de publication SuperX","Résultat de l’analyse","Langue de réponse","Commentaires générés","Générez des commentaires à partir de cette publication.","Génération des commentaires…","Commentaires en attente…"],
-    "de": ["Grok API Key eingeben","Einklappen","Ausklappen","Kopieren","Kopiert","Kopieren fehlgeschlagen","Kommentare","Kommentare generieren","Analyse nicht verfügbar","Kommentare erneut versuchen","Diagnose","Gestartet","Denkt nach…","Faktenprüfung in Warteschlange","Wird geprüft…","Suche verwendet","Faktenprüfung unvollständig","Wartet auf die laufende Analyse","Grok kann sich irren; Quellen prüfen.","Faktenprüfung unvollständig.","Teilergebnis beibehalten.","Abgebrochen; erneuter Versuch möglich.","Grok API Key in den Einstellungen eingeben.","xAI API verwenden","SuperX Beitragsanalyse","Analyseergebnis","Antwortsprache","Generierte Kommentare","Kommentare zu diesem Beitrag generieren.","Kommentare werden generiert…","Kommentare in Warteschlange…"],
-    "pt": ["Inserir Grok API Key","Recolher","Expandir","Copiar","Copiado","Falha ao copiar","Comentários","Gerar comentários","Análise indisponível","Tentar comentários novamente","Diagnóstico","Iniciado","Pensando…","Verificação na fila","Verificando…","Pesquisa utilizada","Verificação incompleta","Aguardando a análise atual","Grok pode errar; confira as fontes.","Verificação incompleta.","Resultado parcial mantido.","Cancelado; pode tentar novamente.","Insira uma Grok API Key nas configurações.","Usar xAI API","Análise de publicação SuperX","Resultado da análise","Idioma da resposta","Comentários gerados","Gere comentários com base nesta publicação.","Gerando comentários…","Comentários na fila…"],
-    "ar": ["إدخال Grok API Key","طي","توسيع","نسخ","تم النسخ","فشل النسخ","تعليقات","إنشاء تعليقات","التحليل غير متاح","إعادة محاولة التعليقات","التشخيص","بدأ","جارٍ التفكير…","التحقق في قائمة الانتظار","جارٍ التحقق…","استُخدم البحث","التحقق غير مكتمل","بانتظار انتهاء التحليل الحالي","قد يخطئ Grok؛ راجع المصادر.","التحقق غير مكتمل.","تم الاحتفاظ بالنتيجة الجزئية.","أُلغي؛ يمكنك إعادة المحاولة.","أدخل Grok API Key في الإعدادات.","استخدام xAI API","تحليل منشور SuperX","نتيجة التحليل","لغة الإجابة","التعليقات المُنشأة","أنشئ تعليقات بناءً على هذا المنشور.","جارٍ إنشاء التعليقات…","التعليقات في قائمة الانتظار…"],
-    "ru": ["Ввести Grok API Key","Свернуть","Развернуть","Копировать","Скопировано","Ошибка копирования","Комментарии","Создать комментарии","Анализ недоступен","Повторить комментарии","Диагностика","Начато","Думает…","Проверка в очереди","Проверка…","Использован поиск","Проверка фактов не завершена","Ожидание текущего анализа","Grok может ошибаться; проверяйте источники.","Проверка не завершена.","Частичный результат сохранён.","Отменено; можно повторить.","Введите Grok API Key в настройках.","Использовать xAI API","Анализ публикации SuperX","Результат анализа","Язык ответа","Созданные комментарии","Создать комментарии на основе этой публикации.","Создание комментариев…","Комментарии в очереди…"],
-    "hi": ["Grok API Key दर्ज करें","समेटें","फैलाएँ","कॉपी करें","कॉपी हो गया","कॉपी विफल","टिप्पणियाँ","टिप्पणियाँ बनाएँ","विश्लेषण उपलब्ध नहीं","टिप्पणियाँ फिर आज़माएँ","निदान","शुरू हुआ","सोच रहा है…","तथ्य जाँच कतार में","जाँच जारी…","खोज का उपयोग हुआ","तथ्य जाँच अधूरी है","वर्तमान विश्लेषण पूरा होने की प्रतीक्षा","Grok गलत हो सकता है; स्रोत जाँचें।","तथ्य जाँच अधूरी है।","आंशिक परिणाम सुरक्षित है।","रद्द हुआ; फिर कोशिश कर सकते हैं।","सेटिंग में Grok API Key दर्ज करें।","xAI API का उपयोग करें","SuperX पोस्ट विश्लेषण","विश्लेषण परिणाम","जवाब की भाषा","बनाई गई टिप्पणियाँ","इस पोस्ट के आधार पर टिप्पणियाँ बनाएँ।","टिप्पणियाँ बन रही हैं…","टिप्पणियाँ कतार में हैं…"]
+    "en": ["Enter Grok API Key","Collapse","Expand","Copy","Copied","Copy failed","Comments","Generate comments","Analysis unavailable","Retry comments","Diagnostics","Started","Thinking…","Fact check queued","Fact-checking…","Search used","Fact check incomplete","Waiting for the current analysis","Grok can make mistakes; check the sources.","Fact check incomplete.","Partial result retained.","Cancelled; you can retry.","Set a Grok API Key in Settings.","Use xAI API","SideLens post analysis","Analysis result","Answer language","Generated comments","Generate comments based on this post.","Generating comments…","Comments queued…"],
+    "zh-CN": ["填写 Grok API Key","折叠","展开","复制","已复制","复制失败","评论","生成评论","分析暂不可用","重试评论","诊断","已开始","正在思考…","求证已进入队列","正在求证…","已使用搜索","求证未完成","等待当前分析完成","Grok 可能出错，请核对来源。","求证尚未完成。","已保留部分结果。","已取消，可以重试。","请先在设置中填写 Grok API Key。","使用 xAI API","SideLens 帖子分析","分析结果","回答语言","生成的评论","根据这条帖子生成评论。","正在生成评论…","评论已进入队列…"],
+    "zh-TW": ["填入 Grok API Key","收合","展開","複製","已複製","複製失敗","留言","產生留言","分析暫時無法使用","重試留言","診斷","已開始","正在思考…","查證已加入佇列","正在查證…","已使用搜尋","查證未完成","等待目前分析完成","Grok 可能出錯，請核對來源。","查證尚未完成。","已保留部分結果。","已取消，可以重試。","請先在設定填入 Grok API Key。","使用 xAI API","SideLens 貼文分析","分析結果","回答語言","產生的留言","根據這篇貼文產生留言。","正在產生留言…","留言已加入佇列…"],
+    "ja": ["Grok API Key を入力","折りたたむ","展開","コピー","コピー済み","コピー失敗","コメント","コメントを生成","分析を利用できません","コメントを再試行","診断","開始済み","思考中…","事実確認待ち","確認中…","検索を使用","事実確認は未完了","現在の分析の完了を待っています","Grok は誤ることがあります。情報源を確認してください。","事実確認が未完了です。","部分的な結果を保持しました。","キャンセルしました。再試行できます。","設定で Grok API Key を入力してください。","xAI API を使用","SideLens 投稿分析","分析結果","回答言語","生成されたコメント","この投稿に基づいてコメントを生成します。","コメントを生成中…","コメント生成の待機中…"],
+    "ko": ["Grok API Key 입력","접기","펼치기","복사","복사됨","복사 실패","댓글","댓글 생성","분석을 사용할 수 없음","댓글 다시 시도","진단","시작됨","생각 중…","사실 확인 대기 중","검증 중…","검색 사용됨","사실 확인 미완료","현재 분석이 끝나기를 기다리는 중","Grok은 틀릴 수 있습니다. 출처를 확인하세요.","사실 확인이 완료되지 않았습니다.","일부 결과를 보존했습니다.","취소되었습니다. 다시 시도할 수 있습니다.","설정에서 Grok API Key를 입력하세요.","xAI API 사용","SideLens 게시물 분석","분석 결과","답변 언어","생성된 댓글","이 게시물을 바탕으로 댓글을 생성합니다.","댓글 생성 중…","댓글 생성 대기 중…"],
+    "es": ["Introducir Grok API Key","Contraer","Expandir","Copiar","Copiado","Error al copiar","Comentarios","Generar comentarios","Análisis no disponible","Reintentar comentarios","Diagnóstico","Iniciado","Pensando…","Verificación en cola","Verificando…","Búsqueda utilizada","Verificación incompleta","Esperando el análisis actual","Grok puede equivocarse; consulta las fuentes.","Verificación incompleta.","Se conserva el resultado parcial.","Cancelado; puedes reintentar.","Introduce una Grok API Key en Ajustes.","Usar xAI API","Análisis de publicaciones SideLens","Resultado del análisis","Idioma de respuesta","Comentarios generados","Genera comentarios basados en esta publicación.","Generando comentarios…","Comentarios en cola…"],
+    "fr": ["Saisir une Grok API Key","Réduire","Développer","Copier","Copié","Échec de la copie","Commentaires","Générer des commentaires","Analyse indisponible","Réessayer les commentaires","Diagnostic","Démarré","Réflexion…","Vérification en attente","Vérification…","Recherche utilisée","Vérification incomplète","Attente de l’analyse en cours","Grok peut se tromper ; consultez les sources.","Vérification incomplète.","Résultat partiel conservé.","Annulé ; vous pouvez réessayer.","Saisissez une Grok API Key dans les paramètres.","Utiliser xAI API","Analyse de publication SideLens","Résultat de l’analyse","Langue de réponse","Commentaires générés","Générez des commentaires à partir de cette publication.","Génération des commentaires…","Commentaires en attente…"],
+    "de": ["Grok API Key eingeben","Einklappen","Ausklappen","Kopieren","Kopiert","Kopieren fehlgeschlagen","Kommentare","Kommentare generieren","Analyse nicht verfügbar","Kommentare erneut versuchen","Diagnose","Gestartet","Denkt nach…","Faktenprüfung in Warteschlange","Wird geprüft…","Suche verwendet","Faktenprüfung unvollständig","Wartet auf die laufende Analyse","Grok kann sich irren; Quellen prüfen.","Faktenprüfung unvollständig.","Teilergebnis beibehalten.","Abgebrochen; erneuter Versuch möglich.","Grok API Key in den Einstellungen eingeben.","xAI API verwenden","SideLens Beitragsanalyse","Analyseergebnis","Antwortsprache","Generierte Kommentare","Kommentare zu diesem Beitrag generieren.","Kommentare werden generiert…","Kommentare in Warteschlange…"],
+    "pt": ["Inserir Grok API Key","Recolher","Expandir","Copiar","Copiado","Falha ao copiar","Comentários","Gerar comentários","Análise indisponível","Tentar comentários novamente","Diagnóstico","Iniciado","Pensando…","Verificação na fila","Verificando…","Pesquisa utilizada","Verificação incompleta","Aguardando a análise atual","Grok pode errar; confira as fontes.","Verificação incompleta.","Resultado parcial mantido.","Cancelado; pode tentar novamente.","Insira uma Grok API Key nas configurações.","Usar xAI API","Análise de publicação SideLens","Resultado da análise","Idioma da resposta","Comentários gerados","Gere comentários com base nesta publicação.","Gerando comentários…","Comentários na fila…"],
+    "ar": ["إدخال Grok API Key","طي","توسيع","نسخ","تم النسخ","فشل النسخ","تعليقات","إنشاء تعليقات","التحليل غير متاح","إعادة محاولة التعليقات","التشخيص","بدأ","جارٍ التفكير…","التحقق في قائمة الانتظار","جارٍ التحقق…","استُخدم البحث","التحقق غير مكتمل","بانتظار انتهاء التحليل الحالي","قد يخطئ Grok؛ راجع المصادر.","التحقق غير مكتمل.","تم الاحتفاظ بالنتيجة الجزئية.","أُلغي؛ يمكنك إعادة المحاولة.","أدخل Grok API Key في الإعدادات.","استخدام xAI API","تحليل منشور SideLens","نتيجة التحليل","لغة الإجابة","التعليقات المُنشأة","أنشئ تعليقات بناءً على هذا المنشور.","جارٍ إنشاء التعليقات…","التعليقات في قائمة الانتظار…"],
+    "ru": ["Ввести Grok API Key","Свернуть","Развернуть","Копировать","Скопировано","Ошибка копирования","Комментарии","Создать комментарии","Анализ недоступен","Повторить комментарии","Диагностика","Начато","Думает…","Проверка в очереди","Проверка…","Использован поиск","Проверка фактов не завершена","Ожидание текущего анализа","Grok может ошибаться; проверяйте источники.","Проверка не завершена.","Частичный результат сохранён.","Отменено; можно повторить.","Введите Grok API Key в настройках.","Использовать xAI API","Анализ публикации SideLens","Результат анализа","Язык ответа","Созданные комментарии","Создать комментарии на основе этой публикации.","Создание комментариев…","Комментарии в очереди…"],
+    "hi": ["Grok API Key दर्ज करें","समेटें","फैलाएँ","कॉपी करें","कॉपी हो गया","कॉपी विफल","टिप्पणियाँ","टिप्पणियाँ बनाएँ","विश्लेषण उपलब्ध नहीं","टिप्पणियाँ फिर आज़माएँ","निदान","शुरू हुआ","सोच रहा है…","तथ्य जाँच कतार में","जाँच जारी…","खोज का उपयोग हुआ","तथ्य जाँच अधूरी है","वर्तमान विश्लेषण पूरा होने की प्रतीक्षा","Grok गलत हो सकता है; स्रोत जाँचें।","तथ्य जाँच अधूरी है।","आंशिक परिणाम सुरक्षित है।","रद्द हुआ; फिर कोशिश कर सकते हैं।","सेटिंग में Grok API Key दर्ज करें।","xAI API का उपयोग करें","SideLens पोस्ट विश्लेषण","विश्लेषण परिणाम","जवाब की भाषा","बनाई गई टिप्पणियाँ","इस पोस्ट के आधार पर टिप्पणियाँ बनाएँ।","टिप्पणियाँ बन रही हैं…","टिप्पणियाँ कतार में हैं…"]
   });
   section(["options.tagline","options.subtitle","options.uiHint","options.source","options.enable","options.providerAPI","options.keyPlaceholder","options.keyHelp","options.console","options.remember","options.rememberHelp","options.model","options.modelHelp","options.fastPreset","options.concurrency","options.verification","options.verificationHelp","options.webSearch","options.xSearch","options.billing","options.languageHelp","options.cacheHelp","options.reloadHelp","options.version","options.customLanguage","options.saved","options.keyCleared","options.cacheCleared","options.presetReady","options.saving","options.reloading","options.keyRequired","options.modelInvalid","errors.load","errors.operation","errors.noResponse","popup.apiLabel","popup.apiHint"], {
     "en": ["Understand X. Fact-check as you scroll.","Visible posts enter analysis immediately, with no session limit.","Interface labels follow X. Answer language is configured separately.","Answer source","Enable","xAI API · Parallel fact checks","Enter your Grok API Key","Create a Key in the xAI console. Remember Key encrypts it on this device automatically; uncheck it for session-only storage.","xAI console","Remember Key on this device","Encrypted automatically on this device and restored after browser restart.","Model","Recommended: grok-4.3. It is fast and has the lowest Token unit price among these models. You can also use grok-4.5, grok-4.6 or grok-4.7, whose Token unit prices are higher than grok-4.3.","Use fast defaults","Maximum concurrent API requests","Fact check","Fact checks read the full linked post. Search tool calls may add cost.","Search web sources","Search X posts","API usage is billed separately. X Premium does not include API credits.","Auto follows the post’s currently displayed main text and updates when you switch between the original and translation. A selected language overrides Auto.","Completed answers are cached. After clearing, refresh X or retry a post.","After updating files, reload the extension and refresh X.","Version {version}","Custom language · {language}","Saved. Open X feeds update automatically.","Key cleared from this session and device.","Answer cache cleared.","Fast defaults selected. Save to apply.","Saving…","Reloading the extension. Refresh X afterward.","Enter a Grok API Key.","Invalid model name. Use letters, numbers, dots, hyphens or underscores.","Could not load: {error}","Operation failed: {error}","The extension returned no response. Reopen Settings and retry.","xAI API · {count} parallel requests","Visible posts are fact-checked immediately. Set a Key in Settings; API usage is billed separately."],
@@ -109,18 +109,18 @@
     "hi": ["प्रॉम्प्ट","किसी भी भाषा में निर्देश संपादित करें। मूल पोस्ट URL मुख्य संदर्भ और दिख रहा पाठ अतिरिक्त संदर्भ के रूप में भेजा जाता है। हर फ़ील्ड में अधिकतम {limit} अक्षर; खाली रखने पर डिफ़ॉल्ट इस्तेमाल होता है। सहेजना नए अनुरोधों पर लागू होता है; पुराने परिणाम के लिए फिर विश्लेषण करें।","तथ्य जाँच","एक पंक्ति की टिप्पणियाँ","विश्लेषण लिंक की पूरी मूल पोस्ट पढ़ने का अनुरोध करता है। जवाब की भाषा, चालू खोज टूल, स्रोतों की सत्यता और तीन टिप्पणियों का JSON प्रारूप अपने आप जोड़े जाते हैं।","डिफ़ॉल्ट बहाल करें","सभी डिफ़ॉल्ट बहाल करें","फ़ॉर्म में डिफ़ॉल्ट बहाल कर दिए गए हैं। लागू करने के लिए सहेजें।","हर प्रॉम्प्ट में अधिकतम {limit} अक्षर हो सकते हैं।"]
   });
   section(["options.explanationMode","options.presetMode","options.customMode","options.presetModeHelp","options.customModeHelp","options.urlSearchRequired","error.urlSearchRequired"], {
-    "en": ["Fact-check style","SuperX built-in prompts (default)","Custom prompts","Checks the full linked post using SuperX’s built-in prompt, without repeating the post. Saved custom drafts are ignored.","Checks the full linked post using your editable fact-check prompt. Switching styles keeps your custom drafts.","All API styles need X search or web search to read the original post. Enable either.","Reading the original post requires X search or web search in every API style. Enable either in Settings."],
-    "zh-CN": ["事实核查方式","SuperX 内置提示词（默认）","自定义提示词","读取原帖全文，按 SuperX 内置提示词核查事实，避免复述帖子。不使用已保存的自定义草稿。","读取原帖全文，使用你编辑的事实核查提示词。切换方式会保留自定义草稿。","所有 API 事实核查均需 X 搜索或网页搜索来读取原帖，请开启其中一种。","所有 API 事实核查读取原帖均需要 X 搜索或网页搜索，请在设置中开启其中一种。"],
-    "zh-TW": ["事實查核方式","SuperX 內建提示詞（預設）","自訂提示詞","讀取原文全文，依 SuperX 內建提示詞查核事實，避免重述貼文。不使用已儲存的自訂草稿。","讀取原文全文，使用你編輯的事實查核提示詞。切換方式會保留自訂草稿。","所有 API 事實查核均需 X 搜尋或網頁搜尋來讀取原文，請開啟其中一種。","所有 API 事實查核讀取原文均需要 X 搜尋或網頁搜尋，請在設定中開啟其中一種。"],
-    "ja": ["事実確認の方法","SuperX の既定プロンプト（既定）","カスタムプロンプト","投稿全文を SuperX の既定プロンプトで確認し、内容の繰り返しを避けます。保存したカスタム下書きは使いません。","投稿全文を編集可能な事実確認プロンプトで確認します。方法を切り替えても下書きは保持されます。","すべての API 事実確認で投稿を読むために X 検索またはウェブ検索が必要です。いずれかを有効にしてください。","すべての API 事実確認で元の投稿を読むには X 検索またはウェブ検索が必要です。設定でいずれかを有効にしてください。"],
-    "ko": ["사실 확인 방식","SuperX 기본 프롬프트 (기본값)","사용자 지정 프롬프트","게시물 전문을 SuperX 기본 프롬프트로 확인하며 원문을 반복하지 않습니다. 저장된 사용자 지정 초안은 사용하지 않습니다.","편집한 사실 확인 프롬프트로 게시물 전문을 확인합니다. 방식을 바꿔도 초안은 유지됩니다.","모든 API 사실 확인에서 원본 게시물을 읽으려면 X 검색 또는 웹 검색이 필요합니다. 둘 중 하나를 켜세요.","모든 API 사실 확인에서 원본 게시물을 읽으려면 X 검색 또는 웹 검색이 필요합니다. 설정에서 둘 중 하나를 켜세요."],
-    "es": ["Estilo de comprobación","Instrucciones integradas de SuperX (predeterminado)","Instrucciones personalizadas","Comprueba la publicación completa con las instrucciones integradas de SuperX, sin repetirla. No usa los borradores personalizados guardados.","Comprueba la publicación completa con tus instrucciones editables. Cambiar de estilo conserva tus borradores.","Todos los estilos API requieren búsqueda en X o en la web para leer la publicación original. Activa una.","Leer la publicación original requiere búsqueda en X o en la web en todos los estilos API. Activa una en Ajustes."],
-    "fr": ["Style de vérification","Instructions intégrées de SuperX (par défaut)","Instructions personnalisées","Vérifie la publication complète avec les instructions intégrées de SuperX, sans la répéter. Les brouillons personnalisés enregistrés ne sont pas utilisés.","Vérifie la publication complète avec vos instructions modifiables. Changer de style conserve vos brouillons.","Tous les styles API nécessitent la recherche sur X ou sur le Web pour lire la publication originale. Activez l’une des deux.","Lire la publication originale nécessite la recherche sur X ou sur le Web dans tous les styles API. Activez l’une des deux dans les paramètres."],
-    "de": ["Stil der Faktenprüfung","SuperX-Standardprompts (Standard)","Eigene Prompts","Prüft den vollständigen Beitrag mit den Standardanweisungen von SuperX, ohne ihn zu wiederholen. Gespeicherte eigene Entwürfe werden nicht verwendet.","Prüft den vollständigen Beitrag mit deinen bearbeitbaren Anweisungen. Beim Wechsel bleiben eigene Entwürfe erhalten.","Alle API-Stile benötigen X-Suche oder Websuche zum Lesen des Originalbeitrags. Aktiviere eine davon.","Zum Lesen des Originalbeitrags benötigen alle API-Stile X-Suche oder Websuche. Aktiviere eine in den Einstellungen."],
-    "pt": ["Estilo de verificação","Instruções integradas do SuperX (padrão)","Instruções personalizadas","Verifica a publicação completa com as instruções integradas do SuperX, sem repeti-la. Não usa os rascunhos personalizados salvos.","Verifica a publicação completa com suas instruções editáveis. Trocar de estilo mantém seus rascunhos.","Todos os estilos API precisam de busca no X ou na web para ler a publicação original. Ative uma delas.","Ler a publicação original requer busca no X ou na web em todos os estilos API. Ative uma delas nas configurações."],
-    "ar": ["أسلوب التحقق من الحقائق","تعليمات SuperX المدمجة (افتراضي)","تعليمات مخصصة","يتحقق من المنشور الكامل بتعليمات SuperX المدمجة دون تكراره. لا تُستخدم المسودات المخصصة المحفوظة.","يتحقق من المنشور الكامل بتعليماتك القابلة للتعديل. تبقى المسودات محفوظة عند تبديل الأسلوب.","تحتاج جميع أساليب API إلى البحث في X أو الويب لقراءة المنشور الأصلي. فعّل أحدهما.","تتطلب قراءة المنشور الأصلي البحث في X أو الويب في جميع أساليب API. فعّل أحدهما في الإعدادات."],
-    "ru": ["Стиль проверки фактов","Встроенные инструкции SuperX (по умолчанию)","Свои инструкции","Проверяет полную публикацию встроенными инструкциями SuperX, не повторяя её. Сохранённые свои черновики не используются.","Проверяет полную публикацию с вашими редактируемыми инструкциями. При смене стиля черновики сохраняются.","Всем стилям API нужен поиск в X или интернете для чтения исходной публикации. Включите один из них.","Для чтения исходной публикации во всех стилях API нужен поиск в X или интернете. Включите один из них в настройках."],
-    "hi": ["तथ्य जाँच का तरीका","SuperX के अंतर्निहित प्रॉम्प्ट (डिफ़ॉल्ट)","कस्टम प्रॉम्प्ट","SuperX के अंतर्निहित निर्देशों से पूरी पोस्ट की जाँच करता है, उसे दोहराता नहीं। सहेजे हुए कस्टम ड्राफ़्ट इस्तेमाल नहीं होते।","आपके संपादन योग्य निर्देशों से पूरी पोस्ट की जाँच करता है। तरीका बदलने पर कस्टम ड्राफ़्ट बने रहते हैं।","हर API तरीके में मूल पोस्ट पढ़ने के लिए X खोज या वेब खोज चाहिए। इनमें से कोई एक चालू करें।","हर API तरीके में मूल पोस्ट पढ़ने के लिए X खोज या वेब खोज चाहिए। सेटिंग में इनमें से कोई एक चालू करें।"]
+    "en": ["Fact-check style","SideLens built-in prompts (default)","Custom prompts","Checks the full linked post using SideLens’s built-in prompt, without repeating the post. Saved custom drafts are ignored.","Checks the full linked post using your editable fact-check prompt. Switching styles keeps your custom drafts.","All API styles need X search or web search to read the original post. Enable either.","Reading the original post requires X search or web search in every API style. Enable either in Settings."],
+    "zh-CN": ["事实核查方式","SideLens 内置提示词（默认）","自定义提示词","读取原帖全文，按 SideLens 内置提示词核查事实，避免复述帖子。不使用已保存的自定义草稿。","读取原帖全文，使用你编辑的事实核查提示词。切换方式会保留自定义草稿。","所有 API 事实核查均需 X 搜索或网页搜索来读取原帖，请开启其中一种。","所有 API 事实核查读取原帖均需要 X 搜索或网页搜索，请在设置中开启其中一种。"],
+    "zh-TW": ["事實查核方式","SideLens 內建提示詞（預設）","自訂提示詞","讀取原文全文，依 SideLens 內建提示詞查核事實，避免重述貼文。不使用已儲存的自訂草稿。","讀取原文全文，使用你編輯的事實查核提示詞。切換方式會保留自訂草稿。","所有 API 事實查核均需 X 搜尋或網頁搜尋來讀取原文，請開啟其中一種。","所有 API 事實查核讀取原文均需要 X 搜尋或網頁搜尋，請在設定中開啟其中一種。"],
+    "ja": ["事実確認の方法","SideLens の既定プロンプト（既定）","カスタムプロンプト","投稿全文を SideLens の既定プロンプトで確認し、内容の繰り返しを避けます。保存したカスタム下書きは使いません。","投稿全文を編集可能な事実確認プロンプトで確認します。方法を切り替えても下書きは保持されます。","すべての API 事実確認で投稿を読むために X 検索またはウェブ検索が必要です。いずれかを有効にしてください。","すべての API 事実確認で元の投稿を読むには X 検索またはウェブ検索が必要です。設定でいずれかを有効にしてください。"],
+    "ko": ["사실 확인 방식","SideLens 기본 프롬프트 (기본값)","사용자 지정 프롬프트","게시물 전문을 SideLens 기본 프롬프트로 확인하며 원문을 반복하지 않습니다. 저장된 사용자 지정 초안은 사용하지 않습니다.","편집한 사실 확인 프롬프트로 게시물 전문을 확인합니다. 방식을 바꿔도 초안은 유지됩니다.","모든 API 사실 확인에서 원본 게시물을 읽으려면 X 검색 또는 웹 검색이 필요합니다. 둘 중 하나를 켜세요.","모든 API 사실 확인에서 원본 게시물을 읽으려면 X 검색 또는 웹 검색이 필요합니다. 설정에서 둘 중 하나를 켜세요."],
+    "es": ["Estilo de comprobación","Instrucciones integradas de SideLens (predeterminado)","Instrucciones personalizadas","Comprueba la publicación completa con las instrucciones integradas de SideLens, sin repetirla. No usa los borradores personalizados guardados.","Comprueba la publicación completa con tus instrucciones editables. Cambiar de estilo conserva tus borradores.","Todos los estilos API requieren búsqueda en X o en la web para leer la publicación original. Activa una.","Leer la publicación original requiere búsqueda en X o en la web en todos los estilos API. Activa una en Ajustes."],
+    "fr": ["Style de vérification","Instructions intégrées de SideLens (par défaut)","Instructions personnalisées","Vérifie la publication complète avec les instructions intégrées de SideLens, sans la répéter. Les brouillons personnalisés enregistrés ne sont pas utilisés.","Vérifie la publication complète avec vos instructions modifiables. Changer de style conserve vos brouillons.","Tous les styles API nécessitent la recherche sur X ou sur le Web pour lire la publication originale. Activez l’une des deux.","Lire la publication originale nécessite la recherche sur X ou sur le Web dans tous les styles API. Activez l’une des deux dans les paramètres."],
+    "de": ["Stil der Faktenprüfung","SideLens-Standardprompts (Standard)","Eigene Prompts","Prüft den vollständigen Beitrag mit den Standardanweisungen von SideLens, ohne ihn zu wiederholen. Gespeicherte eigene Entwürfe werden nicht verwendet.","Prüft den vollständigen Beitrag mit deinen bearbeitbaren Anweisungen. Beim Wechsel bleiben eigene Entwürfe erhalten.","Alle API-Stile benötigen X-Suche oder Websuche zum Lesen des Originalbeitrags. Aktiviere eine davon.","Zum Lesen des Originalbeitrags benötigen alle API-Stile X-Suche oder Websuche. Aktiviere eine in den Einstellungen."],
+    "pt": ["Estilo de verificação","Instruções integradas do SideLens (padrão)","Instruções personalizadas","Verifica a publicação completa com as instruções integradas do SideLens, sem repeti-la. Não usa os rascunhos personalizados salvos.","Verifica a publicação completa com suas instruções editáveis. Trocar de estilo mantém seus rascunhos.","Todos os estilos API precisam de busca no X ou na web para ler a publicação original. Ative uma delas.","Ler a publicação original requer busca no X ou na web em todos os estilos API. Ative uma delas nas configurações."],
+    "ar": ["أسلوب التحقق من الحقائق","تعليمات SideLens المدمجة (افتراضي)","تعليمات مخصصة","يتحقق من المنشور الكامل بتعليمات SideLens المدمجة دون تكراره. لا تُستخدم المسودات المخصصة المحفوظة.","يتحقق من المنشور الكامل بتعليماتك القابلة للتعديل. تبقى المسودات محفوظة عند تبديل الأسلوب.","تحتاج جميع أساليب API إلى البحث في X أو الويب لقراءة المنشور الأصلي. فعّل أحدهما.","تتطلب قراءة المنشور الأصلي البحث في X أو الويب في جميع أساليب API. فعّل أحدهما في الإعدادات."],
+    "ru": ["Стиль проверки фактов","Встроенные инструкции SideLens (по умолчанию)","Свои инструкции","Проверяет полную публикацию встроенными инструкциями SideLens, не повторяя её. Сохранённые свои черновики не используются.","Проверяет полную публикацию с вашими редактируемыми инструкциями. При смене стиля черновики сохраняются.","Всем стилям API нужен поиск в X или интернете для чтения исходной публикации. Включите один из них.","Для чтения исходной публикации во всех стилях API нужен поиск в X или интернете. Включите один из них в настройках."],
+    "hi": ["तथ्य जाँच का तरीका","SideLens के अंतर्निहित प्रॉम्प्ट (डिफ़ॉल्ट)","कस्टम प्रॉम्प्ट","SideLens के अंतर्निहित निर्देशों से पूरी पोस्ट की जाँच करता है, उसे दोहराता नहीं। सहेजे हुए कस्टम ड्राफ़्ट इस्तेमाल नहीं होते।","आपके संपादन योग्य निर्देशों से पूरी पोस्ट की जाँच करता है। तरीका बदलने पर कस्टम ड्राफ़्ट बने रहते हैं।","हर API तरीके में मूल पोस्ट पढ़ने के लिए X खोज या वेब खोज चाहिए। इनमें से कोई एक चालू करें।","हर API तरीके में मूल पोस्ट पढ़ने के लिए X खोज या वेब खोज चाहिए। सेटिंग में इनमें से कोई एक चालू करें।"]
   });
   section(["error.apiKeyRejected","error.apiUsage","error.apiAccess","error.apiRequest","error.apiServer","error.apiConnection","error.apiTimeout","error.apiOutputLimit","error.apiIncomplete","error.apiFailed"], {
     "en": ["Grok API Key rejected. Check it in Settings.","Check your account balance, budget or usage limit.","This Key cannot access the selected model or feature.","xAI rejected the request. Check model and search support.","xAI returned a service error.","The xAI response was interrupted.","The request timed out.","The answer reached its output limit and is incomplete.","xAI did not return a complete answer.","xAI returned an error."],
@@ -207,18 +207,18 @@
     "hi": ["चालू होने पर दिख रही पोस्ट अपने आप विश्लेषित होती हैं। प्रति सत्र कोई सीमा नहीं है।","xAI कंसोल में Key बनाएँ। Key याद रखने पर इसे इस डिवाइस पर अपने आप एन्क्रिप्ट करके सहेजा जाता है; विकल्प हटाने पर यह केवल मौजूदा ब्राउज़र सत्र में इस्तेमाल होती है।","इस डिवाइस पर अपने आप एन्क्रिप्ट करके सहेजी जाती है और ब्राउज़र फिर शुरू करने पर उपलब्ध रहती है।","दिख रही पोस्ट की तुरंत तथ्य जाँच होती है। सेटिंग में Key दर्ज करें; API का शुल्क अलग है।"]
   });
   section(["options.privacyLink"], {
-    "en":["SuperX privacy notice"],
-    "zh-CN":["SuperX 隐私说明"],
-    "zh-TW":["SuperX 隱私說明"],
-    "ja":["SuperX プライバシー通知"],
-    "ko":["SuperX 개인정보 안내"],
-    "es":["Aviso de privacidad de SuperX"],
-    "fr":["Avis de confidentialité SuperX"],
-    "de":["SuperX-Datenschutzhinweis"],
-    "pt":["Aviso de privacidade SuperX"],
-    "ar":["إشعار خصوصية SuperX"],
-    "ru":["Уведомление о данных SuperX"],
-    "hi":["SuperX गोपनीयता सूचना"]
+    "en":["SideLens privacy notice"],
+    "zh-CN":["SideLens 隐私说明"],
+    "zh-TW":["SideLens 隱私說明"],
+    "ja":["SideLens プライバシー通知"],
+    "ko":["SideLens 개인정보 안내"],
+    "es":["Aviso de privacidad de SideLens"],
+    "fr":["Avis de confidentialité SideLens"],
+    "de":["SideLens-Datenschutzhinweis"],
+    "pt":["Aviso de privacidade SideLens"],
+    "ar":["إشعار خصوصية SideLens"],
+    "ru":["Уведомление о данных SideLens"],
+    "hi":["SideLens गोपनीयता सूचना"]
   });
   section(["options.directClientHint"], {
     "en":["Your own xAI API Key sends requests directly from this browser to xAI. API usage is billed to your xAI account."],
@@ -319,32 +319,32 @@
     "hi": ["{settings} में Grok API Key दर्ज करें","यह अनुरोध सेवा प्रदाता की अनुरोध दर सीमा तक पहुँच गया।","बदलाव अभी सहेजे नहीं गए हैं।","Grok API Key जोड़ें"]
   });
   section(["common.refreshPage","status.refreshRequired","status.refreshRequiredAction"], {
-    "en":["Refresh X","Refresh X to reconnect to SuperX.","{refresh} to reconnect to SuperX."],
-    "zh-CN":["刷新 X","请刷新 X，重新连接 SuperX。","请{refresh}，重新连接 SuperX。"],
-    "zh-TW":["重新整理 X","請重新整理 X，重新連線 SuperX。","請{refresh}，重新連線 SuperX。"],
-    "ja":["X を更新","SuperX に再接続するには X を更新してください。","{refresh}して SuperX に再接続してください。"],
-    "ko":["X 새로 고침","SuperX에 다시 연결하려면 X를 새로 고침하세요.","{refresh}하여 SuperX에 다시 연결하세요."],
-    "es":["Actualizar X","Actualiza X para volver a conectar con SuperX.","{refresh} para volver a conectar con SuperX."],
-    "fr":["Actualiser X","Actualisez X pour reconnecter SuperX.","{refresh} pour reconnecter SuperX."],
-    "de":["X neu laden","Lade X neu, um SuperX wieder zu verbinden.","{refresh}, um SuperX wieder zu verbinden."],
-    "pt":["Atualizar X","Atualize X para reconectar o SuperX.","{refresh} para reconectar o SuperX."],
-    "ar":["تحديث X","حدّث X لإعادة الاتصال بـ SuperX.","{refresh} لإعادة الاتصال بـ SuperX."],
-    "ru":["Обновить X","Обновите X для повторного подключения SuperX.","{refresh} для повторного подключения SuperX."],
-    "hi":["X रीफ़्रेश करें","SuperX से दोबारा जुड़ने के लिए X रीफ़्रेश करें।","SuperX से दोबारा जुड़ने के लिए {refresh}।"]
+    "en":["Refresh X","Refresh X to reconnect to SideLens.","{refresh} to reconnect to SideLens."],
+    "zh-CN":["刷新 X","请刷新 X，重新连接 SideLens。","请{refresh}，重新连接 SideLens。"],
+    "zh-TW":["重新整理 X","請重新整理 X，重新連線 SideLens。","請{refresh}，重新連線 SideLens。"],
+    "ja":["X を更新","SideLens に再接続するには X を更新してください。","{refresh}して SideLens に再接続してください。"],
+    "ko":["X 새로 고침","SideLens에 다시 연결하려면 X를 새로 고침하세요.","{refresh}하여 SideLens에 다시 연결하세요."],
+    "es":["Actualizar X","Actualiza X para volver a conectar con SideLens.","{refresh} para volver a conectar con SideLens."],
+    "fr":["Actualiser X","Actualisez X pour reconnecter SideLens.","{refresh} pour reconnecter SideLens."],
+    "de":["X neu laden","Lade X neu, um SideLens wieder zu verbinden.","{refresh}, um SideLens wieder zu verbinden."],
+    "pt":["Atualizar X","Atualize X para reconectar o SideLens.","{refresh} para reconectar o SideLens."],
+    "ar":["تحديث X","حدّث X لإعادة الاتصال بـ SideLens.","{refresh} لإعادة الاتصال بـ SideLens."],
+    "ru":["Обновить X","Обновите X для повторного подключения SideLens.","{refresh} для повторного подключения SideLens."],
+    "hi":["X रीफ़्रेश करें","SideLens से दोबारा जुड़ने के लिए X रीफ़्रेश करें।","SideLens से दोबारा जुड़ने के लिए {refresh}।"]
   });
   section(["options.languageTitle","options.answerLanguage","options.interfaceLanguage","options.interfaceLanguageHelp","lang.interfaceAuto","options.uiHint","options.keyReadySaved","options.keyReady"], {
-    "en":["Language","Grok answer language","SuperX interface language","Auto follows X’s interface language and uses the browser language when X is unavailable. A selected language overrides Auto.","Auto · X interface language","Grok answers and the SuperX interface have independent language settings. Both default to Auto.","Saved on this device. It remains available after browser restart.","Key is available only for this browser session and is not saved on this device. Enter it again after restarting the browser."],
-    "zh-CN":["语言","Grok 回答的语言","SuperX 界面的语言","自动跟随 X 的界面语言；无法获取时使用浏览器语言。手动指定语言优先。","自动 · X 界面语言","Grok 回答语言和 SuperX 界面语言分别设置，默认均为自动。","已保存在本机，重启浏览器后可继续使用。","Key 仅可在本次浏览器会话使用，未保存在本机；重启浏览器后需重新输入。"],
-    "zh-TW":["語言","Grok 回答的語言","SuperX 介面的語言","自動跟隨 X 的介面語言；無法取得時使用瀏覽器語言。手動指定語言優先。","自動 · X 介面語言","Grok 回答語言和 SuperX 介面語言分別設定，預設均為自動。","已儲存在本機，重啟瀏覽器後可繼續使用。","Key 僅可在本次瀏覽器工作階段使用，未儲存在本機；重啟瀏覽器後需重新輸入。"],
-    "ja":["言語","Grok の回答言語","SuperX の表示言語","自動では X の表示言語に従います。X の言語を取得できない場合はブラウザーの言語を使います。指定した言語が優先されます。","自動 · X の表示言語","Grok の回答言語と SuperX の表示言語は別々に設定でき、どちらも既定は自動です。","この端末に保存済みです。ブラウザー再起動後も使えます。","Key はこのブラウザーセッションのみで使用でき、端末には保存されていません。ブラウザー再起動後に再入力してください。"],
-    "ko":["언어","Grok 답변 언어","SuperX 인터페이스 언어","자동은 X의 인터페이스 언어를 따릅니다. X 언어를 확인할 수 없으면 브라우저 언어를 사용합니다. 직접 선택한 언어가 우선합니다.","자동 · X 인터페이스 언어","Grok 답변 언어와 SuperX 인터페이스 언어는 따로 설정하며, 둘 다 기본값은 자동입니다.","이 기기에 저장되었습니다. 브라우저를 다시 시작해도 사용할 수 있습니다.","Key는 현재 브라우저 세션에서만 사용할 수 있으며 기기에 저장되지 않았습니다. 브라우저를 다시 시작하면 다시 입력하세요."],
-    "es":["Idioma","Idioma de las respuestas de Grok","Idioma de la interfaz de SuperX","Automático sigue el idioma de la interfaz de X y usa el del navegador si X no está disponible. El idioma seleccionado tiene prioridad.","Automático · Idioma de la interfaz de X","Las respuestas de Grok y la interfaz de SuperX tienen ajustes de idioma independientes. Ambos son automáticos por defecto.","Guardada en este dispositivo. Sigue disponible al reiniciar el navegador.","La Key solo está disponible durante esta sesión y no se guarda en este dispositivo. Introdúcela de nuevo tras reiniciar el navegador."],
-    "fr":["Langue","Langue des réponses de Grok","Langue de l’interface SuperX","Automatique suit la langue de l’interface X et utilise celle du navigateur si X est indisponible. La langue choisie est prioritaire.","Automatique · Langue de l’interface X","Les réponses de Grok et l’interface SuperX ont des réglages de langue indépendants. Les deux sont automatiques par défaut.","Enregistrée sur cet appareil. Elle reste disponible après le redémarrage du navigateur.","La Key est disponible uniquement pendant cette session et n’est pas enregistrée sur cet appareil. Saisissez-la à nouveau après le redémarrage du navigateur."],
-    "de":["Sprache","Sprache der Grok-Antworten","Sprache der SuperX-Oberfläche","Automatisch folgt der Sprache der X-Oberfläche und nutzt die Browsersprache, wenn X nicht verfügbar ist. Eine ausgewählte Sprache hat Vorrang.","Automatisch · Sprache der X-Oberfläche","Grok-Antworten und die SuperX-Oberfläche haben unabhängige Spracheinstellungen. Beide sind standardmäßig automatisch.","Auf diesem Gerät gespeichert. Nach dem Browserneustart weiterhin verfügbar.","Der Key ist nur für diese Browsersitzung verfügbar und wird nicht auf diesem Gerät gespeichert. Nach einem Browserneustart erneut eingeben."],
-    "pt":["Idioma","Idioma das respostas do Grok","Idioma da interface do SuperX","Automático segue o idioma da interface do X e usa o idioma do navegador quando X não está disponível. O idioma selecionado tem prioridade.","Automático · Idioma da interface do X","As respostas do Grok e a interface do SuperX têm configurações de idioma independentes. Ambas são automáticas por padrão.","Salva neste dispositivo. Continua disponível após reiniciar o navegador.","A Key está disponível apenas nesta sessão e não foi salva neste dispositivo. Insira-a novamente após reiniciar o navegador."],
-    "ar":["اللغة","لغة إجابات Grok","لغة واجهة SuperX","يتبع الوضع التلقائي لغة واجهة X، ويستخدم لغة المتصفح عندما تكون لغة X غير متاحة. تكون الأولوية للغة المحددة.","تلقائي · لغة واجهة X","تُضبط لغة إجابات Grok ولغة واجهة SuperX بشكل مستقل. الوضع الافتراضي لكليهما تلقائي.","حُفظت على هذا الجهاز وتبقى متاحة بعد إعادة تشغيل المتصفح.","Key متاحة لجلسة المتصفح الحالية فقط ولم تُحفظ على هذا الجهاز. أدخلها مجدداً بعد إعادة تشغيل المتصفح."],
-    "ru":["Язык","Язык ответов Grok","Язык интерфейса SuperX","Авто следует языку интерфейса X и использует язык браузера, если язык X недоступен. Выбранный язык имеет приоритет.","Авто · Язык интерфейса X","Язык ответов Grok и язык интерфейса SuperX настраиваются отдельно. По умолчанию оба выбираются автоматически.","Сохранён на этом устройстве и доступен после перезапуска браузера.","Key доступна только в текущем сеансе и не сохранена на этом устройстве. Введите её снова после перезапуска браузера."],
-    "hi":["भाषा","Grok के जवाबों की भाषा","SuperX इंटरफ़ेस की भाषा","स्वतः X इंटरफ़ेस की भाषा का अनुसरण करता है। X की भाषा उपलब्ध न हो तो ब्राउज़र की भाषा इस्तेमाल होती है। चुनी हुई भाषा को प्राथमिकता मिलती है।","स्वतः · X इंटरफ़ेस की भाषा","Grok के जवाब और SuperX इंटरफ़ेस की भाषाएँ अलग सेट होती हैं। दोनों का डिफ़ॉल्ट स्वतः है।","इस डिवाइस पर सहेजी गई है। ब्राउज़र फिर शुरू करने पर भी उपलब्ध रहेगी।","Key केवल वर्तमान ब्राउज़र सत्र में उपलब्ध है और इस डिवाइस पर सहेजी नहीं गई है। ब्राउज़र फिर शुरू करने पर इसे दोबारा दर्ज करें।"]
+    "en":["Language","Grok answer language","SideLens interface language","Auto follows X’s interface language and uses the browser language when X is unavailable. A selected language overrides Auto.","Auto · X interface language","Grok answers and the SideLens interface have independent language settings. Both default to Auto.","Saved on this device. It remains available after browser restart.","Key is available only for this browser session and is not saved on this device. Enter it again after restarting the browser."],
+    "zh-CN":["语言","Grok 回答的语言","SideLens 界面的语言","自动跟随 X 的界面语言；无法获取时使用浏览器语言。手动指定语言优先。","自动 · X 界面语言","Grok 回答语言和 SideLens 界面语言分别设置，默认均为自动。","已保存在本机，重启浏览器后可继续使用。","Key 仅可在本次浏览器会话使用，未保存在本机；重启浏览器后需重新输入。"],
+    "zh-TW":["語言","Grok 回答的語言","SideLens 介面的語言","自動跟隨 X 的介面語言；無法取得時使用瀏覽器語言。手動指定語言優先。","自動 · X 介面語言","Grok 回答語言和 SideLens 介面語言分別設定，預設均為自動。","已儲存在本機，重啟瀏覽器後可繼續使用。","Key 僅可在本次瀏覽器工作階段使用，未儲存在本機；重啟瀏覽器後需重新輸入。"],
+    "ja":["言語","Grok の回答言語","SideLens の表示言語","自動では X の表示言語に従います。X の言語を取得できない場合はブラウザーの言語を使います。指定した言語が優先されます。","自動 · X の表示言語","Grok の回答言語と SideLens の表示言語は別々に設定でき、どちらも既定は自動です。","この端末に保存済みです。ブラウザー再起動後も使えます。","Key はこのブラウザーセッションのみで使用でき、端末には保存されていません。ブラウザー再起動後に再入力してください。"],
+    "ko":["언어","Grok 답변 언어","SideLens 인터페이스 언어","자동은 X의 인터페이스 언어를 따릅니다. X 언어를 확인할 수 없으면 브라우저 언어를 사용합니다. 직접 선택한 언어가 우선합니다.","자동 · X 인터페이스 언어","Grok 답변 언어와 SideLens 인터페이스 언어는 따로 설정하며, 둘 다 기본값은 자동입니다.","이 기기에 저장되었습니다. 브라우저를 다시 시작해도 사용할 수 있습니다.","Key는 현재 브라우저 세션에서만 사용할 수 있으며 기기에 저장되지 않았습니다. 브라우저를 다시 시작하면 다시 입력하세요."],
+    "es":["Idioma","Idioma de las respuestas de Grok","Idioma de la interfaz de SideLens","Automático sigue el idioma de la interfaz de X y usa el del navegador si X no está disponible. El idioma seleccionado tiene prioridad.","Automático · Idioma de la interfaz de X","Las respuestas de Grok y la interfaz de SideLens tienen ajustes de idioma independientes. Ambos son automáticos por defecto.","Guardada en este dispositivo. Sigue disponible al reiniciar el navegador.","La Key solo está disponible durante esta sesión y no se guarda en este dispositivo. Introdúcela de nuevo tras reiniciar el navegador."],
+    "fr":["Langue","Langue des réponses de Grok","Langue de l’interface SideLens","Automatique suit la langue de l’interface X et utilise celle du navigateur si X est indisponible. La langue choisie est prioritaire.","Automatique · Langue de l’interface X","Les réponses de Grok et l’interface SideLens ont des réglages de langue indépendants. Les deux sont automatiques par défaut.","Enregistrée sur cet appareil. Elle reste disponible après le redémarrage du navigateur.","La Key est disponible uniquement pendant cette session et n’est pas enregistrée sur cet appareil. Saisissez-la à nouveau après le redémarrage du navigateur."],
+    "de":["Sprache","Sprache der Grok-Antworten","Sprache der SideLens-Oberfläche","Automatisch folgt der Sprache der X-Oberfläche und nutzt die Browsersprache, wenn X nicht verfügbar ist. Eine ausgewählte Sprache hat Vorrang.","Automatisch · Sprache der X-Oberfläche","Grok-Antworten und die SideLens-Oberfläche haben unabhängige Spracheinstellungen. Beide sind standardmäßig automatisch.","Auf diesem Gerät gespeichert. Nach dem Browserneustart weiterhin verfügbar.","Der Key ist nur für diese Browsersitzung verfügbar und wird nicht auf diesem Gerät gespeichert. Nach einem Browserneustart erneut eingeben."],
+    "pt":["Idioma","Idioma das respostas do Grok","Idioma da interface do SideLens","Automático segue o idioma da interface do X e usa o idioma do navegador quando X não está disponível. O idioma selecionado tem prioridade.","Automático · Idioma da interface do X","As respostas do Grok e a interface do SideLens têm configurações de idioma independentes. Ambas são automáticas por padrão.","Salva neste dispositivo. Continua disponível após reiniciar o navegador.","A Key está disponível apenas nesta sessão e não foi salva neste dispositivo. Insira-a novamente após reiniciar o navegador."],
+    "ar":["اللغة","لغة إجابات Grok","لغة واجهة SideLens","يتبع الوضع التلقائي لغة واجهة X، ويستخدم لغة المتصفح عندما تكون لغة X غير متاحة. تكون الأولوية للغة المحددة.","تلقائي · لغة واجهة X","تُضبط لغة إجابات Grok ولغة واجهة SideLens بشكل مستقل. الوضع الافتراضي لكليهما تلقائي.","حُفظت على هذا الجهاز وتبقى متاحة بعد إعادة تشغيل المتصفح.","Key متاحة لجلسة المتصفح الحالية فقط ولم تُحفظ على هذا الجهاز. أدخلها مجدداً بعد إعادة تشغيل المتصفح."],
+    "ru":["Язык","Язык ответов Grok","Язык интерфейса SideLens","Авто следует языку интерфейса X и использует язык браузера, если язык X недоступен. Выбранный язык имеет приоритет.","Авто · Язык интерфейса X","Язык ответов Grok и язык интерфейса SideLens настраиваются отдельно. По умолчанию оба выбираются автоматически.","Сохранён на этом устройстве и доступен после перезапуска браузера.","Key доступна только в текущем сеансе и не сохранена на этом устройстве. Введите её снова после перезапуска браузера."],
+    "hi":["भाषा","Grok के जवाबों की भाषा","SideLens इंटरफ़ेस की भाषा","स्वतः X इंटरफ़ेस की भाषा का अनुसरण करता है। X की भाषा उपलब्ध न हो तो ब्राउज़र की भाषा इस्तेमाल होती है। चुनी हुई भाषा को प्राथमिकता मिलती है।","स्वतः · X इंटरफ़ेस की भाषा","Grok के जवाब और SideLens इंटरफ़ेस की भाषाएँ अलग सेट होती हैं। दोनों का डिफ़ॉल्ट स्वतः है।","इस डिवाइस पर सहेजी गई है। ब्राउज़र फिर शुरू करने पर भी उपलब्ध रहेगी।","Key केवल वर्तमान ब्राउज़र सत्र में उपलब्ध है और इस डिवाइस पर सहेजी नहीं गई है। ब्राउज़र फिर शुरू करने पर इसे दोबारा दर्ज करें।"]
   });
   section(["options.author"], {
     "en": ["By"],
@@ -417,18 +417,18 @@
     "hi":["Grok API Key फिर दर्ज करें। Key याद रखने का विकल्प चुनने पर इसे अपने आप एन्क्रिप्ट करके सहेजा जाएगा।","Grok API Key अपडेट नहीं हो सकी। फिर कोशिश करें।"]
   });
   section(["common.history","history.title","history.subtitle","history.recording","history.recordingHelp","history.settingsHint","history.openHistory","history.off","history.saved","history.search","history.searchLabel","history.clear","history.clearConfirm","history.clearHelp","history.confirmClear","history.cancel","history.refresh","history.loading","history.empty","history.emptyHelp","history.noMatches","history.noAnalysis","history.showAnswer","history.hideAnswer","history.explanation","history.factCheck","history.open","history.delete","history.deleted","history.cleared","history.error","history.deleteError","history.clearError","history.recordingError","history.count","history.lastViewed","history.invalidDate","history.comments","history.copy","history.copied","history.copyError","history.tokens","history.model","history.previousAnswer"], {
-    "en": ["Browsing history","Browsing history","Posts viewed in the last 24 hours, saved on this device with existing answers. Available after browser restart; repeated posts are merged. Viewing history makes no API requests.","Save browsing history","Records visible posts while SuperX is enabled, even without an API Key. Turning this off stops new records and keeps existing history until it expires.","Up to 1,000 posts and approximately 6 MB, retained for 24 hours after the latest view. History is separate from the analysis cache.","Open browsing history","History recording is off","History setting saved","Search posts, authors and answers","Search browsing history","Clear history","Clear all browsing history?","Saved posts and answers on this device will be deleted. This cannot be undone.","Clear all","Cancel","Refresh","Loading history…","No browsing history yet","Posts you view on X while SuperX and history recording are enabled will appear here.","No matching results","No saved answer","Show saved answer","Hide answer","Explanation","Fact check","Open original post ↗","Delete","Post deleted","History cleared","Could not load browsing history. Try again.","Could not delete this post. Try again.","Could not clear history. Try again.","Could not change history recording. Try again.","{count} posts","Last viewed","Time unavailable","Suggested comments","Copy","Copied","Copy failed","{count} tokens","Model: {model}","This saved result may be incomplete."],
-    "zh-CN": ["浏览历史","浏览历史","最近 24 小时看过的帖子与已有回答保存在本机，重启后仍可查看，重复帖子合并。查看历史不会发送 API 请求。","保存浏览历史","SuperX 启用时记录可见帖子，无需 API Key。关闭后停止新增记录，已有历史保留至到期。","最多 1,000 条、约 6 MB，按最后浏览时间保留 24 小时。历史独立于分析缓存。","打开浏览历史","历史记录已关闭","历史设置已保存","搜索帖子、作者和回答","搜索浏览历史","清空历史","清空全部浏览历史？","将删除本机已保存的帖子和回答，无法撤销。","全部清空","取消","刷新","正在加载历史…","暂无浏览历史","启用 SuperX 和历史记录后，在 X 上看过的帖子会显示在这里。","没有匹配结果","尚无保存的回答","查看已保存回答","收起回答","解释","事实核查","打开原帖 ↗","删除","帖子已删除","历史已清空","无法加载浏览历史，请重试。","无法删除这条帖子，请重试。","无法清空历史，请重试。","无法更新历史记录开关，请重试。","{count} 条帖子","上次浏览","时间未知","推荐评论","复制","已复制","复制失败","{count} tokens","模型：{model}","这条已保存的结果可能不完整。"],
-    "zh-TW": ["瀏覽歷史","瀏覽歷史","最近 24 小時看過的貼文與既有回答儲存在本機，重新啟動後仍可查看，重複貼文合併。查看歷史不會傳送 API 請求。","儲存瀏覽歷史","SuperX 啟用時記錄可見貼文，無需 API Key。關閉後停止新增記錄，既有歷史保留至到期。","最多 1,000 則、約 6 MB，依最後瀏覽時間保留 24 小時。歷史獨立於分析快取。","開啟瀏覽歷史","歷史記錄已關閉","歷史設定已儲存","搜尋貼文、作者和回答","搜尋瀏覽歷史","清空歷史","清空全部瀏覽歷史？","將刪除本機已儲存的貼文和回答，無法復原。","全部清空","取消","重新整理","正在載入歷史…","暫無瀏覽歷史","啟用 SuperX 和歷史記錄後，在 X 上看過的貼文會顯示在這裡。","沒有符合的結果","尚無儲存的回答","查看已儲存回答","收合回答","解釋","事實查證","開啟原文 ↗","刪除","貼文已刪除","歷史已清空","無法載入瀏覽歷史，請重試。","無法刪除這則貼文，請重試。","無法清空歷史，請重試。","無法更新歷史記錄開關，請重試。","{count} 則貼文","上次瀏覽","時間未知","推薦留言","複製","已複製","複製失敗","{count} tokens","模型：{model}","這筆已儲存的結果可能不完整。"],
-    "ja": ["閲覧履歴","閲覧履歴","過去 24 時間に閲覧した投稿と既存の回答をこの端末に保存します。ブラウザーの再起動後も確認でき、同じ投稿は統合されます。履歴の表示で API リクエストは送信されません。","閲覧履歴を保存","SuperX が有効な間、表示された投稿を API Key なしでも記録します。オフにすると新規記録を停止し、既存の履歴は期限まで保持します。","最大 1,000 件、約 6 MB。最後の閲覧から 24 時間保持します。分析キャッシュとは別に保存します。","閲覧履歴を開く","履歴の記録はオフです","履歴の設定を保存しました","投稿・作者・回答を検索","閲覧履歴を検索","履歴を消去","閲覧履歴をすべて消去しますか？","この端末に保存された投稿と回答を削除します。この操作は元に戻せません。","すべて消去","キャンセル","更新","履歴を読み込み中…","閲覧履歴はまだありません","SuperX と履歴の記録が有効な間に X で閲覧した投稿がここに表示されます。","一致する結果はありません","保存された回答はありません","保存された回答を表示","回答を隠す","解説","事実確認","元の投稿を開く ↗","削除","投稿を削除しました","履歴を消去しました","閲覧履歴を読み込めませんでした。再試行してください。","この投稿を削除できませんでした。再試行してください。","履歴を消去できませんでした。再試行してください。","履歴の記録設定を変更できませんでした。再試行してください。","{count} 件の投稿","最終閲覧","日時不明","コメント候補","コピー","コピー済み","コピー失敗","{count} tokens","モデル：{model}","保存された結果は不完全な場合があります。"],
-    "ko": ["열람 기록","열람 기록","최근 24시간 동안 본 게시물과 기존 답변을 이 기기에 저장합니다. 브라우저를 다시 시작해도 볼 수 있으며 중복 게시물은 합쳐집니다. 기록을 볼 때 API 요청을 보내지 않습니다.","열람 기록 저장","SuperX가 켜져 있으면 API Key 없이도 보이는 게시물을 기록합니다. 끄면 새 기록을 중단하며 기존 기록은 만료될 때까지 유지합니다.","최대 1,000개, 약 6 MB. 마지막으로 본 시점부터 24시간 보관하며 분석 캐시와는 별개입니다.","열람 기록 열기","기록 저장이 꺼져 있습니다","기록 설정이 저장되었습니다","게시물, 작성자 및 답변 검색","열람 기록 검색","기록 지우기","열람 기록을 모두 지울까요?","이 기기에 저장된 게시물과 답변을 삭제합니다. 되돌릴 수 없습니다.","모두 지우기","취소","새로고침","기록 불러오는 중…","아직 열람 기록이 없습니다","SuperX와 기록 저장이 켜져 있을 때 X에서 본 게시물이 여기에 표시됩니다.","일치하는 결과가 없습니다","저장된 답변 없음","저장된 답변 보기","답변 숨기기","설명","사실 확인","원본 게시물 열기 ↗","삭제","게시물 삭제됨","기록이 지워졌습니다","열람 기록을 불러올 수 없습니다. 다시 시도하세요.","이 게시물을 삭제할 수 없습니다. 다시 시도하세요.","기록을 지울 수 없습니다. 다시 시도하세요.","기록 저장 설정을 변경할 수 없습니다. 다시 시도하세요.","게시물 {count}개","마지막 열람","시간 알 수 없음","추천 댓글","복사","복사됨","복사 실패","{count} tokens","모델: {model}","저장된 결과가 불완전할 수 있습니다."],
-    "es": ["Historial de lectura","Historial de lectura","Publicaciones vistas en las últimas 24 horas y respuestas existentes, guardadas en este dispositivo. Disponible tras reiniciar el navegador; las publicaciones repetidas se combinan. Consultar el historial no envía solicitudes API.","Guardar historial de lectura","Registra publicaciones visibles mientras SuperX está activado, incluso sin API Key. Desactivarlo detiene los nuevos registros y conserva el historial hasta que caduque.","Hasta 1.000 publicaciones y aproximadamente 6 MB, durante 24 horas desde la última visita. El historial es independiente de la caché de análisis.","Abrir historial de lectura","El registro del historial está desactivado","Ajuste del historial guardado","Buscar publicaciones, autores y respuestas","Buscar en el historial","Borrar historial","¿Borrar todo el historial de lectura?","Se eliminarán las publicaciones y respuestas guardadas en este dispositivo. No se puede deshacer.","Borrar todo","Cancelar","Actualizar","Cargando historial…","Aún no hay historial","Aquí aparecerán las publicaciones que veas en X mientras SuperX y el registro del historial estén activados.","No hay resultados coincidentes","Sin respuesta guardada","Mostrar respuesta guardada","Ocultar respuesta","Explicación","Verificación de hechos","Abrir publicación original ↗","Eliminar","Publicación eliminada","Historial borrado","No se pudo cargar el historial. Inténtalo de nuevo.","No se pudo eliminar esta publicación. Inténtalo de nuevo.","No se pudo borrar el historial. Inténtalo de nuevo.","No se pudo cambiar el registro del historial. Inténtalo de nuevo.","{count} publicaciones","Última visita","Hora no disponible","Comentarios sugeridos","Copiar","Copiado","Error al copiar","{count} tokens","Modelo: {model}","Este resultado guardado puede estar incompleto."],
-    "fr": ["Historique de lecture","Historique de lecture","Publications vues au cours des dernières 24 heures et réponses existantes, enregistrées sur cet appareil. Disponible après le redémarrage du navigateur ; les doublons sont regroupés. Consulter l’historique n’envoie aucune requête API.","Enregistrer l’historique de lecture","Enregistre les publications visibles lorsque SuperX est activé, même sans API Key. La désactivation arrête les nouveaux enregistrements et conserve l’historique jusqu’à son expiration.","Jusqu’à 1 000 publications et environ 6 Mo, conservées 24 heures après la dernière visite. L’historique est indépendant du cache d’analyse.","Ouvrir l’historique de lecture","L’enregistrement de l’historique est désactivé","Paramètre de l’historique enregistré","Rechercher des publications, auteurs et réponses","Rechercher dans l’historique","Effacer l’historique","Effacer tout l’historique de lecture ?","Les publications et réponses enregistrées sur cet appareil seront supprimées. Cette action est irréversible.","Tout effacer","Annuler","Actualiser","Chargement de l’historique…","Aucun historique pour le moment","Les publications consultées sur X lorsque SuperX et l’enregistrement de l’historique sont activés apparaîtront ici.","Aucun résultat correspondant","Aucune réponse enregistrée","Afficher la réponse enregistrée","Masquer la réponse","Explication","Vérification des faits","Ouvrir la publication originale ↗","Supprimer","Publication supprimée","Historique effacé","Impossible de charger l’historique. Réessayez.","Impossible de supprimer cette publication. Réessayez.","Impossible d’effacer l’historique. Réessayez.","Impossible de modifier l’enregistrement de l’historique. Réessayez.","{count} publications","Dernière consultation","Date indisponible","Commentaires suggérés","Copier","Copié","Échec de la copie","{count} tokens","Modèle : {model}","Ce résultat enregistré peut être incomplet."],
-    "de": ["Leseverlauf","Leseverlauf","In den letzten 24 Stunden angesehene Beiträge und vorhandene Antworten werden auf diesem Gerät gespeichert. Nach einem Browserneustart verfügbar; doppelte Beiträge werden zusammengeführt. Das Anzeigen des Verlaufs sendet keine API-Anfragen.","Leseverlauf speichern","Erfasst sichtbare Beiträge, solange SuperX aktiviert ist, auch ohne API Key. Beim Ausschalten werden keine neuen Einträge erstellt; vorhandene bleiben bis zum Ablauf erhalten.","Bis zu 1.000 Beiträge und etwa 6 MB, gespeichert für 24 Stunden nach dem letzten Ansehen. Der Verlauf ist vom Analyse-Cache getrennt.","Leseverlauf öffnen","Verlaufserfassung ist ausgeschaltet","Verlaufseinstellung gespeichert","Beiträge, Autoren und Antworten suchen","Leseverlauf durchsuchen","Verlauf löschen","Gesamten Leseverlauf löschen?","Gespeicherte Beiträge und Antworten auf diesem Gerät werden gelöscht. Dies kann nicht rückgängig gemacht werden.","Alles löschen","Abbrechen","Aktualisieren","Verlauf wird geladen…","Noch kein Leseverlauf","Hier erscheinen Beiträge, die du auf X ansiehst, während SuperX und die Verlaufserfassung aktiviert sind.","Keine passenden Ergebnisse","Keine gespeicherte Antwort","Gespeicherte Antwort anzeigen","Antwort ausblenden","Erklärung","Faktenprüfung","Originalbeitrag öffnen ↗","Löschen","Beitrag gelöscht","Verlauf gelöscht","Der Leseverlauf konnte nicht geladen werden. Versuche es erneut.","Dieser Beitrag konnte nicht gelöscht werden. Versuche es erneut.","Der Verlauf konnte nicht gelöscht werden. Versuche es erneut.","Die Verlaufserfassung konnte nicht geändert werden. Versuche es erneut.","{count} Beiträge","Zuletzt angesehen","Zeit unbekannt","Vorgeschlagene Kommentare","Kopieren","Kopiert","Kopieren fehlgeschlagen","{count} tokens","Modell: {model}","Dieses gespeicherte Ergebnis kann unvollständig sein."],
-    "pt": ["Histórico de leitura","Histórico de leitura","Publicações vistas nas últimas 24 horas e respostas existentes, salvas neste dispositivo. Disponível após reiniciar o navegador; publicações repetidas são mescladas. Consultar o histórico não envia solicitações API.","Salvar histórico de leitura","Registra publicações visíveis enquanto o SuperX está ativado, mesmo sem API Key. Desativar interrompe novos registros e mantém o histórico até expirar.","Até 1.000 publicações e aproximadamente 6 MB, por 24 horas após a última visualização. O histórico é separado do cache de análise.","Abrir histórico de leitura","O registro do histórico está desativado","Configuração do histórico salva","Buscar publicações, autores e respostas","Buscar no histórico","Limpar histórico","Limpar todo o histórico de leitura?","Publicações e respostas salvas neste dispositivo serão excluídas. Não é possível desfazer.","Limpar tudo","Cancelar","Atualizar","Carregando histórico…","Ainda não há histórico","As publicações vistas no X enquanto o SuperX e o registro do histórico estiverem ativados aparecerão aqui.","Nenhum resultado correspondente","Sem resposta salva","Mostrar resposta salva","Ocultar resposta","Explicação","Verificação de fatos","Abrir publicação original ↗","Excluir","Publicação excluída","Histórico limpo","Não foi possível carregar o histórico. Tente novamente.","Não foi possível excluir esta publicação. Tente novamente.","Não foi possível limpar o histórico. Tente novamente.","Não foi possível alterar o registro do histórico. Tente novamente.","{count} publicações","Última visualização","Horário indisponível","Comentários sugeridos","Copiar","Copiado","Falha ao copiar","{count} tokens","Modelo: {model}","Este resultado salvo pode estar incompleto."],
-    "ar": ["سجل القراءة","سجل القراءة","تُحفظ المنشورات التي شاهدتها خلال آخر 24 ساعة والإجابات الموجودة على هذا الجهاز. يتوفر السجل بعد إعادة تشغيل المتصفح وتُدمج المنشورات المتكررة. عرض السجل لا يرسل طلبات API.","حفظ سجل القراءة","يسجل المنشورات الظاهرة عندما تكون SuperX مفعّلة، حتى دون API Key. إيقافه يمنع السجلات الجديدة ويحتفظ بالسجل الحالي حتى انتهاء مدته.","حتى 1,000 منشور وحوالي 6 MB، لمدة 24 ساعة بعد آخر مشاهدة. السجل منفصل عن ذاكرة التحليل المؤقتة.","فتح سجل القراءة","تسجيل السجل متوقف","تم حفظ إعداد السجل","البحث في المنشورات والمؤلفين والإجابات","البحث في سجل القراءة","مسح السجل","هل تريد مسح سجل القراءة بالكامل؟","ستُحذف المنشورات والإجابات المحفوظة على هذا الجهاز. لا يمكن التراجع عن ذلك.","مسح الكل","إلغاء","تحديث","جارٍ تحميل السجل…","لا يوجد سجل قراءة بعد","ستظهر هنا المنشورات التي تشاهدها على X عندما تكون SuperX وتسجيل السجل مفعّلين.","لا توجد نتائج مطابقة","لا توجد إجابة محفوظة","عرض الإجابة المحفوظة","إخفاء الإجابة","الشرح","التحقق من الحقائق","فتح المنشور الأصلي ↗","حذف","تم حذف المنشور","تم مسح السجل","تعذّر تحميل سجل القراءة. حاول مجدداً.","تعذّر حذف هذا المنشور. حاول مجدداً.","تعذّر مسح السجل. حاول مجدداً.","تعذّر تغيير تسجيل السجل. حاول مجدداً.","{count} منشور","آخر مشاهدة","الوقت غير متاح","التعليقات المقترحة","نسخ","تم النسخ","فشل النسخ","{count} رموز","النموذج: {model}","قد تكون هذه النتيجة المحفوظة غير مكتملة."],
-    "ru": ["История чтения","История чтения","Публикации, просмотренные за последние 24 часа, и готовые ответы сохраняются на этом устройстве. Доступны после перезапуска браузера; повторные публикации объединяются. Просмотр истории не отправляет запросы API.","Сохранять историю чтения","Записывает видимые публикации, когда SuperX включён, даже без API Key. Выключение прекращает новые записи и сохраняет имеющуюся историю до истечения срока.","До 1 000 публикаций и около 6 МБ, на 24 часа с последнего просмотра. История хранится отдельно от кэша анализа.","Открыть историю чтения","Запись истории выключена","Настройка истории сохранена","Поиск публикаций, авторов и ответов","Поиск в истории чтения","Очистить историю","Очистить всю историю чтения?","Сохранённые публикации и ответы на этом устройстве будут удалены. Это действие нельзя отменить.","Очистить всё","Отмена","Обновить","Загрузка истории…","Истории чтения пока нет","Здесь появятся публикации, просмотренные в X, когда SuperX и запись истории включены.","Совпадений не найдено","Нет сохранённого ответа","Показать сохранённый ответ","Скрыть ответ","Объяснение","Проверка фактов","Открыть исходную публикацию ↗","Удалить","Публикация удалена","История очищена","Не удалось загрузить историю чтения. Попробуйте ещё раз.","Не удалось удалить эту публикацию. Попробуйте ещё раз.","Не удалось очистить историю. Попробуйте ещё раз.","Не удалось изменить запись истории. Попробуйте ещё раз.","{count} публикаций","Последний просмотр","Время неизвестно","Предложенные комментарии","Копировать","Скопировано","Ошибка копирования","{count} токенов","Модель: {model}","Этот сохранённый результат может быть неполным."],
-    "hi": ["पढ़ने का इतिहास","पढ़ने का इतिहास","पिछले 24 घंटों में देखी गई पोस्ट और मौजूदा उत्तर इस डिवाइस पर सहेजे जाते हैं। ब्राउज़र फिर शुरू करने के बाद भी उपलब्ध हैं; दोहराई गई पोस्ट एक साथ रखी जाती हैं। इतिहास देखने पर API अनुरोध नहीं भेजे जाते।","पढ़ने का इतिहास सहेजें","SuperX चालू होने पर दिख रही पोस्ट दर्ज करता है, API Key के बिना भी। बंद करने पर नई प्रविष्टियाँ रुकती हैं और मौजूदा इतिहास अवधि समाप्त होने तक रहता है।","अधिकतम 1,000 पोस्ट और लगभग 6 MB, अंतिम बार देखने के बाद 24 घंटे तक। इतिहास विश्लेषण कैश से अलग है।","पढ़ने का इतिहास खोलें","इतिहास दर्ज करना बंद है","इतिहास की सेटिंग सहेजी गई","पोस्ट, लेखक और उत्तर खोजें","पढ़ने का इतिहास खोजें","इतिहास साफ़ करें","पूरा पढ़ने का इतिहास साफ़ करें?","इस डिवाइस पर सहेजी गई पोस्ट और उत्तर हटा दिए जाएँगे। यह वापस नहीं हो सकता।","सभी साफ़ करें","रद्द करें","रीफ़्रेश करें","इतिहास लोड हो रहा है…","अभी पढ़ने का इतिहास नहीं है","SuperX और इतिहास दर्ज करना चालू होने पर X में देखी गई पोस्ट यहाँ दिखाई देंगी।","कोई मिलता-जुलता परिणाम नहीं","कोई सहेजा गया उत्तर नहीं","सहेजा गया उत्तर दिखाएँ","उत्तर छिपाएँ","व्याख्या","तथ्य जाँच","मूल पोस्ट खोलें ↗","हटाएँ","पोस्ट हटाई गई","इतिहास साफ़ किया गया","पढ़ने का इतिहास लोड नहीं हो सका। फिर कोशिश करें।","यह पोस्ट हटाई नहीं जा सकी। फिर कोशिश करें।","इतिहास साफ़ नहीं हो सका। फिर कोशिश करें।","इतिहास दर्ज करने की सेटिंग बदल नहीं सकी। फिर कोशिश करें।","{count} पोस्ट","अंतिम बार देखा","समय उपलब्ध नहीं","सुझाई गई टिप्पणियाँ","कॉपी करें","कॉपी किया गया","कॉपी विफल","{count} टोकन","मॉडल: {model}","यह सहेजा गया परिणाम अधूरा हो सकता है।"]
+    "en": ["Browsing history","Browsing history","Posts viewed in the last 24 hours, saved on this device with existing answers. Available after browser restart; repeated posts are merged. Viewing history makes no API requests.","Save browsing history","Records visible posts while SideLens is enabled, even without an API Key. Turning this off stops new records and keeps existing history until it expires.","Up to 1,000 posts and approximately 6 MB, retained for 24 hours after the latest view. History is separate from the analysis cache.","Open browsing history","History recording is off","History setting saved","Search posts, authors and answers","Search browsing history","Clear history","Clear all browsing history?","Saved posts and answers on this device will be deleted. This cannot be undone.","Clear all","Cancel","Refresh","Loading history…","No browsing history yet","Posts you view on X while SideLens and history recording are enabled will appear here.","No matching results","No saved answer","Show saved answer","Hide answer","Explanation","Fact check","Open original post ↗","Delete","Post deleted","History cleared","Could not load browsing history. Try again.","Could not delete this post. Try again.","Could not clear history. Try again.","Could not change history recording. Try again.","{count} posts","Last viewed","Time unavailable","Suggested comments","Copy","Copied","Copy failed","{count} tokens","Model: {model}","This saved result may be incomplete."],
+    "zh-CN": ["浏览历史","浏览历史","最近 24 小时看过的帖子与已有回答保存在本机，重启后仍可查看，重复帖子合并。查看历史不会发送 API 请求。","保存浏览历史","SideLens 启用时记录可见帖子，无需 API Key。关闭后停止新增记录，已有历史保留至到期。","最多 1,000 条、约 6 MB，按最后浏览时间保留 24 小时。历史独立于分析缓存。","打开浏览历史","历史记录已关闭","历史设置已保存","搜索帖子、作者和回答","搜索浏览历史","清空历史","清空全部浏览历史？","将删除本机已保存的帖子和回答，无法撤销。","全部清空","取消","刷新","正在加载历史…","暂无浏览历史","启用 SideLens 和历史记录后，在 X 上看过的帖子会显示在这里。","没有匹配结果","尚无保存的回答","查看已保存回答","收起回答","解释","事实核查","打开原帖 ↗","删除","帖子已删除","历史已清空","无法加载浏览历史，请重试。","无法删除这条帖子，请重试。","无法清空历史，请重试。","无法更新历史记录开关，请重试。","{count} 条帖子","上次浏览","时间未知","推荐评论","复制","已复制","复制失败","{count} tokens","模型：{model}","这条已保存的结果可能不完整。"],
+    "zh-TW": ["瀏覽歷史","瀏覽歷史","最近 24 小時看過的貼文與既有回答儲存在本機，重新啟動後仍可查看，重複貼文合併。查看歷史不會傳送 API 請求。","儲存瀏覽歷史","SideLens 啟用時記錄可見貼文，無需 API Key。關閉後停止新增記錄，既有歷史保留至到期。","最多 1,000 則、約 6 MB，依最後瀏覽時間保留 24 小時。歷史獨立於分析快取。","開啟瀏覽歷史","歷史記錄已關閉","歷史設定已儲存","搜尋貼文、作者和回答","搜尋瀏覽歷史","清空歷史","清空全部瀏覽歷史？","將刪除本機已儲存的貼文和回答，無法復原。","全部清空","取消","重新整理","正在載入歷史…","暫無瀏覽歷史","啟用 SideLens 和歷史記錄後，在 X 上看過的貼文會顯示在這裡。","沒有符合的結果","尚無儲存的回答","查看已儲存回答","收合回答","解釋","事實查證","開啟原文 ↗","刪除","貼文已刪除","歷史已清空","無法載入瀏覽歷史，請重試。","無法刪除這則貼文，請重試。","無法清空歷史，請重試。","無法更新歷史記錄開關，請重試。","{count} 則貼文","上次瀏覽","時間未知","推薦留言","複製","已複製","複製失敗","{count} tokens","模型：{model}","這筆已儲存的結果可能不完整。"],
+    "ja": ["閲覧履歴","閲覧履歴","過去 24 時間に閲覧した投稿と既存の回答をこの端末に保存します。ブラウザーの再起動後も確認でき、同じ投稿は統合されます。履歴の表示で API リクエストは送信されません。","閲覧履歴を保存","SideLens が有効な間、表示された投稿を API Key なしでも記録します。オフにすると新規記録を停止し、既存の履歴は期限まで保持します。","最大 1,000 件、約 6 MB。最後の閲覧から 24 時間保持します。分析キャッシュとは別に保存します。","閲覧履歴を開く","履歴の記録はオフです","履歴の設定を保存しました","投稿・作者・回答を検索","閲覧履歴を検索","履歴を消去","閲覧履歴をすべて消去しますか？","この端末に保存された投稿と回答を削除します。この操作は元に戻せません。","すべて消去","キャンセル","更新","履歴を読み込み中…","閲覧履歴はまだありません","SideLens と履歴の記録が有効な間に X で閲覧した投稿がここに表示されます。","一致する結果はありません","保存された回答はありません","保存された回答を表示","回答を隠す","解説","事実確認","元の投稿を開く ↗","削除","投稿を削除しました","履歴を消去しました","閲覧履歴を読み込めませんでした。再試行してください。","この投稿を削除できませんでした。再試行してください。","履歴を消去できませんでした。再試行してください。","履歴の記録設定を変更できませんでした。再試行してください。","{count} 件の投稿","最終閲覧","日時不明","コメント候補","コピー","コピー済み","コピー失敗","{count} tokens","モデル：{model}","保存された結果は不完全な場合があります。"],
+    "ko": ["열람 기록","열람 기록","최근 24시간 동안 본 게시물과 기존 답변을 이 기기에 저장합니다. 브라우저를 다시 시작해도 볼 수 있으며 중복 게시물은 합쳐집니다. 기록을 볼 때 API 요청을 보내지 않습니다.","열람 기록 저장","SideLens가 켜져 있으면 API Key 없이도 보이는 게시물을 기록합니다. 끄면 새 기록을 중단하며 기존 기록은 만료될 때까지 유지합니다.","최대 1,000개, 약 6 MB. 마지막으로 본 시점부터 24시간 보관하며 분석 캐시와는 별개입니다.","열람 기록 열기","기록 저장이 꺼져 있습니다","기록 설정이 저장되었습니다","게시물, 작성자 및 답변 검색","열람 기록 검색","기록 지우기","열람 기록을 모두 지울까요?","이 기기에 저장된 게시물과 답변을 삭제합니다. 되돌릴 수 없습니다.","모두 지우기","취소","새로고침","기록 불러오는 중…","아직 열람 기록이 없습니다","SideLens와 기록 저장이 켜져 있을 때 X에서 본 게시물이 여기에 표시됩니다.","일치하는 결과가 없습니다","저장된 답변 없음","저장된 답변 보기","답변 숨기기","설명","사실 확인","원본 게시물 열기 ↗","삭제","게시물 삭제됨","기록이 지워졌습니다","열람 기록을 불러올 수 없습니다. 다시 시도하세요.","이 게시물을 삭제할 수 없습니다. 다시 시도하세요.","기록을 지울 수 없습니다. 다시 시도하세요.","기록 저장 설정을 변경할 수 없습니다. 다시 시도하세요.","게시물 {count}개","마지막 열람","시간 알 수 없음","추천 댓글","복사","복사됨","복사 실패","{count} tokens","모델: {model}","저장된 결과가 불완전할 수 있습니다."],
+    "es": ["Historial de lectura","Historial de lectura","Publicaciones vistas en las últimas 24 horas y respuestas existentes, guardadas en este dispositivo. Disponible tras reiniciar el navegador; las publicaciones repetidas se combinan. Consultar el historial no envía solicitudes API.","Guardar historial de lectura","Registra publicaciones visibles mientras SideLens está activado, incluso sin API Key. Desactivarlo detiene los nuevos registros y conserva el historial hasta que caduque.","Hasta 1.000 publicaciones y aproximadamente 6 MB, durante 24 horas desde la última visita. El historial es independiente de la caché de análisis.","Abrir historial de lectura","El registro del historial está desactivado","Ajuste del historial guardado","Buscar publicaciones, autores y respuestas","Buscar en el historial","Borrar historial","¿Borrar todo el historial de lectura?","Se eliminarán las publicaciones y respuestas guardadas en este dispositivo. No se puede deshacer.","Borrar todo","Cancelar","Actualizar","Cargando historial…","Aún no hay historial","Aquí aparecerán las publicaciones que veas en X mientras SideLens y el registro del historial estén activados.","No hay resultados coincidentes","Sin respuesta guardada","Mostrar respuesta guardada","Ocultar respuesta","Explicación","Verificación de hechos","Abrir publicación original ↗","Eliminar","Publicación eliminada","Historial borrado","No se pudo cargar el historial. Inténtalo de nuevo.","No se pudo eliminar esta publicación. Inténtalo de nuevo.","No se pudo borrar el historial. Inténtalo de nuevo.","No se pudo cambiar el registro del historial. Inténtalo de nuevo.","{count} publicaciones","Última visita","Hora no disponible","Comentarios sugeridos","Copiar","Copiado","Error al copiar","{count} tokens","Modelo: {model}","Este resultado guardado puede estar incompleto."],
+    "fr": ["Historique de lecture","Historique de lecture","Publications vues au cours des dernières 24 heures et réponses existantes, enregistrées sur cet appareil. Disponible après le redémarrage du navigateur ; les doublons sont regroupés. Consulter l’historique n’envoie aucune requête API.","Enregistrer l’historique de lecture","Enregistre les publications visibles lorsque SideLens est activé, même sans API Key. La désactivation arrête les nouveaux enregistrements et conserve l’historique jusqu’à son expiration.","Jusqu’à 1 000 publications et environ 6 Mo, conservées 24 heures après la dernière visite. L’historique est indépendant du cache d’analyse.","Ouvrir l’historique de lecture","L’enregistrement de l’historique est désactivé","Paramètre de l’historique enregistré","Rechercher des publications, auteurs et réponses","Rechercher dans l’historique","Effacer l’historique","Effacer tout l’historique de lecture ?","Les publications et réponses enregistrées sur cet appareil seront supprimées. Cette action est irréversible.","Tout effacer","Annuler","Actualiser","Chargement de l’historique…","Aucun historique pour le moment","Les publications consultées sur X lorsque SideLens et l’enregistrement de l’historique sont activés apparaîtront ici.","Aucun résultat correspondant","Aucune réponse enregistrée","Afficher la réponse enregistrée","Masquer la réponse","Explication","Vérification des faits","Ouvrir la publication originale ↗","Supprimer","Publication supprimée","Historique effacé","Impossible de charger l’historique. Réessayez.","Impossible de supprimer cette publication. Réessayez.","Impossible d’effacer l’historique. Réessayez.","Impossible de modifier l’enregistrement de l’historique. Réessayez.","{count} publications","Dernière consultation","Date indisponible","Commentaires suggérés","Copier","Copié","Échec de la copie","{count} tokens","Modèle : {model}","Ce résultat enregistré peut être incomplet."],
+    "de": ["Leseverlauf","Leseverlauf","In den letzten 24 Stunden angesehene Beiträge und vorhandene Antworten werden auf diesem Gerät gespeichert. Nach einem Browserneustart verfügbar; doppelte Beiträge werden zusammengeführt. Das Anzeigen des Verlaufs sendet keine API-Anfragen.","Leseverlauf speichern","Erfasst sichtbare Beiträge, solange SideLens aktiviert ist, auch ohne API Key. Beim Ausschalten werden keine neuen Einträge erstellt; vorhandene bleiben bis zum Ablauf erhalten.","Bis zu 1.000 Beiträge und etwa 6 MB, gespeichert für 24 Stunden nach dem letzten Ansehen. Der Verlauf ist vom Analyse-Cache getrennt.","Leseverlauf öffnen","Verlaufserfassung ist ausgeschaltet","Verlaufseinstellung gespeichert","Beiträge, Autoren und Antworten suchen","Leseverlauf durchsuchen","Verlauf löschen","Gesamten Leseverlauf löschen?","Gespeicherte Beiträge und Antworten auf diesem Gerät werden gelöscht. Dies kann nicht rückgängig gemacht werden.","Alles löschen","Abbrechen","Aktualisieren","Verlauf wird geladen…","Noch kein Leseverlauf","Hier erscheinen Beiträge, die du auf X ansiehst, während SideLens und die Verlaufserfassung aktiviert sind.","Keine passenden Ergebnisse","Keine gespeicherte Antwort","Gespeicherte Antwort anzeigen","Antwort ausblenden","Erklärung","Faktenprüfung","Originalbeitrag öffnen ↗","Löschen","Beitrag gelöscht","Verlauf gelöscht","Der Leseverlauf konnte nicht geladen werden. Versuche es erneut.","Dieser Beitrag konnte nicht gelöscht werden. Versuche es erneut.","Der Verlauf konnte nicht gelöscht werden. Versuche es erneut.","Die Verlaufserfassung konnte nicht geändert werden. Versuche es erneut.","{count} Beiträge","Zuletzt angesehen","Zeit unbekannt","Vorgeschlagene Kommentare","Kopieren","Kopiert","Kopieren fehlgeschlagen","{count} tokens","Modell: {model}","Dieses gespeicherte Ergebnis kann unvollständig sein."],
+    "pt": ["Histórico de leitura","Histórico de leitura","Publicações vistas nas últimas 24 horas e respostas existentes, salvas neste dispositivo. Disponível após reiniciar o navegador; publicações repetidas são mescladas. Consultar o histórico não envia solicitações API.","Salvar histórico de leitura","Registra publicações visíveis enquanto o SideLens está ativado, mesmo sem API Key. Desativar interrompe novos registros e mantém o histórico até expirar.","Até 1.000 publicações e aproximadamente 6 MB, por 24 horas após a última visualização. O histórico é separado do cache de análise.","Abrir histórico de leitura","O registro do histórico está desativado","Configuração do histórico salva","Buscar publicações, autores e respostas","Buscar no histórico","Limpar histórico","Limpar todo o histórico de leitura?","Publicações e respostas salvas neste dispositivo serão excluídas. Não é possível desfazer.","Limpar tudo","Cancelar","Atualizar","Carregando histórico…","Ainda não há histórico","As publicações vistas no X enquanto o SideLens e o registro do histórico estiverem ativados aparecerão aqui.","Nenhum resultado correspondente","Sem resposta salva","Mostrar resposta salva","Ocultar resposta","Explicação","Verificação de fatos","Abrir publicação original ↗","Excluir","Publicação excluída","Histórico limpo","Não foi possível carregar o histórico. Tente novamente.","Não foi possível excluir esta publicação. Tente novamente.","Não foi possível limpar o histórico. Tente novamente.","Não foi possível alterar o registro do histórico. Tente novamente.","{count} publicações","Última visualização","Horário indisponível","Comentários sugeridos","Copiar","Copiado","Falha ao copiar","{count} tokens","Modelo: {model}","Este resultado salvo pode estar incompleto."],
+    "ar": ["سجل القراءة","سجل القراءة","تُحفظ المنشورات التي شاهدتها خلال آخر 24 ساعة والإجابات الموجودة على هذا الجهاز. يتوفر السجل بعد إعادة تشغيل المتصفح وتُدمج المنشورات المتكررة. عرض السجل لا يرسل طلبات API.","حفظ سجل القراءة","يسجل المنشورات الظاهرة عندما تكون SideLens مفعّلة، حتى دون API Key. إيقافه يمنع السجلات الجديدة ويحتفظ بالسجل الحالي حتى انتهاء مدته.","حتى 1,000 منشور وحوالي 6 MB، لمدة 24 ساعة بعد آخر مشاهدة. السجل منفصل عن ذاكرة التحليل المؤقتة.","فتح سجل القراءة","تسجيل السجل متوقف","تم حفظ إعداد السجل","البحث في المنشورات والمؤلفين والإجابات","البحث في سجل القراءة","مسح السجل","هل تريد مسح سجل القراءة بالكامل؟","ستُحذف المنشورات والإجابات المحفوظة على هذا الجهاز. لا يمكن التراجع عن ذلك.","مسح الكل","إلغاء","تحديث","جارٍ تحميل السجل…","لا يوجد سجل قراءة بعد","ستظهر هنا المنشورات التي تشاهدها على X عندما تكون SideLens وتسجيل السجل مفعّلين.","لا توجد نتائج مطابقة","لا توجد إجابة محفوظة","عرض الإجابة المحفوظة","إخفاء الإجابة","الشرح","التحقق من الحقائق","فتح المنشور الأصلي ↗","حذف","تم حذف المنشور","تم مسح السجل","تعذّر تحميل سجل القراءة. حاول مجدداً.","تعذّر حذف هذا المنشور. حاول مجدداً.","تعذّر مسح السجل. حاول مجدداً.","تعذّر تغيير تسجيل السجل. حاول مجدداً.","{count} منشور","آخر مشاهدة","الوقت غير متاح","التعليقات المقترحة","نسخ","تم النسخ","فشل النسخ","{count} رموز","النموذج: {model}","قد تكون هذه النتيجة المحفوظة غير مكتملة."],
+    "ru": ["История чтения","История чтения","Публикации, просмотренные за последние 24 часа, и готовые ответы сохраняются на этом устройстве. Доступны после перезапуска браузера; повторные публикации объединяются. Просмотр истории не отправляет запросы API.","Сохранять историю чтения","Записывает видимые публикации, когда SideLens включён, даже без API Key. Выключение прекращает новые записи и сохраняет имеющуюся историю до истечения срока.","До 1 000 публикаций и около 6 МБ, на 24 часа с последнего просмотра. История хранится отдельно от кэша анализа.","Открыть историю чтения","Запись истории выключена","Настройка истории сохранена","Поиск публикаций, авторов и ответов","Поиск в истории чтения","Очистить историю","Очистить всю историю чтения?","Сохранённые публикации и ответы на этом устройстве будут удалены. Это действие нельзя отменить.","Очистить всё","Отмена","Обновить","Загрузка истории…","Истории чтения пока нет","Здесь появятся публикации, просмотренные в X, когда SideLens и запись истории включены.","Совпадений не найдено","Нет сохранённого ответа","Показать сохранённый ответ","Скрыть ответ","Объяснение","Проверка фактов","Открыть исходную публикацию ↗","Удалить","Публикация удалена","История очищена","Не удалось загрузить историю чтения. Попробуйте ещё раз.","Не удалось удалить эту публикацию. Попробуйте ещё раз.","Не удалось очистить историю. Попробуйте ещё раз.","Не удалось изменить запись истории. Попробуйте ещё раз.","{count} публикаций","Последний просмотр","Время неизвестно","Предложенные комментарии","Копировать","Скопировано","Ошибка копирования","{count} токенов","Модель: {model}","Этот сохранённый результат может быть неполным."],
+    "hi": ["पढ़ने का इतिहास","पढ़ने का इतिहास","पिछले 24 घंटों में देखी गई पोस्ट और मौजूदा उत्तर इस डिवाइस पर सहेजे जाते हैं। ब्राउज़र फिर शुरू करने के बाद भी उपलब्ध हैं; दोहराई गई पोस्ट एक साथ रखी जाती हैं। इतिहास देखने पर API अनुरोध नहीं भेजे जाते।","पढ़ने का इतिहास सहेजें","SideLens चालू होने पर दिख रही पोस्ट दर्ज करता है, API Key के बिना भी। बंद करने पर नई प्रविष्टियाँ रुकती हैं और मौजूदा इतिहास अवधि समाप्त होने तक रहता है।","अधिकतम 1,000 पोस्ट और लगभग 6 MB, अंतिम बार देखने के बाद 24 घंटे तक। इतिहास विश्लेषण कैश से अलग है।","पढ़ने का इतिहास खोलें","इतिहास दर्ज करना बंद है","इतिहास की सेटिंग सहेजी गई","पोस्ट, लेखक और उत्तर खोजें","पढ़ने का इतिहास खोजें","इतिहास साफ़ करें","पूरा पढ़ने का इतिहास साफ़ करें?","इस डिवाइस पर सहेजी गई पोस्ट और उत्तर हटा दिए जाएँगे। यह वापस नहीं हो सकता।","सभी साफ़ करें","रद्द करें","रीफ़्रेश करें","इतिहास लोड हो रहा है…","अभी पढ़ने का इतिहास नहीं है","SideLens और इतिहास दर्ज करना चालू होने पर X में देखी गई पोस्ट यहाँ दिखाई देंगी।","कोई मिलता-जुलता परिणाम नहीं","कोई सहेजा गया उत्तर नहीं","सहेजा गया उत्तर दिखाएँ","उत्तर छिपाएँ","व्याख्या","तथ्य जाँच","मूल पोस्ट खोलें ↗","हटाएँ","पोस्ट हटाई गई","इतिहास साफ़ किया गया","पढ़ने का इतिहास लोड नहीं हो सका। फिर कोशिश करें।","यह पोस्ट हटाई नहीं जा सकी। फिर कोशिश करें।","इतिहास साफ़ नहीं हो सका। फिर कोशिश करें।","इतिहास दर्ज करने की सेटिंग बदल नहीं सकी। फिर कोशिश करें।","{count} पोस्ट","अंतिम बार देखा","समय उपलब्ध नहीं","सुझाई गई टिप्पणियाँ","कॉपी करें","कॉपी किया गया","कॉपी विफल","{count} टोकन","मॉडल: {model}","यह सहेजा गया परिणाम अधूरा हो सकता है।"]
   });
   section(["history.storageError"], {
     "en": ["Could not access browsing history. Try again."],
@@ -541,11 +541,11 @@
       "Grok CLI / ACP · Local", "Visible posts queue immediately; your local Grok Build connection handles one task at a time.", "Set up Grok Build",
       "Visible posts are fact-checked immediately. Usage depends on your account and provider rules.", "Fast options may use more of your account allowance. Availability and limits follow the provider’s rules.", "Allow access to 127.0.0.1 when checking. This permission connects only to the local service on your computer.",
       "Your computer", "Generate launch command", "Run the command in PowerShell (Windows) or Terminal (macOS). Keep that window open. Press Ctrl+C in it to stop the official service.",
-      "Connects only to this computer and official Grok. No SuperX relay or extra SuperX software is installed.", "Local port", "Local connection code",
+      "Connects only to this computer and official Grok. No SideLens relay or extra SideLens software is installed.", "Local port", "Local connection code",
       "Generated with the command, or paste an existing service’s code. It is not your Grok account password.", "Saved on this device · leave blank to keep", "Generate a command or paste the local code",
       "Forget local connection", "Generate and run a launch command, or paste your local connection code.", "Connection code did not match. Paste the code used to start the local service.",
       "Command ready. Copy it and run it in your terminal, then check the connection.", "Command copied. Run it in your terminal and keep that window open.", "Local connection forgotten. Your API Key is unchanged.",
-      "Use your official Grok login on Windows or macOS. Install only official Grok; SuperX needs no additional installer.", "Save connection", "Checking does not generate an answer. Saving enables the selected Grok mode; usage follows your account and provider rules.",
+      "Use your official Grok login on Windows or macOS. Install only official Grok; SideLens needs no additional installer.", "Save connection", "Checking does not generate an answer. Saving enables the selected Grok mode; usage follows your account and provider rules.",
       "Could not save the local connection. Retry; your API Key is unchanged.", "Cancellation could not be confirmed. Official Grok may still be working. Press Ctrl+C in the service terminal to stop it.", "This command contains a private local connection code. Do not share the command or screenshots of it.",
       "Connection details (optional)"
     ],
@@ -563,11 +563,11 @@
       "Grok CLI / ACP · 本地", "可视帖子立即排队，本地 Grok Build 连接逐项执行任务。", "设置 Grok Build",
       "可视帖子立即开始事实核查，用量取决于账号和提供方规则。", "Fast 选项可能消耗更多账号额度，可用性和限制以提供方规则为准。", "检查连接时请允许访问 127.0.0.1，此权限仅用于连接电脑上的本地服务。",
       "你的电脑", "生成启动命令", "在 PowerShell（Windows）或终端（macOS）运行命令，并保持窗口开启。如需停止官方服务，请在该终端按 Ctrl+C。",
-      "仅连接本机和官方 Grok，不经过 SuperX 中转，也不安装额外的 SuperX 软件。", "本地端口", "本地连接码",
+      "仅连接本机和官方 Grok，不经过 SideLens 中转，也不安装额外的 SideLens 软件。", "本地端口", "本地连接码",
       "生成命令时自动填写，也可粘贴已有服务的连接码。它不是你的 Grok 账号密码。", "已保存在本机 · 留空则保留", "生成命令或粘贴本地连接码",
       "忘记本地连接", "请生成并运行启动命令，或粘贴本地连接码。", "连接码不匹配，请填写启动本地服务时使用的连接码。",
       "命令已生成。复制并在终端运行后，再检查连接。", "命令已复制。请在终端运行，并保持该窗口开启。", "已忘记本地连接，API Key 不受影响。",
-      "使用官方 Grok 账号登录，支持 Windows 和 macOS。只需安装官方 Grok，无需其他 SuperX 安装包。", "保存连接", "检查连接不生成回答。保存后启用所选的 Grok 模式，用量取决于账号和提供方规则。",
+      "使用官方 Grok 账号登录，支持 Windows 和 macOS。只需安装官方 Grok，无需其他 SideLens 安装包。", "保存连接", "检查连接不生成回答。保存后启用所选的 Grok 模式，用量取决于账号和提供方规则。",
       "无法保存本地连接，请重试，API Key 不受影响。", "无法确认任务已取消，官方 Grok 可能仍在工作。请在运行官方服务的终端按 Ctrl+C 停止服务。", "命令包含私密的本地连接码，请勿分享命令或其截图。",
       "连接详情（可选）"
     ],
@@ -585,11 +585,11 @@
       "Grok CLI / ACP · 本機", "可見貼文立即排隊，本機 Grok Build 連線逐項執行任務。", "設定 Grok Build",
       "可見貼文立即開始事實查核，用量取決於帳號及提供者規則。", "Fast 選項可能消耗更多帳號額度，可用性和限制依提供者規則為準。", "檢查連線時請允許存取 127.0.0.1，此權限僅用於連接電腦上的本機服務。",
       "你的電腦", "產生啟動命令", "在 PowerShell（Windows）或終端機（macOS）執行命令，並保持視窗開啟。請在該終端機按 Ctrl+C 停止官方服務。",
-      "僅連接本機及官方 Grok，不經過 SuperX 中繼，也不安裝額外的 SuperX 軟體。", "本機連接埠", "本機連線碼",
+      "僅連接本機及官方 Grok，不經過 SideLens 中繼，也不安裝額外的 SideLens 軟體。", "本機連接埠", "本機連線碼",
       "產生命令時自動填入，也可貼上現有服務的連線碼。這不是你的 Grok 帳號密碼。", "已儲存在本機 · 留空則保留", "產生命令或貼上本機連線碼",
       "忘記本機連線", "請產生並執行啟動命令，或貼上本機連線碼。", "連線碼不符，請填入啟動本機服務時使用的連線碼。",
       "命令已產生，複製並在終端機執行後，再檢查連線。", "命令已複製，請在終端機執行並保持視窗開啟。", "已忘記本機連線，API Key 不受影響。",
-      "使用官方 Grok 帳號登入，支援 Windows 及 macOS。只須安裝官方 Grok，無需其他 SuperX 安裝包。", "儲存連線", "檢查連線不產生回答，儲存後啟用所選 Grok 模式。用量取決於帳號及提供者規則。",
+      "使用官方 Grok 帳號登入，支援 Windows 及 macOS。只須安裝官方 Grok，無需其他 SideLens 安裝包。", "儲存連線", "檢查連線不產生回答，儲存後啟用所選 Grok 模式。用量取決於帳號及提供者規則。",
       "無法儲存本機連線，請重試，API Key 不受影響。", "無法確認任務已取消，官方 Grok 可能仍在執行。請在官方服務的終端機按 Ctrl+C 停止服務。", "命令包含私密的本機連線碼，請勿分享命令或截圖。",
       "連線詳情（選填）"
     ],
@@ -607,11 +607,11 @@
       "Grok CLI / ACP · ローカル", "表示中の投稿はすぐに待ち行列に入り、ローカルの Grok Build 接続で一件ずつ処理されます。", "Grok Build を設定",
       "表示中の投稿を直ちに事実確認します。利用量はアカウントと提供元の規則によります。", "Fast オプションはアカウントの利用枠をより多く消費する場合があります。利用条件と上限は提供元の規則によります。", "確認時に 127.0.0.1 へのアクセスを許可してください。この端末のローカルサービスへの接続にのみ使います。",
       "お使いの端末", "起動コマンドを生成", "PowerShell（Windows）またはターミナル（macOS）で実行し、開いたままにします。停止するにはその端末で Ctrl+C を押します。",
-      "この端末と公式 Grok にのみ接続します。SuperX の中継や追加ソフトの導入はありません。", "ローカルポート", "ローカル接続コード",
+      "この端末と公式 Grok にのみ接続します。SideLens の中継や追加ソフトの導入はありません。", "ローカルポート", "ローカル接続コード",
       "コマンド生成時に入力されます。既存サービスのコードも貼り付けられます。Grok のパスワードではありません。", "この端末に保存済み · 空欄で維持", "コマンドを生成するかコードを貼り付け",
       "ローカル接続を削除", "起動コマンドを生成して実行するか、接続コードを貼り付けてください。", "接続コードが一致しません。サービス起動時のコードを入力してください。",
       "コマンドをコピーして端末で実行し、接続を確認してください。", "コピーしました。端末で実行し、ウィンドウを開いたままにしてください。", "ローカル接続を削除しました。API Key は変更されません。",
-      "Windows と macOS で公式 Grok のログインを利用できます。公式 Grok のみ必要で、SuperX の追加インストーラーは不要です。", "接続を保存", "確認では回答を生成しません。保存すると選択した Grok モードを有効にします。利用量はアカウントと提供元の規則によります。",
+      "Windows と macOS で公式 Grok のログインを利用できます。公式 Grok のみ必要で、SideLens の追加インストーラーは不要です。", "接続を保存", "確認では回答を生成しません。保存すると選択した Grok モードを有効にします。利用量はアカウントと提供元の規則によります。",
       "ローカル接続を保存できませんでした。再試行してください。API Key は変更されていません。", "キャンセルを確認できません。公式 Grok が処理中の可能性があります。サービスの端末で Ctrl+C を押して停止してください。", "このコマンドには秘密のローカル接続コードが含まれます。コマンドやスクリーンショットを共有しないでください。",
       "接続の詳細（任意）"
     ],
@@ -629,11 +629,11 @@
       "Grok CLI / ACP · 로컬", "보이는 게시물이 즉시 대기열에 추가되고 로컬 Grok Build 연결이 한 번에 하나씩 처리합니다.", "Grok Build 설정",
       "보이는 게시물을 즉시 사실 확인합니다. 사용량은 계정과 제공업체 규칙에 따라 다릅니다.", "Fast 옵션은 계정 사용 한도를 더 많이 소모할 수 있습니다. 사용 가능 여부와 한도는 제공업체 규칙에 따릅니다.", "연결 확인 시 127.0.0.1 접근을 허용하세요. 이 컴퓨터의 로컬 서비스 연결에만 사용됩니다.",
       "사용 중인 컴퓨터", "시작 명령 생성", "PowerShell(Windows) 또는 터미널(macOS)에서 실행하고 창을 열어 두세요. 공식 서비스를 중지하려면 해당 터미널에서 Ctrl+C를 누르세요.",
-      "이 컴퓨터와 공식 Grok에만 연결합니다. SuperX 중계나 추가 SuperX 프로그램 설치가 없습니다.", "로컬 포트", "로컬 연결 코드",
+      "이 컴퓨터와 공식 Grok에만 연결합니다. SideLens 중계나 추가 SideLens 프로그램 설치가 없습니다.", "로컬 포트", "로컬 연결 코드",
       "명령 생성 시 자동 입력됩니다. 기존 서비스의 코드를 붙여넣을 수도 있습니다. Grok 계정 암호가 아닙니다.", "이 기기에 저장됨 · 비워 두면 유지", "명령을 생성하거나 연결 코드 붙여넣기",
       "로컬 연결 지우기", "시작 명령을 생성해 실행하거나 로컬 연결 코드를 붙여넣으세요.", "연결 코드가 다릅니다. 서비스 시작에 사용한 코드를 입력하세요.",
       "명령을 복사해 터미널에서 실행한 다음 연결을 확인하세요.", "명령이 복사되었습니다. 터미널에서 실행하고 창을 열어 두세요.", "로컬 연결을 지웠습니다. API Key는 변경되지 않았습니다.",
-      "Windows 및 macOS에서 공식 Grok 로그인을 사용하세요. 공식 Grok만 설치하면 되며 별도 SuperX 설치 프로그램은 필요하지 않습니다.", "연결 저장", "연결 확인은 답변을 생성하지 않습니다. 저장하면 선택한 Grok 모드가 활성화됩니다. 사용량은 계정과 제공업체 규칙에 따라 다릅니다.",
+      "Windows 및 macOS에서 공식 Grok 로그인을 사용하세요. 공식 Grok만 설치하면 되며 별도 SideLens 설치 프로그램은 필요하지 않습니다.", "연결 저장", "연결 확인은 답변을 생성하지 않습니다. 저장하면 선택한 Grok 모드가 활성화됩니다. 사용량은 계정과 제공업체 규칙에 따라 다릅니다.",
       "로컬 연결을 저장하지 못했습니다. 다시 시도하세요. API Key는 변경되지 않았습니다.", "취소를 확인할 수 없습니다. 공식 Grok가 작업 중일 수 있습니다. 서비스 터미널에서 Ctrl+C를 눌러 중지하세요.", "이 명령에는 비공개 로컬 연결 코드가 포함됩니다. 명령이나 스크린샷을 공유하지 마세요.",
       "연결 세부 정보(선택)"
     ],
@@ -651,11 +651,11 @@
       "Grok CLI / ACP · Local", "Las publicaciones visibles entran inmediatamente en cola; tu conexión local de Grok Build procesa una tarea a la vez.", "Configurar Grok Build",
       "Las publicaciones visibles se verifican inmediatamente. El uso depende de tu cuenta y de las reglas del proveedor.", "Las opciones Fast pueden consumir más de la cuota de tu cuenta. La disponibilidad y los límites dependen del proveedor.", "Permite el acceso a 127.0.0.1 al comprobar. Solo se usa para el servicio local de tu equipo.",
       "Tu equipo", "Generar comando de inicio", "Ejecuta en PowerShell (Windows) o Terminal (macOS) y mantén la ventana abierta. Pulsa Ctrl+C en ella para detener el servicio oficial.",
-      "Solo conecta con este equipo y el Grok oficial. Sin intermediario ni software adicional de SuperX.", "Puerto local", "Código de conexión local",
+      "Solo conecta con este equipo y el Grok oficial. Sin intermediario ni software adicional de SideLens.", "Puerto local", "Código de conexión local",
       "Se genera con el comando; también puedes pegar el código de otro servicio local. No es tu contraseña de Grok.", "Guardado en este equipo · deja vacío para conservar", "Genera un comando o pega el código local",
       "Olvidar conexión local", "Genera y ejecuta un comando de inicio o pega tu código de conexión.", "El código no coincide. Pega el usado para iniciar el servicio local.",
       "Copia el comando, ejecútalo en la terminal y comprueba la conexión.", "Comando copiado. Ejecútalo en la terminal y mantén la ventana abierta.", "Conexión local olvidada. Tu API Key no ha cambiado.",
-      "Usa tu sesión oficial de Grok en Windows o macOS. Solo necesitas el Grok oficial, sin otro instalador de SuperX.", "Guardar conexión", "La comprobación no genera respuestas. Al guardar se activa el modo elegido. El uso depende de tu cuenta y del proveedor.",
+      "Usa tu sesión oficial de Grok en Windows o macOS. Solo necesitas el Grok oficial, sin otro instalador de SideLens.", "Guardar conexión", "La comprobación no genera respuestas. Al guardar se activa el modo elegido. El uso depende de tu cuenta y del proveedor.",
       "No se pudo guardar la conexión local. Reintenta; tu API Key no cambió.", "No se pudo confirmar la cancelación. Grok podría seguir trabajando. Pulsa Ctrl+C en la terminal del servicio para detenerlo.", "El comando contiene un código local privado. No compartas el comando ni capturas.",
       "Detalles de conexión (opcional)"
     ],
@@ -673,11 +673,11 @@
       "Grok CLI / ACP · Local", "Les publications visibles rejoignent immédiatement la file ; votre connexion locale à Grok Build traite une tâche à la fois.", "Configurer Grok Build",
       "Les publications visibles sont vérifiées immédiatement. L’utilisation dépend de votre compte et des règles du fournisseur.", "Les options Fast peuvent consommer davantage de votre quota. Leur disponibilité et leurs limites dépendent du fournisseur.", "Autorisez 127.0.0.1 lors de la vérification. Cette permission sert uniquement au service local de votre ordinateur.",
       "Votre ordinateur", "Générer la commande", "Exécutez dans PowerShell (Windows) ou Terminal (macOS) et gardez la fenêtre ouverte. Appuyez sur Ctrl+C pour arrêter le service officiel.",
-      "Connexion à cet ordinateur et au Grok officiel uniquement. Aucun relais ou logiciel supplémentaire SuperX.", "Port local", "Code de connexion local",
+      "Connexion à cet ordinateur et au Grok officiel uniquement. Aucun relais ou logiciel supplémentaire SideLens.", "Port local", "Code de connexion local",
       "Généré avec la commande, ou collez le code d’un service existant. Ce n’est pas votre mot de passe Grok.", "Enregistré sur cet appareil · laisser vide pour conserver", "Générez une commande ou collez le code local",
       "Oublier la connexion locale", "Générez et lancez une commande ou collez le code de connexion local.", "Le code ne correspond pas. Collez celui utilisé au lancement du service.",
       "Copiez la commande, lancez-la dans le terminal puis vérifiez la connexion.", "Commande copiée. Lancez-la dans le terminal et gardez la fenêtre ouverte.", "Connexion locale oubliée. Votre API Key est inchangée.",
-      "Utilisez votre connexion officielle Grok sous Windows ou macOS. Seul le Grok officiel est nécessaire, sans installateur SuperX supplémentaire.", "Enregistrer la connexion", "La vérification ne génère pas de réponse. Enregistrer active le mode choisi. L’utilisation dépend de votre compte et du fournisseur.",
+      "Utilisez votre connexion officielle Grok sous Windows ou macOS. Seul le Grok officiel est nécessaire, sans installateur SideLens supplémentaire.", "Enregistrer la connexion", "La vérification ne génère pas de réponse. Enregistrer active le mode choisi. L’utilisation dépend de votre compte et du fournisseur.",
       "Impossible d’enregistrer la connexion locale. Réessayez ; votre API Key est inchangée.", "Annulation non confirmée. Grok peut encore travailler. Appuyez sur Ctrl+C dans le terminal du service pour l’arrêter.", "Cette commande contient un code local privé. Ne partagez ni la commande ni sa capture.",
       "Détails de connexion (facultatif)"
     ],
@@ -695,11 +695,11 @@
       "Grok CLI / ACP · Lokal", "Sichtbare Beiträge werden sofort eingereiht; deine lokale Grok Build-Verbindung bearbeitet eine Aufgabe nach der anderen.", "Grok Build einrichten",
       "Sichtbare Beiträge werden sofort geprüft. Die Nutzung hängt von deinem Konto und den Anbieterregeln ab.", "Fast-Optionen können mehr von deinem Kontokontingent verbrauchen. Verfügbarkeit und Grenzen richten sich nach dem Anbieter.", "Erlaube bei der Prüfung den Zugriff auf 127.0.0.1. Die Berechtigung dient nur dem lokalen Dienst auf deinem Computer.",
       "Dein Computer", "Startbefehl erzeugen", "Führe den Befehl in PowerShell (Windows) oder Terminal (macOS) aus und lass das Fenster offen. Stoppe den offiziellen Dienst dort mit Ctrl+C.",
-      "Verbindet nur diesen Computer und das offizielle Grok. Kein SuperX-Relay und keine zusätzliche SuperX-Software.", "Lokaler Port", "Lokaler Verbindungscode",
+      "Verbindet nur diesen Computer und das offizielle Grok. Kein SideLens-Relay und keine zusätzliche SideLens-Software.", "Lokaler Port", "Lokaler Verbindungscode",
       "Wird mit dem Befehl erzeugt; alternativ den Code eines laufenden Dienstes einfügen. Kein Grok-Kontopasswort.", "Auf diesem Gerät gespeichert · leer lassen zum Behalten", "Befehl erzeugen oder lokalen Code einfügen",
       "Lokale Verbindung vergessen", "Erzeuge und starte den Befehl oder füge deinen lokalen Verbindungscode ein.", "Der Code stimmt nicht. Füge den beim Dienststart verwendeten Code ein.",
       "Kopiere den Befehl, starte ihn im Terminal und prüfe die Verbindung.", "Befehl kopiert. Führe ihn aus und lass das Terminalfenster offen.", "Lokale Verbindung vergessen. Dein API Key bleibt erhalten.",
-      "Nutze deine offizielle Grok-Anmeldung auf Windows oder macOS. Nur das offizielle Grok ist nötig, kein zusätzlicher SuperX-Installer.", "Verbindung speichern", "Die Prüfung erzeugt keine Antwort. Speichern aktiviert den gewählten Modus. Die Nutzung hängt von Konto und Anbieter ab.",
+      "Nutze deine offizielle Grok-Anmeldung auf Windows oder macOS. Nur das offizielle Grok ist nötig, kein zusätzlicher SideLens-Installer.", "Verbindung speichern", "Die Prüfung erzeugt keine Antwort. Speichern aktiviert den gewählten Modus. Die Nutzung hängt von Konto und Anbieter ab.",
       "Lokale Verbindung konnte nicht gespeichert werden. Versuche es erneut; dein API Key bleibt unverändert.", "Abbruch nicht bestätigt. Grok könnte noch arbeiten. Stoppe den Dienst mit Ctrl+C in seinem Terminal.", "Der Befehl enthält einen privaten lokalen Verbindungscode. Teile weder den Befehl noch Screenshots davon.",
       "Verbindungsdetails (optional)"
     ],
@@ -717,11 +717,11 @@
       "Grok CLI / ACP · Local", "Publicações visíveis entram imediatamente na fila; sua conexão local do Grok Build executa uma tarefa por vez.", "Configurar Grok Build",
       "Publicações visíveis são verificadas imediatamente. O uso depende da sua conta e das regras do provedor.", "As opções Fast podem consumir mais da cota da sua conta. A disponibilidade e os limites seguem as regras do provedor.", "Permita acesso a 127.0.0.1 ao verificar. A permissão serve apenas ao serviço local deste computador.",
       "Seu computador", "Gerar comando de início", "Execute no PowerShell (Windows) ou Terminal (macOS) e mantenha a janela aberta. Pressione Ctrl+C para parar o serviço oficial.",
-      "Conecta apenas a este computador e ao Grok oficial. Sem intermediário nem software adicional SuperX.", "Porta local", "Código de conexão local",
+      "Conecta apenas a este computador e ao Grok oficial. Sem intermediário nem software adicional SideLens.", "Porta local", "Código de conexão local",
       "Gerado com o comando; também aceita o código de um serviço existente. Não é sua senha do Grok.", "Salvo neste dispositivo · deixe vazio para manter", "Gere um comando ou cole o código local",
       "Esquecer conexão local", "Gere e execute o comando ou cole seu código de conexão local.", "O código não corresponde. Cole o usado para iniciar o serviço local.",
       "Copie o comando, execute no terminal e verifique a conexão.", "Comando copiado. Execute no terminal e mantenha a janela aberta.", "Conexão local esquecida. Sua API Key não foi alterada.",
-      "Use seu login oficial do Grok no Windows ou macOS. Só precisa do Grok oficial, sem outro instalador SuperX.", "Salvar conexão", "A verificação não gera respostas. Salvar ativa o modo escolhido. O uso depende da conta e das regras do provedor.",
+      "Use seu login oficial do Grok no Windows ou macOS. Só precisa do Grok oficial, sem outro instalador SideLens.", "Salvar conexão", "A verificação não gera respostas. Salvar ativa o modo escolhido. O uso depende da conta e das regras do provedor.",
       "Não foi possível salvar a conexão local. Tente novamente; sua API Key não mudou.", "Cancelamento não confirmado. Grok pode continuar trabalhando. Pressione Ctrl+C no terminal do serviço para pará-lo.", "O comando contém um código local privado. Não compartilhe o comando nem capturas dele.",
       "Detalhes da conexão (opcional)"
     ],
@@ -739,11 +739,11 @@
       "Grok CLI / ACP · محلي", "تدخل المنشورات المرئية القائمة فورًا، ويعالج اتصال Grok Build المحلي مهمة واحدة في كل مرة.", "إعداد Grok Build",
       "يُتحقق من المنشورات المرئية فورًا. يعتمد الاستخدام على حسابك وقواعد المزوّد.", "قد تستهلك خيارات Fast قدرًا أكبر من حصة حسابك. يخضع التوفر والحدود لقواعد المزوّد.", "اسمح بالوصول إلى 127.0.0.1 عند الفحص. هذا الإذن للخدمة المحلية على جهازك فقط.",
       "جهاز الكمبيوتر", "إنشاء أمر التشغيل", "نفّذ الأمر في PowerShell‏ (Windows) أو Terminal‏ (macOS) وأبقِ النافذة مفتوحة. اضغط Ctrl+C فيها لإيقاف الخدمة الرسمية.",
-      "يتصل بهذا الكمبيوتر وبـ Grok الرسمي فقط. لا وسيط SuperX ولا برنامج SuperX إضافي.", "المنفذ المحلي", "رمز الاتصال المحلي",
+      "يتصل بهذا الكمبيوتر وبـ Grok الرسمي فقط. لا وسيط SideLens ولا برنامج SideLens إضافي.", "المنفذ المحلي", "رمز الاتصال المحلي",
       "يُنشأ مع الأمر، أو الصق رمز خدمة موجودة. ليس كلمة مرور حساب Grok.", "محفوظ على هذا الجهاز · اتركه فارغًا للاحتفاظ", "أنشئ أمرًا أو الصق الرمز المحلي",
       "نسيان الاتصال المحلي", "أنشئ أمر التشغيل ونفّذه أو الصق رمز الاتصال المحلي.", "رمز الاتصال غير مطابق. الصق الرمز المستخدم لتشغيل الخدمة.",
       "انسخ الأمر ونفّذه في الطرفية ثم افحص الاتصال.", "نُسخ الأمر. نفّذه في الطرفية وأبقِ النافذة مفتوحة.", "نُسي الاتصال المحلي. لم تتغير API Key.",
-      "استخدم حساب Grok الرسمي على Windows أو macOS. يلزم Grok الرسمي فقط دون مثبت SuperX إضافي.", "حفظ الاتصال", "الفحص لا يولّد إجابة. الحفظ يفعّل وضع Grok المختار. يعتمد الاستخدام على الحساب وقواعد المزوّد.",
+      "استخدم حساب Grok الرسمي على Windows أو macOS. يلزم Grok الرسمي فقط دون مثبت SideLens إضافي.", "حفظ الاتصال", "الفحص لا يولّد إجابة. الحفظ يفعّل وضع Grok المختار. يعتمد الاستخدام على الحساب وقواعد المزوّد.",
       "تعذّر حفظ الاتصال المحلي. أعد المحاولة؛ لم تتغير API Key.", "تعذّر تأكيد الإلغاء. قد يواصل Grok العمل. اضغط Ctrl+C في طرفية الخدمة لإيقافها.", "يحتوي هذا الأمر على رمز اتصال محلي خاص. لا تشارك الأمر أو لقطات شاشة له.",
       "تفاصيل الاتصال (اختياري)"
     ],
@@ -761,11 +761,11 @@
       "Grok CLI / ACP · Локально", "Видимые публикации сразу попадают в очередь; локальное подключение Grok Build выполняет задачи по одной.", "Настроить Grok Build",
       "Видимые публикации сразу проверяются. Использование зависит от аккаунта и правил провайдера.", "Варианты Fast могут расходовать больше квоты аккаунта. Доступность и ограничения определяются правилами провайдера.", "При проверке разрешите доступ к 127.0.0.1. Он нужен только локальному сервису на вашем компьютере.",
       "Ваш компьютер", "Создать команду запуска", "Выполните в PowerShell (Windows) или Terminal (macOS) и оставьте окно открытым. Нажмите Ctrl+C в нём для остановки сервиса.",
-      "Подключается только к этому компьютеру и официальному Grok. Без посредника или дополнительного ПО SuperX.", "Локальный порт", "Код локального подключения",
+      "Подключается только к этому компьютеру и официальному Grok. Без посредника или дополнительного ПО SideLens.", "Локальный порт", "Код локального подключения",
       "Создаётся вместе с командой; можно вставить код работающего сервиса. Это не пароль Grok.", "Сохранён на этом устройстве · пустое поле сохраняет", "Создайте команду или вставьте локальный код",
       "Забыть локальное подключение", "Создайте и выполните команду или вставьте локальный код подключения.", "Код не совпадает. Вставьте использованный при запуске сервиса.",
       "Скопируйте команду, выполните в терминале и проверьте подключение.", "Команда скопирована. Выполните её и оставьте терминал открытым.", "Локальное подключение забыто. API Key не изменён.",
-      "Используйте официальный вход Grok на Windows или macOS. Нужен только официальный Grok, без отдельного установщика SuperX.", "Сохранить подключение", "Проверка не генерирует ответы. Сохранение включает выбранный режим. Использование зависит от аккаунта и провайдера.",
+      "Используйте официальный вход Grok на Windows или macOS. Нужен только официальный Grok, без отдельного установщика SideLens.", "Сохранить подключение", "Проверка не генерирует ответы. Сохранение включает выбранный режим. Использование зависит от аккаунта и провайдера.",
       "Не удалось сохранить локальное подключение. Повторите попытку; API Key не изменён.", "Отмена не подтверждена. Grok может продолжать работу. Нажмите Ctrl+C в терминале сервиса, чтобы его остановить.", "Команда содержит приватный локальный код. Не делитесь командой или её скриншотами.",
       "Параметры подключения (необязательно)"
     ],
@@ -783,11 +783,11 @@
       "Grok CLI / ACP · स्थानीय", "दिखाई देने वाली पोस्ट तुरंत कतार में जुड़ती हैं; आपका स्थानीय Grok Build कनेक्शन एक बार में एक कार्य चलाता है।", "Grok Build सेट करें",
       "दिखाई देने वाली पोस्ट की तुरंत तथ्य-जाँच होती है। उपयोग आपके खाते और प्रदाता के नियमों पर निर्भर है।", "Fast विकल्प आपके खाते की अधिक उपयोग सीमा खर्च कर सकते हैं। उपलब्धता और सीमाएँ प्रदाता के नियमों पर निर्भर हैं।", "जाँचते समय 127.0.0.1 की पहुँच दें। यह अनुमति केवल इस कंप्यूटर की स्थानीय सेवा के लिए है।",
       "आपका कंप्यूटर", "लॉन्च कमांड बनाएँ", "PowerShell (Windows) या Terminal (macOS) में चलाएँ और विंडो खुली रखें। आधिकारिक सेवा रोकने के लिए उसी टर्मिनल में Ctrl+C दबाएँ।",
-      "केवल इस कंप्यूटर और आधिकारिक Grok से जुड़ता है। कोई SuperX रिले या अतिरिक्त SuperX सॉफ़्टवेयर नहीं।", "स्थानीय पोर्ट", "स्थानीय कनेक्शन कोड",
+      "केवल इस कंप्यूटर और आधिकारिक Grok से जुड़ता है। कोई SideLens रिले या अतिरिक्त SideLens सॉफ़्टवेयर नहीं।", "स्थानीय पोर्ट", "स्थानीय कनेक्शन कोड",
       "कमांड के साथ बनता है, या मौजूदा सेवा का कोड पेस्ट करें। यह Grok खाते का पासवर्ड नहीं है।", "इस डिवाइस पर सहेजा गया · बनाए रखने के लिए खाली छोड़ें", "कमांड बनाएँ या स्थानीय कोड पेस्ट करें",
       "स्थानीय कनेक्शन भूलें", "लॉन्च कमांड बनाकर चलाएँ या स्थानीय कनेक्शन कोड पेस्ट करें।", "कोड मेल नहीं खाता। सेवा शुरू करने में इस्तेमाल कोड पेस्ट करें।",
       "कमांड कॉपी करके टर्मिनल में चलाएँ, फिर कनेक्शन जाँचें।", "कमांड कॉपी हुई। टर्मिनल में चलाएँ और विंडो खुली रखें।", "स्थानीय कनेक्शन भूल दिया। API Key अपरिवर्तित है।",
-      "Windows या macOS पर आधिकारिक Grok लॉगिन इस्तेमाल करें। केवल आधिकारिक Grok चाहिए, अलग SuperX इंस्टॉलर नहीं।", "कनेक्शन सहेजें", "जाँच उत्तर नहीं बनाती। सहेजने पर चुना गया मोड सक्रिय होता है। उपयोग खाते और प्रदाता के नियमों पर निर्भर है।",
+      "Windows या macOS पर आधिकारिक Grok लॉगिन इस्तेमाल करें। केवल आधिकारिक Grok चाहिए, अलग SideLens इंस्टॉलर नहीं।", "कनेक्शन सहेजें", "जाँच उत्तर नहीं बनाती। सहेजने पर चुना गया मोड सक्रिय होता है। उपयोग खाते और प्रदाता के नियमों पर निर्भर है।",
       "स्थानीय कनेक्शन नहीं सहेज सके। फिर कोशिश करें; API Key अपरिवर्तित है।", "रद्द होने की पुष्टि नहीं हुई। Grok अभी काम कर सकता है। सेवा रोकने के लिए उसके टर्मिनल में Ctrl+C दबाएँ।", "इस कमांड में निजी स्थानीय कोड है। कमांड या उसका स्क्रीनशॉट साझा न करें।",
       "कनेक्शन विवरण (वैकल्पिक)"
     ]
@@ -811,132 +811,132 @@
     'options.apiMeteredTitle','options.apiMeteredHelp','options.apiMeteredLink','options.apiPriorityHelp','options.apiPriorityLink',
     'options.providerIntro','options.subtitle','popup.apiHint','options.presetReady'],{
     en:[
-      'Analyze after (seconds)','After feed or page scrolling stops, posts must stay visible for this long before automatic analysis. Scrolling again resets the timer; scrolling inside the SuperX sidebar does not. Default: 1 second; 0 starts immediately. Manual actions do not wait.',
+      'Analyze after (seconds)','After feed or page scrolling stops, posts must stay visible for this long before automatic analysis. Scrolling again resets the timer; scrolling inside the SideLens sidebar does not. Default: 1 second; 0 starts immediately. Manual actions do not wait.',
       'Default: 3. All X tabs and comment requests share this limit.','Subscription or pay-as-you-go API',
       'The X Subscription','Create an API Key in Grok Dashboard to use eligible API usage from your plan’s shared weekly allowance. Check your account for available models, limits and extra charges.','Grok API Keys',
       'Pay-as-you-go xAI API','Create a Key and add credits in xAI Console. Pay for the tokens and tools you use, and manage API usage and billing there.','xAI Console',
-      'Buying standard API credits does not enable Priority Processing. SuperX uses standard requests. Priority requires explicit opt-in at an extra cost; it may reduce peak-time latency but does not guarantee availability.','About Priority Processing',
+      'Buying standard API credits does not enable Priority Processing. SideLens uses standard requests. Priority requires explicit opt-in at an extra cost; it may reduce peak-time latency but does not guarantee availability.','About Priority Processing',
       'Choose an answer source. Enabled posts queue for fact-checking after scrolling stops and they remain visible for the configured time.',
       'Enabled posts analyze automatically after scrolling stops and they remain visible for the configured time, with no session limit.',
       'After scrolling stops, posts are fact-checked once they remain visible for the configured time. Usage depends on your account and provider rules.',
       'Defaults selected: 1-second visible time and 3 shared concurrent API requests. Save to apply.'
     ],
     'zh-CN':[
-      '自动分析前停留（秒）','停止滚动信息流或页面后，帖子须持续可见达到此时长才会自动分析。再次滚动会重新计时，滚动 SuperX 右栏内部不会影响。默认 1 秒；设为 0 即可立即开始。手动操作无需等待。',
+      '自动分析前停留（秒）','停止滚动信息流或页面后，帖子须持续可见达到此时长才会自动分析。再次滚动会重新计时，滚动 SideLens 右栏内部不会影响。默认 1 秒；设为 0 即可立即开始。手动操作无需等待。',
       '默认 3。所有 X 标签页和评论请求共享此上限。','订阅或按量付费 API',
       'The X Subscription','在 Grok Dashboard 创建 API Key，使用套餐支持的 API 额度，与其他受支持的使用共享周额度。可用模型、额度和额外费用以账户页面为准。','Grok API Keys',
       '按量使用 xAI API','在 xAI Console 创建 Key 并购买 credits，按实际使用的 Token 和工具计费，在控制台管理 API 用量和账单。','xAI Console',
-      '购买标准 API credits 不会开启 Priority Processing。SuperX 使用标准请求。Priority 需要明确选择并额外付费，可能降低高峰期延迟，但不保证服务始终可用。','了解 Priority Processing',
+      '购买标准 API credits 不会开启 Priority Processing。SideLens 使用标准请求。Priority 需要明确选择并额外付费，可能降低高峰期延迟，但不保证服务始终可用。','了解 Priority Processing',
       '选择回答来源。开启后，停止滚动且帖子持续可见达到设置的时长后，才会排队等待事实核查。',
       '启用后，停止滚动且帖子持续可见达到设置的时长后自动分析，不设每会话条数上限。',
       '停止滚动且帖子持续可见达到设置的时长后开始事实核查，用量取决于账号和提供方规则。',
       '已选默认配置：停留 1 秒、共享 API 并发上限 3。保存后生效。'
     ],
     'zh-TW':[
-      '自動分析前停留（秒）','停止捲動動態或頁面後，貼文須持續可見達到此時長才會自動分析。再次捲動會重新計時，捲動 SuperX 右欄內部不會影響。預設 1 秒；設為 0 即可立即開始。手動操作無需等待。',
+      '自動分析前停留（秒）','停止捲動動態或頁面後，貼文須持續可見達到此時長才會自動分析。再次捲動會重新計時，捲動 SideLens 右欄內部不會影響。預設 1 秒；設為 0 即可立即開始。手動操作無需等待。',
       '預設 3。所有 X 分頁和留言請求共用此上限。','訂閱或按用量付費 API',
       'The X Subscription','在 Grok Dashboard 建立 API Key，使用方案支援的 API 額度，與其他支援的使用共用每週額度。可用模型、額度及額外費用以帳戶頁面為準。','Grok API Keys',
       '按用量使用 xAI API','在 xAI Console 建立 Key 並購買 credits，依實際使用的 Token 和工具計費，在控制台管理 API 用量及帳單。','xAI Console',
-      '購買標準 API credits 不會啟用 Priority Processing。SuperX 使用標準請求。Priority 需要明確選擇並額外付費，可能降低尖峰時段延遲，但不保證服務始終可用。','了解 Priority Processing',
+      '購買標準 API credits 不會啟用 Priority Processing。SideLens 使用標準請求。Priority 需要明確選擇並額外付費，可能降低尖峰時段延遲，但不保證服務始終可用。','了解 Priority Processing',
       '選擇回答來源。開啟後，停止捲動且貼文持續可見達到設定的時長後，才會排隊等待事實查核。',
       '啟用後，停止捲動且貼文持續可見達到設定的時長後自動分析，不設每次瀏覽的篇數上限。',
       '停止捲動且貼文持續可見達到設定的時長後開始事實查核，用量取決於帳號及提供者規則。',
       '已選預設設定：停留 1 秒、共用 API 並行上限 3。儲存後生效。'
     ],
     ja:[
-      '自動分析までの表示時間（秒）','フィードやページのスクロール停止後、投稿がこの時間だけ表示され続けると自動分析します。再スクロールで計時をやり直しますが、SuperX サイドバー内のスクロールは影響しません。既定は 1 秒、0 はすぐに開始します。手動操作は待ちません。',
+      '自動分析までの表示時間（秒）','フィードやページのスクロール停止後、投稿がこの時間だけ表示され続けると自動分析します。再スクロールで計時をやり直しますが、SideLens サイドバー内のスクロールは影響しません。既定は 1 秒、0 はすぐに開始します。手動操作は待ちません。',
       '既定は 3。すべての X タブとコメント要求でこの上限を共有します。','サブスクリプションまたは従量課金 API',
       'The X Subscription','Grok Dashboard で API Key を作成し、プラン対象の API 利用を共有の週間枠から使用します。利用可能なモデル、上限、追加料金はアカウントで確認してください。','Grok API Keys',
       '従量課金の xAI API','xAI Console で Key を作成し、クレジットを購入します。使用したトークンとツールに応じて課金され、API 利用量と請求を管理できます。','xAI Console',
-      '通常の API クレジット購入では Priority Processing は有効になりません。SuperX は標準の要求を送ります。Priority は明示的な選択と追加料金が必要で、混雑時の遅延を減らす場合がありますが、可用性は保証しません。','Priority Processing について',
+      '通常の API クレジット購入では Priority Processing は有効になりません。SideLens は標準の要求を送ります。Priority は明示的な選択と追加料金が必要で、混雑時の遅延を減らす場合がありますが、可用性は保証しません。','Priority Processing について',
       '回答元を選択してください。有効な投稿はスクロール停止後、設定した時間だけ表示され続けると事実確認の待ち行列に入ります。',
       '有効な間はスクロール停止後、投稿が設定した時間だけ表示され続けると自動分析します。セッションごとの件数制限はありません。',
       'スクロール停止後、投稿が設定した時間だけ表示され続けると事実確認します。利用量はアカウントと提供元の規則によります。',
       '既定値を選択しました。表示時間 1 秒、共有 API 同時要求数 3。保存すると適用されます。'
     ],
     ko:[
-      '자동 분석 전 표시 시간(초)','피드나 페이지 스크롤이 멈춘 후 게시물이 이 시간 동안 계속 보이면 자동 분석합니다. 다시 스크롤하면 타이머가 초기화되지만 SuperX 사이드바 내부 스크롤은 영향을 주지 않습니다. 기본값은 1초이며 0은 즉시 시작합니다. 수동 작업은 기다리지 않습니다.',
+      '자동 분석 전 표시 시간(초)','피드나 페이지 스크롤이 멈춘 후 게시물이 이 시간 동안 계속 보이면 자동 분석합니다. 다시 스크롤하면 타이머가 초기화되지만 SideLens 사이드바 내부 스크롤은 영향을 주지 않습니다. 기본값은 1초이며 0은 즉시 시작합니다. 수동 작업은 기다리지 않습니다.',
       '기본값: 3. 모든 X 탭과 댓글 요청이 이 한도를 공유합니다.','구독 또는 종량제 API',
       'The X Subscription','Grok Dashboard에서 API Key를 만들어 요금제가 지원하는 API 사용량을 주간 공유 한도에서 사용하세요. 사용 가능한 모델, 한도 및 추가 요금은 계정에서 확인하세요.','Grok API Keys',
       '종량제 xAI API','xAI Console에서 Key를 만들고 크레딧을 구매하세요. 사용한 토큰과 도구에 따라 요금이 부과되며 API 사용량과 청구를 관리할 수 있습니다.','xAI Console',
-      '일반 API 크레딧 구매로 Priority Processing이 켜지지 않습니다. SuperX는 표준 요청을 사용합니다. Priority는 명시적 선택과 추가 비용이 필요하며 혼잡 시간 지연을 줄일 수 있지만 가용성을 보장하지 않습니다.','Priority Processing 알아보기',
+      '일반 API 크레딧 구매로 Priority Processing이 켜지지 않습니다. SideLens는 표준 요청을 사용합니다. Priority는 명시적 선택과 추가 비용이 필요하며 혼잡 시간 지연을 줄일 수 있지만 가용성을 보장하지 않습니다.','Priority Processing 알아보기',
       '답변 소스를 선택하세요. 스크롤이 멈춘 후 활성화된 게시물이 설정한 시간 동안 계속 보이면 사실 확인 대기열에 추가됩니다.',
       '활성화된 동안 스크롤이 멈춘 후 게시물이 설정한 시간 동안 계속 보이면 자동 분석합니다. 세션별 개수 제한은 없습니다.',
       '스크롤이 멈춘 후 게시물이 설정한 시간 동안 계속 보이면 사실을 확인합니다. 사용량은 계정과 제공업체 규칙에 따라 다릅니다.',
       '기본값 선택됨: 표시 시간 1초, 공유 API 동시 요청 한도 3. 저장하면 적용됩니다.'
     ],
     es:[
-      'Analizar tras (segundos)','Tras detener el desplazamiento del feed o la página, las publicaciones deben permanecer visibles este tiempo. Desplazarse de nuevo reinicia el temporizador; hacerlo dentro de la barra lateral de SuperX no lo reinicia. Predeterminado: 1 segundo; 0 inicia al instante. Las acciones manuales no esperan.',
+      'Analizar tras (segundos)','Tras detener el desplazamiento del feed o la página, las publicaciones deben permanecer visibles este tiempo. Desplazarse de nuevo reinicia el temporizador; hacerlo dentro de la barra lateral de SideLens no lo reinicia. Predeterminado: 1 segundo; 0 inicia al instante. Las acciones manuales no esperan.',
       'Predeterminado: 3. Todas las pestañas de X y las solicitudes de comentarios comparten este límite.','API con suscripción o pago por uso',
       'The X Subscription','Crea una API Key en Grok Dashboard para usar la API incluida en la cuota semanal compartida de tu plan. Consulta tu cuenta para ver modelos, límites y cargos adicionales.','Grok API Keys',
       'xAI API de pago por uso','Crea una Key y compra créditos en xAI Console. Pagas por los tokens y herramientas que uses y gestionas allí el uso y la facturación de la API.','xAI Console',
-      'Comprar créditos estándar de API no activa Priority Processing. SuperX envía solicitudes estándar. Priority requiere activación explícita y un coste adicional; puede reducir la latencia en horas punta, pero no garantiza disponibilidad.','Acerca de Priority Processing',
+      'Comprar créditos estándar de API no activa Priority Processing. SideLens envía solicitudes estándar. Priority requiere activación explícita y un coste adicional; puede reducir la latencia en horas punta, pero no garantiza disponibilidad.','Acerca de Priority Processing',
       'Elige el origen de las respuestas. Tras detener el desplazamiento, las publicaciones activadas entran en cola al permanecer visibles el tiempo configurado.',
       'Al activarlo, tras detener el desplazamiento, las publicaciones se analizan cuando permanecen visibles el tiempo configurado, sin límite por sesión.',
       'Tras detener el desplazamiento, las publicaciones se verifican cuando permanecen visibles el tiempo configurado. El uso depende de tu cuenta y de las reglas del proveedor.',
       'Valores predeterminados seleccionados: 1 segundo visible y 3 solicitudes API simultáneas compartidas. Guarda para aplicar.'
     ],
     fr:[
-      'Analyser après (secondes)','Après l’arrêt du défilement du fil ou de la page, les publications doivent rester visibles pendant cette durée. Tout nouveau défilement relance le délai, sauf dans la barre latérale SuperX. Par défaut : 1 seconde ; 0 lance immédiatement. Les actions manuelles n’attendent pas.',
+      'Analyser après (secondes)','Après l’arrêt du défilement du fil ou de la page, les publications doivent rester visibles pendant cette durée. Tout nouveau défilement relance le délai, sauf dans la barre latérale SideLens. Par défaut : 1 seconde ; 0 lance immédiatement. Les actions manuelles n’attendent pas.',
       'Par défaut : 3. Tous les onglets X et les demandes de commentaires partagent cette limite.','API avec abonnement ou à l’usage',
       'The X Subscription','Créez une API Key dans Grok Dashboard pour utiliser l’API éligible dans le quota hebdomadaire partagé de votre offre. Consultez votre compte pour les modèles, limites et frais supplémentaires.','Grok API Keys',
       'xAI API à l’usage','Créez une Key et achetez des crédits dans xAI Console. Payez les tokens et outils utilisés et gérez l’utilisation et la facturation de l’API.','xAI Console',
-      'L’achat de crédits API standard n’active pas Priority Processing. SuperX utilise des requêtes standard. Priority demande une activation explicite et un supplément ; il peut réduire la latence aux heures de pointe, sans garantir la disponibilité.','À propos de Priority Processing',
+      'L’achat de crédits API standard n’active pas Priority Processing. SideLens utilise des requêtes standard. Priority demande une activation explicite et un supplément ; il peut réduire la latence aux heures de pointe, sans garantir la disponibilité.','À propos de Priority Processing',
       'Choisissez la source des réponses. Après l’arrêt du défilement, les publications activées rejoignent la file en restant visibles pendant la durée configurée.',
       'Après l’arrêt du défilement, les publications activées sont analysées lorsqu’elles restent visibles pendant la durée configurée, sans limite par session.',
       'Après l’arrêt du défilement, les publications sont vérifiées lorsqu’elles restent visibles pendant la durée configurée. L’utilisation dépend de votre compte et des règles du fournisseur.',
       'Valeurs par défaut sélectionnées : 1 seconde de visibilité et 3 requêtes API simultanées partagées. Enregistrez pour appliquer.'
     ],
     de:[
-      'Analysieren nach (Sekunden)','Nach dem Scrollen im Feed oder auf der Seite müssen Beiträge so lange sichtbar bleiben. Erneutes Scrollen setzt den Timer zurück; Scrollen innerhalb der SuperX-Seitenleiste nicht. Standard: 1 Sekunde; 0 startet sofort. Manuelle Aktionen warten nicht.',
+      'Analysieren nach (Sekunden)','Nach dem Scrollen im Feed oder auf der Seite müssen Beiträge so lange sichtbar bleiben. Erneutes Scrollen setzt den Timer zurück; Scrollen innerhalb der SideLens-Seitenleiste nicht. Standard: 1 Sekunde; 0 startet sofort. Manuelle Aktionen warten nicht.',
       'Standard: 3. Alle X-Tabs und Kommentaranfragen teilen sich dieses Limit.','API mit Abo oder nutzungsbasierter Abrechnung',
       'The X Subscription','Erstelle im Grok Dashboard einen API Key, um berechtigte API-Nutzung aus dem gemeinsamen Wochenkontingent deines Tarifs zu verwenden. Modelle, Limits und Zusatzkosten findest du in deinem Konto.','Grok API Keys',
       'Nutzungsbasierte xAI API','Erstelle einen Key und kaufe Guthaben in der xAI Console. Bezahle die verwendeten Tokens und Tools und verwalte dort API-Nutzung und Abrechnung.','xAI Console',
-      'Der Kauf von Standard-API-Guthaben aktiviert Priority Processing nicht. SuperX nutzt Standardanfragen. Priority erfordert eine ausdrückliche Auswahl und kostet extra; es kann Spitzenlast-Latenzen senken, garantiert aber keine Verfügbarkeit.','Über Priority Processing',
+      'Der Kauf von Standard-API-Guthaben aktiviert Priority Processing nicht. SideLens nutzt Standardanfragen. Priority erfordert eine ausdrückliche Auswahl und kostet extra; es kann Spitzenlast-Latenzen senken, garantiert aber keine Verfügbarkeit.','Über Priority Processing',
       'Wähle die Antwortquelle. Sobald das Scrollen endet und aktivierte Beiträge die eingestellte Zeit sichtbar bleiben, werden sie zur Faktenprüfung eingereiht.',
       'Bei aktivierter Funktion werden Beiträge analysiert, sobald das Scrollen endet und sie die eingestellte Zeit sichtbar bleiben, ohne Sitzungslimit.',
       'Beiträge werden geprüft, sobald das Scrollen endet und sie die eingestellte Zeit sichtbar bleiben. Die Nutzung hängt von deinem Konto und den Anbieterregeln ab.',
       'Standardwerte gewählt: 1 Sekunde sichtbar und 3 gemeinsame gleichzeitige API-Anfragen. Zum Anwenden speichern.'
     ],
     pt:[
-      'Analisar após (segundos)','Após parar a rolagem do feed ou da página, as publicações devem continuar visíveis por este tempo. Rolar novamente reinicia o tempo; rolar dentro da barra lateral do SuperX não. Padrão: 1 segundo; 0 inicia imediatamente. Ações manuais não esperam.',
+      'Analisar após (segundos)','Após parar a rolagem do feed ou da página, as publicações devem continuar visíveis por este tempo. Rolar novamente reinicia o tempo; rolar dentro da barra lateral do SideLens não. Padrão: 1 segundo; 0 inicia imediatamente. Ações manuais não esperam.',
       'Padrão: 3. Todas as abas do X e solicitações de comentários compartilham este limite.','API por assinatura ou por uso',
       'The X Subscription','Crie uma API Key no Grok Dashboard para usar a API elegível da cota semanal compartilhada do seu plano. Consulte sua conta para ver modelos, limites e cobranças extras.','Grok API Keys',
       'xAI API por uso','Crie uma Key e compre créditos no xAI Console. Pague pelos tokens e ferramentas utilizados e gerencie o uso e a cobrança da API.','xAI Console',
-      'Comprar créditos padrão de API não ativa o Priority Processing. O SuperX usa solicitações padrão. Priority exige adesão explícita e custo adicional; pode reduzir a latência em horários de pico, mas não garante disponibilidade.','Sobre Priority Processing',
+      'Comprar créditos padrão de API não ativa o Priority Processing. O SideLens usa solicitações padrão. Priority exige adesão explícita e custo adicional; pode reduzir a latência em horários de pico, mas não garante disponibilidade.','Sobre Priority Processing',
       'Escolha a origem das respostas. Após parar a rolagem, publicações ativadas entram na fila quando continuam visíveis pelo tempo configurado.',
       'Quando ativado, após parar a rolagem, publicações são analisadas quando continuam visíveis pelo tempo configurado, sem limite por sessão.',
       'Após parar a rolagem, publicações são verificadas quando continuam visíveis pelo tempo configurado. O uso depende da sua conta e das regras do provedor.',
       'Padrões selecionados: 1 segundo visível e 3 solicitações API simultâneas compartilhadas. Salve para aplicar.'
     ],
     ar:[
-      'التحليل بعد (بالثواني)','بعد توقف تمرير الخلاصة أو الصفحة، يجب أن تبقى المنشورات مرئية لهذه المدة. يعيد التمرير المؤقت من البداية، لكن التمرير داخل شريط SuperX الجانبي لا يؤثر. الافتراضي ثانية واحدة؛ 0 يبدأ فورًا. الإجراءات اليدوية لا تنتظر.',
+      'التحليل بعد (بالثواني)','بعد توقف تمرير الخلاصة أو الصفحة، يجب أن تبقى المنشورات مرئية لهذه المدة. يعيد التمرير المؤقت من البداية، لكن التمرير داخل شريط SideLens الجانبي لا يؤثر. الافتراضي ثانية واحدة؛ 0 يبدأ فورًا. الإجراءات اليدوية لا تنتظر.',
       'الافتراضي: 3. تتشارك جميع علامات تبويب X وطلبات التعليقات هذا الحد.','API باشتراك أو بالدفع حسب الاستخدام',
       'The X Subscription','أنشئ API Key في Grok Dashboard لاستخدام API المؤهل من الحصة الأسبوعية المشتركة لخُطتك. راجع حسابك للنماذج المتاحة والحدود والرسوم الإضافية.','Grok API Keys',
       'xAI API بالدفع حسب الاستخدام','أنشئ Key واشترِ رصيدًا في xAI Console. ادفع مقابل الرموز والأدوات المستخدمة، وأدر استخدام API والفوترة هناك.','xAI Console',
-      'شراء رصيد API عادي لا يفعّل Priority Processing. يستخدم SuperX طلبات عادية. يتطلب Priority اختيارًا صريحًا وتكلفة إضافية؛ قد يقلل التأخير وقت الذروة لكنه لا يضمن التوافر.','حول Priority Processing',
+      'شراء رصيد API عادي لا يفعّل Priority Processing. يستخدم SideLens طلبات عادية. يتطلب Priority اختيارًا صريحًا وتكلفة إضافية؛ قد يقلل التأخير وقت الذروة لكنه لا يضمن التوافر.','حول Priority Processing',
       'اختر مصدر الإجابات. بعد توقف التمرير، تدخل المنشورات المفعّلة قائمة التحقق عندما تبقى مرئية للمدة المحددة.',
       'عند التفعيل، تُحلّل المنشورات بعد توقف التمرير وبقائها مرئية للمدة المحددة، دون حد لكل جلسة.',
       'يُتحقق من المنشورات بعد توقف التمرير وبقائها مرئية للمدة المحددة. يعتمد الاستخدام على حسابك وقواعد المزوّد.',
       'تم اختيار الإعدادات الافتراضية: ظهور لمدة ثانية واحدة و3 طلبات API متزامنة مشتركة. احفظ لتطبيقها.'
     ],
     ru:[
-      'Анализировать через (секунды)','После остановки прокрутки ленты или страницы публикация должна оставаться видимой это время. Новая прокрутка сбрасывает таймер, кроме прокрутки внутри боковой панели SuperX. По умолчанию 1 секунда; 0 — сразу. Ручные действия не ждут.',
+      'Анализировать через (секунды)','После остановки прокрутки ленты или страницы публикация должна оставаться видимой это время. Новая прокрутка сбрасывает таймер, кроме прокрутки внутри боковой панели SideLens. По умолчанию 1 секунда; 0 — сразу. Ручные действия не ждут.',
       'По умолчанию: 3. Все вкладки X и запросы комментариев используют этот общий лимит.','API по подписке или с оплатой за использование',
       'The X Subscription','Создайте API Key в Grok Dashboard, чтобы использовать API в рамках общего недельного лимита вашего плана. Доступные модели, ограничения и доплаты указаны в аккаунте.','Grok API Keys',
       'xAI API с оплатой за использование','Создайте Key и купите кредиты в xAI Console. Платите за использованные токены и инструменты, управляйте расходами и счетами API.','xAI Console',
-      'Покупка обычных API-кредитов не включает Priority Processing. SuperX отправляет стандартные запросы. Priority требует явного выбора и доплаты; он может снизить задержку в часы пик, но не гарантирует доступность.','О Priority Processing',
+      'Покупка обычных API-кредитов не включает Priority Processing. SideLens отправляет стандартные запросы. Priority требует явного выбора и доплаты; он может снизить задержку в часы пик, но не гарантирует доступность.','О Priority Processing',
       'Выберите источник ответов. После остановки прокрутки включённые публикации попадают в очередь, если остаются видимыми заданное время.',
       'При включении публикации анализируются после остановки прокрутки и непрерывной видимости заданное время, без лимита на сеанс.',
       'Публикации проверяются после остановки прокрутки и непрерывной видимости заданное время. Использование зависит от аккаунта и правил провайдера.',
       'Выбраны значения по умолчанию: 1 секунда видимости и 3 общих одновременных API-запроса. Сохраните для применения.'
     ],
     hi:[
-      'विश्लेषण से पहले ठहराव (सेकंड)','फ़ीड या पेज की स्क्रॉलिंग रुकने के बाद पोस्ट इतनी देर लगातार दिखनी चाहिए। फिर स्क्रॉल करने पर टाइमर दोबारा शुरू होता है; SuperX साइडबार के अंदर स्क्रॉल करने से नहीं। डिफ़ॉल्ट: 1 सेकंड; 0 तुरंत शुरू करता है। मैन्युअल कार्रवाइयाँ इंतज़ार नहीं करतीं।',
+      'विश्लेषण से पहले ठहराव (सेकंड)','फ़ीड या पेज की स्क्रॉलिंग रुकने के बाद पोस्ट इतनी देर लगातार दिखनी चाहिए। फिर स्क्रॉल करने पर टाइमर दोबारा शुरू होता है; SideLens साइडबार के अंदर स्क्रॉल करने से नहीं। डिफ़ॉल्ट: 1 सेकंड; 0 तुरंत शुरू करता है। मैन्युअल कार्रवाइयाँ इंतज़ार नहीं करतीं।',
       'डिफ़ॉल्ट: 3. सभी X टैब और टिप्पणी अनुरोध यह सीमा साझा करते हैं।','सदस्यता या उपयोग के अनुसार भुगतान वाला API',
       'The X Subscription','Grok Dashboard में API Key बनाकर अपने प्लान की साझा साप्ताहिक सीमा से पात्र API उपयोग करें। उपलब्ध मॉडल, सीमाएँ और अतिरिक्त शुल्क अपने खाते में देखें।','Grok API Keys',
       'उपयोग के अनुसार भुगतान वाला xAI API','xAI Console में Key बनाएँ और क्रेडिट खरीदें। इस्तेमाल किए गए टोकन और टूल के लिए भुगतान करें तथा API उपयोग और बिलिंग वहाँ सँभालें।','xAI Console',
-      'सामान्य API क्रेडिट खरीदने से Priority Processing चालू नहीं होता। SuperX सामान्य अनुरोध भेजता है। Priority के लिए स्पष्ट चयन और अतिरिक्त शुल्क चाहिए; इससे व्यस्त समय में देरी घट सकती है, लेकिन उपलब्धता की गारंटी नहीं है।','Priority Processing के बारे में',
+      'सामान्य API क्रेडिट खरीदने से Priority Processing चालू नहीं होता। SideLens सामान्य अनुरोध भेजता है। Priority के लिए स्पष्ट चयन और अतिरिक्त शुल्क चाहिए; इससे व्यस्त समय में देरी घट सकती है, लेकिन उपलब्धता की गारंटी नहीं है।','Priority Processing के बारे में',
       'जवाब का स्रोत चुनें। स्क्रॉलिंग रुकने के बाद सक्षम पोस्ट तय समय तक लगातार दिखने पर तथ्य-जाँच की कतार में जुड़ती हैं।',
       'चालू होने पर स्क्रॉलिंग रुकने और पोस्ट तय समय तक लगातार दिखने के बाद अपने आप विश्लेषण होता है। प्रति सत्र कोई सीमा नहीं है।',
       'स्क्रॉलिंग रुकने और पोस्ट तय समय तक लगातार दिखने के बाद तथ्य-जाँच होती है। उपयोग आपके खाते और प्रदाता के नियमों पर निर्भर है।',
@@ -962,7 +962,7 @@
     'options.apiMeteredTitle','options.apiMeteredHelp','options.apiMeteredLink','options.apiAccountHelp',
     'options.rememberHelp','options.keyReadySaved','options.keyReady','options.keyMissing','options.keyMigration','options.modelHelp','options.reasoningHelp'],{
     en:[
-      'Connection','Enable SuperX','Grok API Key','Paste your Grok API Key','Grok API Keys from grok.com and xAI Console both work here.','Get a Grok API Key or check usage',
+      'Connection','Enable SideLens','Grok API Key','Paste your Grok API Key','Grok API Keys from grok.com and xAI Console both work here.','Get a Grok API Key or check usage',
       'grok.com · The X Subscription','Use eligible API allowance from The X Subscription. Check your Grok Dashboard account for availability and limits.',
       'Choose Grok Inference (not Cursor) and allow Chat and your chosen model.','Create Grok API Key','View Usage',
       'xAI Console · Pay as you go','Add API credits and pay for the Tokens and tools you use. Manage usage and billing in xAI Console.','Keys & billing',
@@ -973,7 +973,7 @@
       'Only levels supported by the selected model are shown. Higher levels may take longer and use more Tokens.'
     ],
     'zh-CN':[
-      '连接','启用 SuperX','Grok API Key','粘贴你的 Grok API Key','grok.com 和 xAI Console 创建的 Grok API Key 均可使用。','获取 Grok API Key 或查看用量',
+      '连接','启用 SideLens','Grok API Key','粘贴你的 Grok API Key','grok.com 和 xAI Console 创建的 Grok API Key 均可使用。','获取 Grok API Key 或查看用量',
       'grok.com · The X Subscription','使用 The X Subscription 支持的 API 额度，具体资格与限制以你的 Grok Dashboard 账户页面为准。',
       '选择 Grok Inference（不是 Cursor），并允许 Chat 和所选模型。','创建 Grok API Key','查看用量',
       'xAI Console · 按量付费','购买 API credits，按实际使用的 Token 和工具计费。在 xAI Console 管理用量和账单。','Key 与账单',
@@ -984,7 +984,7 @@
       '仅显示所选模型支持的档位。更高档位可能耗时更长、使用更多 Token。'
     ],
     'zh-TW':[
-      '連線','啟用 SuperX','Grok API Key','貼上你的 Grok API Key','grok.com 和 xAI Console 建立的 Grok API Key 均可使用。','取得 Grok API Key 或查看用量',
+      '連線','啟用 SideLens','Grok API Key','貼上你的 Grok API Key','grok.com 和 xAI Console 建立的 Grok API Key 均可使用。','取得 Grok API Key 或查看用量',
       'grok.com · The X Subscription','使用 The X Subscription 支援的 API 額度，具體資格與限制以你的 Grok Dashboard 帳戶頁面為準。',
       '選擇 Grok Inference（不是 Cursor），並允許 Chat 和所選模型。','建立 Grok API Key','查看用量',
       'xAI Console · 按用量付費','購買 API credits，依實際使用的 Token 和工具計費。在 xAI Console 管理用量與帳單。','Key 與帳單',
@@ -995,7 +995,7 @@
       '僅顯示所選模型支援的等級。較高等級可能耗時更長、使用更多 Token。'
     ],
     ja:[
-      '接続','SuperX を有効にする','Grok API Key','Grok API Key を貼り付け','grok.com と xAI Console のどちらで作成した Grok API Key も使えます。','Grok API Key の取得・利用量の確認',
+      '接続','SideLens を有効にする','Grok API Key','Grok API Key を貼り付け','grok.com と xAI Console のどちらで作成した Grok API Key も使えます。','Grok API Key の取得・利用量の確認',
       'grok.com · The X Subscription','The X Subscription の対象 API 利用枠を使用します。利用資格と上限は Grok Dashboard のアカウントで確認してください。',
       'Grok Inference（Cursor ではありません）を選択し、Chat と選択したモデルを許可してください。','Grok API Key を作成','利用量を確認',
       'xAI Console · 従量課金','API クレジットを購入し、使用したトークンとツールの料金を支払います。利用量と請求は xAI Console で管理します。','Key と請求',
@@ -1006,7 +1006,7 @@
       '選択したモデルが対応するレベルのみ表示します。高いレベルでは時間とトークン消費が増える場合があります。'
     ],
     ko:[
-      '연결','SuperX 활성화','Grok API Key','Grok API Key 붙여넣기','grok.com과 xAI Console에서 만든 Grok API Key를 모두 사용할 수 있습니다.','Grok API Key 발급 또는 사용량 확인',
+      '연결','SideLens 활성화','Grok API Key','Grok API Key 붙여넣기','grok.com과 xAI Console에서 만든 Grok API Key를 모두 사용할 수 있습니다.','Grok API Key 발급 또는 사용량 확인',
       'grok.com · The X Subscription','The X Subscription에서 지원하는 API 한도를 사용합니다. 이용 자격과 제한은 Grok Dashboard 계정에서 확인하세요.',
       'Grok Inference(Cursor 아님)를 선택하고 Chat과 선택한 모델을 허용하세요.','Grok API Key 만들기','사용량 보기',
       'xAI Console · 종량제','API 크레딧을 구매하고 사용한 토큰과 도구에 대해 결제하세요. 사용량과 청구는 xAI Console에서 관리합니다.','Key 및 청구',
@@ -1017,7 +1017,7 @@
       '선택한 모델이 지원하는 수준만 표시합니다. 높은 수준은 시간이 더 걸리고 토큰을 더 사용할 수 있습니다.'
     ],
     es:[
-      'Conexión','Activar SuperX','Grok API Key','Pega tu Grok API Key','Aquí funcionan las Grok API Keys de grok.com y de xAI Console.','Obtener una Grok API Key o consultar el uso',
+      'Conexión','Activar SideLens','Grok API Key','Pega tu Grok API Key','Aquí funcionan las Grok API Keys de grok.com y de xAI Console.','Obtener una Grok API Key o consultar el uso',
       'grok.com · The X Subscription','Usa la cuota de API elegible de The X Subscription. Consulta la disponibilidad y los límites en tu cuenta de Grok Dashboard.',
       'Elige Grok Inference (no Cursor) y permite Chat y el modelo elegido.','Crear Grok API Key','Ver uso',
       'xAI Console · Pago por uso','Compra créditos de API y paga por los tokens y herramientas que uses. Gestiona el uso y la facturación en xAI Console.','Keys y facturación',
@@ -1028,7 +1028,7 @@
       'Solo se muestran los niveles que admite el modelo elegido. Los niveles superiores pueden tardar más y consumir más tokens.'
     ],
     fr:[
-      'Connexion','Activer SuperX','Grok API Key','Collez votre Grok API Key','Les Grok API Keys de grok.com et de xAI Console fonctionnent ici.','Obtenir une Grok API Key ou consulter l’utilisation',
+      'Connexion','Activer SideLens','Grok API Key','Collez votre Grok API Key','Les Grok API Keys de grok.com et de xAI Console fonctionnent ici.','Obtenir une Grok API Key ou consulter l’utilisation',
       'grok.com · The X Subscription','Utilisez le quota API éligible de The X Subscription. Consultez la disponibilité et les limites de votre compte dans Grok Dashboard.',
       'Choisissez Grok Inference (pas Cursor) et autorisez Chat et le modèle choisi.','Créer une Grok API Key','Voir l’utilisation',
       'xAI Console · Paiement à l’usage','Achetez des crédits API et payez les tokens et outils utilisés. Gérez l’utilisation et la facturation dans xAI Console.','Keys et facturation',
@@ -1039,7 +1039,7 @@
       'Seuls les niveaux pris en charge par le modèle choisi sont affichés. Les niveaux supérieurs peuvent prendre plus de temps et utiliser plus de tokens.'
     ],
     de:[
-      'Verbindung','SuperX aktivieren','Grok API Key','Grok API Key einfügen','Grok API Keys von grok.com und der xAI Console funktionieren hier.','Grok API Key erstellen oder Nutzung prüfen',
+      'Verbindung','SideLens aktivieren','Grok API Key','Grok API Key einfügen','Grok API Keys von grok.com und der xAI Console funktionieren hier.','Grok API Key erstellen oder Nutzung prüfen',
       'grok.com · The X Subscription','Nutze das berechtigte API-Kontingent von The X Subscription. Verfügbarkeit und Limits findest du in deinem Konto im Grok Dashboard.',
       'Wähle Grok Inference (nicht Cursor) und erlaube Chat und das gewählte Modell.','Grok API Key erstellen','Nutzung ansehen',
       'xAI Console · Nutzungsbasierte Abrechnung','Kaufe API-Guthaben und bezahle die verwendeten Tokens und Tools. Verwalte Nutzung und Abrechnung in der xAI Console.','Keys und Abrechnung',
@@ -1050,7 +1050,7 @@
       'Es werden nur vom gewählten Modell unterstützte Stufen angezeigt. Höhere Stufen können länger dauern und mehr Tokens verbrauchen.'
     ],
     pt:[
-      'Conexão','Ativar SuperX','Grok API Key','Cole sua Grok API Key','Grok API Keys do grok.com e do xAI Console funcionam aqui.','Obter uma Grok API Key ou consultar o uso',
+      'Conexão','Ativar SideLens','Grok API Key','Cole sua Grok API Key','Grok API Keys do grok.com e do xAI Console funcionam aqui.','Obter uma Grok API Key ou consultar o uso',
       'grok.com · The X Subscription','Use a cota de API elegível do The X Subscription. Confira a disponibilidade e os limites na sua conta do Grok Dashboard.',
       'Escolha Grok Inference (não Cursor) e permita Chat e o modelo escolhido.','Criar Grok API Key','Ver uso',
       'xAI Console · Pagamento por uso','Compre créditos de API e pague pelos tokens e ferramentas utilizados. Gerencie o uso e a cobrança no xAI Console.','Keys e cobrança',
@@ -1061,7 +1061,7 @@
       'Só aparecem níveis compatíveis com o modelo escolhido. Níveis maiores podem demorar mais e usar mais tokens.'
     ],
     ar:[
-      'الاتصال','تفعيل SuperX','Grok API Key','الصق Grok API Key','تعمل هنا مفاتيح Grok API Key من grok.com وxAI Console.','الحصول على Grok API Key أو مراجعة الاستخدام',
+      'الاتصال','تفعيل SideLens','Grok API Key','الصق Grok API Key','تعمل هنا مفاتيح Grok API Key من grok.com وxAI Console.','الحصول على Grok API Key أو مراجعة الاستخدام',
       'grok.com · The X Subscription','استخدم حصة API المؤهلة ضمن The X Subscription. راجع التوافر والحدود في حسابك على Grok Dashboard.',
       'اختر Grok Inference وليس Cursor، واسمح بـChat والنموذج المختار.','إنشاء Grok API Key','عرض الاستخدام',
       'xAI Console · الدفع حسب الاستخدام','اشترِ رصيد API وادفع مقابل الرموز والأدوات المستخدمة. أدر الاستخدام والفوترة في xAI Console.','المفاتيح والفوترة',
@@ -1072,7 +1072,7 @@
       'تظهر فقط المستويات التي يدعمها النموذج المختار. قد تستغرق المستويات الأعلى وقتًا أطول وتستهلك رموزًا أكثر.'
     ],
     ru:[
-      'Подключение','Включить SuperX','Grok API Key','Вставьте Grok API Key','Здесь работают Grok API Keys из grok.com и xAI Console.','Получить Grok API Key или проверить использование',
+      'Подключение','Включить SideLens','Grok API Key','Вставьте Grok API Key','Здесь работают Grok API Keys из grok.com и xAI Console.','Получить Grok API Key или проверить использование',
       'grok.com · The X Subscription','Используйте доступный лимит API в The X Subscription. Доступность и ограничения указаны в вашем аккаунте Grok Dashboard.',
       'Выберите Grok Inference (не Cursor) и разрешите Chat и выбранную модель.','Создать Grok API Key','Посмотреть использование',
       'xAI Console · Оплата за использование','Купите API-кредиты и платите за использованные токены и инструменты. Управляйте использованием и счетами в xAI Console.','Keys и счета',
@@ -1083,7 +1083,7 @@
       'Показаны только уровни, поддерживаемые выбранной моделью. Более высокие уровни могут требовать больше времени и токенов.'
     ],
     hi:[
-      'कनेक्शन','SuperX चालू करें','Grok API Key','अपनी Grok API Key पेस्ट करें','grok.com और xAI Console की Grok API Keys यहाँ काम करती हैं।','Grok API Key लें या उपयोग देखें',
+      'कनेक्शन','SideLens चालू करें','Grok API Key','अपनी Grok API Key पेस्ट करें','grok.com और xAI Console की Grok API Keys यहाँ काम करती हैं।','Grok API Key लें या उपयोग देखें',
       'grok.com · The X Subscription','The X Subscription की पात्र API सीमा का उपयोग करें। उपलब्धता और सीमाएँ अपने Grok Dashboard खाते में देखें।',
       'Grok Inference चुनें (Cursor नहीं) और Chat व चुने गए मॉडल की अनुमति दें।','Grok API Key बनाएँ','उपयोग देखें',
       'xAI Console · उपयोग के अनुसार भुगतान','API क्रेडिट खरीदें और इस्तेमाल किए गए टोकन व टूल के लिए भुगतान करें। xAI Console में उपयोग और बिलिंग सँभालें।','Keys और बिलिंग',
@@ -1135,7 +1135,7 @@
     "Check this code on the official authorization page:",
     "Copy code",
     "Reopen official authorization page",
-    "If SuperX is enabled, new visible posts follow your existing waiting settings after connecting. Completed results are not rerun.",
+    "If SideLens is enabled, new visible posts follow your existing waiting settings after connecting. Completed results are not rerun.",
     "Sign in to connect your Grok subscription.",
     "Waiting for approval on the official page…",
     "Connected to Grok.",
@@ -1176,7 +1176,7 @@
     "请在官方授权页核对此验证码：",
     "复制验证码",
     "重新打开官方授权页",
-    "如果 SuperX 已启用，连接后会按现有停留设置核查新出现的帖子；已有结果不会重新运行。",
+    "如果 SideLens 已启用，连接后会按现有停留设置核查新出现的帖子；已有结果不会重新运行。",
     "登录以连接你的 Grok 订阅。",
     "等待你在官方页面允许授权…",
     "已连接 Grok。",
@@ -1217,7 +1217,7 @@
     "請在官方授權頁核對此驗證碼：",
     "複製驗證碼",
     "重新開啟官方授權頁",
-    "若 SuperX 已啟用，連線後會依原有停留設定查核新出現的貼文；已有結果不會重新執行。",
+    "若 SideLens 已啟用，連線後會依原有停留設定查核新出現的貼文；已有結果不會重新執行。",
     "登入以連接你的 Grok 訂閱。",
     "等待你在官方頁面允許授權…",
     "已連接 Grok。",
@@ -1258,7 +1258,7 @@
     "公式認証ページで次のコードを確認：",
     "コードをコピー",
     "公式認証ページを再度開く",
-    "SuperX が有効なら、接続後は設定した待機時間に従って新しい投稿を確認します。既存の結果は再実行しません。",
+    "SideLens が有効なら、接続後は設定した待機時間に従って新しい投稿を確認します。既存の結果は再実行しません。",
     "ログインして Grok サブスクリプションを接続してください。",
     "公式ページでの承認を待っています…",
     "Grok に接続済み。",
@@ -1299,7 +1299,7 @@
     "공식 승인 페이지에서 다음 코드를 확인하세요:",
     "코드 복사",
     "공식 승인 페이지 다시 열기",
-    "SuperX가 켜져 있으면 연결 후 기존 대기 설정에 따라 새 게시물을 확인합니다. 기존 결과는 다시 실행하지 않습니다.",
+    "SideLens가 켜져 있으면 연결 후 기존 대기 설정에 따라 새 게시물을 확인합니다. 기존 결과는 다시 실행하지 않습니다.",
     "로그인하여 Grok 구독을 연결하세요.",
     "공식 페이지의 승인을 기다리는 중…",
     "Grok에 연결되었습니다.",
@@ -1340,7 +1340,7 @@
     "Comprueba este código en la página oficial:",
     "Copiar código",
     "Reabrir página oficial",
-    "Si SuperX está activo, las nuevas publicaciones siguen tu espera configurada al conectar. Los resultados existentes no se repiten.",
+    "Si SideLens está activo, las nuevas publicaciones siguen tu espera configurada al conectar. Los resultados existentes no se repiten.",
     "Inicia sesión para conectar tu suscripción Grok.",
     "Esperando aprobación en la página oficial…",
     "Conectado a Grok.",
@@ -1381,7 +1381,7 @@
     "Vérifiez ce code sur la page officielle :",
     "Copier le code",
     "Rouvrir la page officielle",
-    "Si SuperX est actif, les nouveaux posts suivent votre délai habituel après connexion. Les résultats existants ne sont pas relancés.",
+    "Si SideLens est actif, les nouveaux posts suivent votre délai habituel après connexion. Les résultats existants ne sont pas relancés.",
     "Connectez-vous pour utiliser votre abonnement Grok.",
     "En attente de votre accord sur la page officielle…",
     "Connecté à Grok.",
@@ -1422,7 +1422,7 @@
     "Prüfe diesen Code auf der offiziellen Freigabeseite:",
     "Code kopieren",
     "Offizielle Freigabeseite erneut öffnen",
-    "Bei aktiviertem SuperX folgen neue Beiträge nach der Verbindung deiner Wartezeit. Vorhandene Ergebnisse werden nicht erneut erstellt.",
+    "Bei aktiviertem SideLens folgen neue Beiträge nach der Verbindung deiner Wartezeit. Vorhandene Ergebnisse werden nicht erneut erstellt.",
     "Melde dich an, um dein Grok-Abonnement zu verbinden.",
     "Warte auf Freigabe auf der offiziellen Seite…",
     "Mit Grok verbunden.",
@@ -1463,7 +1463,7 @@
     "Confira este código na página oficial:",
     "Copiar código",
     "Reabrir página oficial",
-    "Se SuperX estiver ativo, novos posts seguem seu tempo de espera após conectar. Resultados existentes não são repetidos.",
+    "Se SideLens estiver ativo, novos posts seguem seu tempo de espera após conectar. Resultados existentes não são repetidos.",
     "Entre para conectar sua assinatura Grok.",
     "Aguardando autorização na página oficial…",
     "Conectado ao Grok.",
@@ -1504,7 +1504,7 @@
     "تحقّق من هذا الرمز في صفحة التفويض الرسمية:",
     "نسخ الرمز",
     "إعادة فتح صفحة التفويض الرسمية",
-    "عند تفعيل SuperX تتبع المنشورات الجديدة مهلة الانتظار الحالية بعد الاتصال. لا تُعاد النتائج الموجودة.",
+    "عند تفعيل SideLens تتبع المنشورات الجديدة مهلة الانتظار الحالية بعد الاتصال. لا تُعاد النتائج الموجودة.",
     "سجّل الدخول لربط اشتراك Grok.",
     "بانتظار موافقتك في الصفحة الرسمية…",
     "تم الاتصال بـ Grok.",
@@ -1545,7 +1545,7 @@
     "Проверьте код на официальной странице разрешения:",
     "Копировать код",
     "Открыть официальную страницу снова",
-    "Если SuperX включён, новые посты после подключения проверяются с текущей задержкой. Готовые результаты не запускаются повторно.",
+    "Если SideLens включён, новые посты после подключения проверяются с текущей задержкой. Готовые результаты не запускаются повторно.",
     "Войдите, чтобы подключить подписку Grok.",
     "Ожидается разрешение на официальной странице…",
     "Подключено к Grok.",
@@ -1586,7 +1586,7 @@
     "आधिकारिक अनुमति पेज पर यह कोड जाँचें:",
     "कोड कॉपी करें",
     "आधिकारिक अनुमति पेज फिर खोलें",
-    "SuperX चालू होने पर कनेक्शन के बाद नए पोस्ट मौजूदा प्रतीक्षा सेटिंग का पालन करते हैं। पुराने परिणाम फिर नहीं चलते।",
+    "SideLens चालू होने पर कनेक्शन के बाद नए पोस्ट मौजूदा प्रतीक्षा सेटिंग का पालन करते हैं। पुराने परिणाम फिर नहीं चलते।",
     "Grok सदस्यता जोड़ने के लिए साइन इन करें।",
     "आधिकारिक पेज पर अनुमति की प्रतीक्षा…",
     "Grok से जुड़ गया।",
@@ -1720,18 +1720,18 @@
     ]
   });
   section(['options.pausedWithDrafts'], {
-    en:['SuperX paused. Connection changes are not saved.'],
-    'zh-CN':['SuperX 已暂停，连接更改尚未保存。'],
-    'zh-TW':['SuperX 已暫停，連線變更尚未儲存。'],
-    ja:['SuperX を一時停止しました。接続の変更は未保存です。'],
-    ko:['SuperX를 일시 정지했습니다. 연결 변경 사항은 저장되지 않았습니다.'],
-    es:['SuperX en pausa. Los cambios de conexión no se han guardado.'],
-    fr:['SuperX en pause. Les changements de connexion ne sont pas enregistrés.'],
-    de:['SuperX pausiert. Verbindungsänderungen sind nicht gespeichert.'],
-    pt:['SuperX pausado. As alterações de conexão não foram salvas.'],
-    ar:['تم إيقاف SuperX مؤقتًا. لم تُحفظ تغييرات الاتصال.'],
-    ru:['SuperX приостановлен. Изменения подключения не сохранены.'],
-    hi:['SuperX रुका है। कनेक्शन के बदलाव सहेजे नहीं गए हैं।']
+    en:['SideLens paused. Connection changes are not saved.'],
+    'zh-CN':['SideLens 已暂停，连接更改尚未保存。'],
+    'zh-TW':['SideLens 已暫停，連線變更尚未儲存。'],
+    ja:['SideLens を一時停止しました。接続の変更は未保存です。'],
+    ko:['SideLens를 일시 정지했습니다. 연결 변경 사항은 저장되지 않았습니다.'],
+    es:['SideLens en pausa. Los cambios de conexión no se han guardado.'],
+    fr:['SideLens en pause. Les changements de connexion ne sont pas enregistrés.'],
+    de:['SideLens pausiert. Verbindungsänderungen sind nicht gespeichert.'],
+    pt:['SideLens pausado. As alterações de conexão não foram salvas.'],
+    ar:['تم إيقاف SideLens مؤقتًا. لم تُحفظ تغييرات الاتصال.'],
+    ru:['SideLens приостановлен. Изменения подключения не сохранены.'],
+    hi:['SideLens रुका है। कनेक्शन के बदलाव सहेजे नहीं गए हैं।']
   });
   section(['options.checkFields'], {
     en:['Check the highlighted settings.'],
@@ -1753,84 +1753,84 @@
     'draft.settings','draft.privacy','draft.detached','draft.details','draft.connectionChanged','draft.incomplete'
   ], {
     en:[
-      'Check draft','Checking…','SuperX · Draft fact-check','Collapse','Show check','Show full answer','Show less',
+      'Check draft','Checking…','SideLens · Draft fact-check','Collapse','Show check','Show full answer','Show less',
       'Draft changed. Check again to update.','Check again',"Enter text or add an image to fact-check.",'Draft is too long to check.',
       'Reply context included','Could not complete this check.','Open Settings',
       'Only sent when you click Check draft.','The editor closed. Your check is kept on this page.',
       'Model & tokens','Connection changed. Check this draft again.','This check is incomplete.'
     ],
     'zh-CN':[
-      '核查草稿','核查中…','SuperX · 草稿核查','收起','查看核查','展开全文','收起全文',
+      '核查草稿','核查中…','SideLens · 草稿核查','收起','查看核查','展开全文','收起全文',
       '草稿已修改，重新核查以更新。','重新核查',"输入文字或添加图片后核查。",'草稿过长，无法核查。',
       '已包含回复上下文','未能完成本次核查。','打开设置',
       '点击核查草稿时才会发送内容。','编辑器已关闭，本页保留核查结果。',
       '模型与 Token','连接已更改，请重新核查草稿。','本次核查尚未完成。'
     ],
     'zh-TW':[
-      '查核草稿','查核中…','SuperX · 草稿查核','收合','查看查核','展開全文','收合全文',
+      '查核草稿','查核中…','SideLens · 草稿查核','收合','查看查核','展開全文','收合全文',
       '草稿已修改，請重新查核以更新。','重新查核',"輸入文字或加入圖片後查核。",'草稿過長，無法查核。',
       '已包含回覆上下文','未能完成本次查核。','開啟設定',
       '點選查核草稿時才會傳送內容。','編輯器已關閉，本頁保留查核結果。',
       '模型與 Token','連線已變更，請重新查核草稿。','本次查核尚未完成。'
     ],
     ja:[
-      '下書きを確認','確認中…','SuperX · 下書きの事実確認','折りたたむ','確認結果を表示','全文を表示','表示を減らす',
+      '下書きを確認','確認中…','SideLens · 下書きの事実確認','折りたたむ','確認結果を表示','全文を表示','表示を減らす',
       '下書きが変更されました。再確認して更新してください。','再確認',"テキストを入力するか画像を追加して確認してください。",'下書きが長すぎるため確認できません。',
       '返信元の内容を含む','確認を完了できませんでした。','設定を開く',
       '「下書きを確認」を押したときだけ送信します。','編集欄を閉じました。確認結果はこのページに保持されます。',
       'モデルとトークン','接続が変更されました。下書きを再確認してください。','この確認は未完了です。'
     ],
     ko:[
-      '초안 확인','확인 중…','SuperX · 초안 사실 확인','접기','확인 결과 보기','전체 답변 보기','간략히 보기',
+      '초안 확인','확인 중…','SideLens · 초안 사실 확인','접기','확인 결과 보기','전체 답변 보기','간략히 보기',
       '초안이 변경되었습니다. 다시 확인해 갱신하세요.','다시 확인',"확인할 텍스트를 입력하거나 이미지를 추가하세요.",'초안이 너무 길어 확인할 수 없습니다.',
       '답글의 원문 맥락 포함','확인을 완료하지 못했습니다.','설정 열기',
       '초안 확인을 누를 때만 내용을 전송합니다.','편집기가 닫혔습니다. 확인 결과는 이 페이지에 유지됩니다.',
       '모델 및 토큰','연결이 변경되었습니다. 초안을 다시 확인하세요.','이번 확인은 완료되지 않았습니다.'
     ],
     es:[
-      'Verificar borrador','Verificando…','SuperX · Verificación del borrador','Contraer','Ver verificación','Ver respuesta completa','Ver menos',
+      'Verificar borrador','Verificando…','SideLens · Verificación del borrador','Contraer','Ver verificación','Ver respuesta completa','Ver menos',
       'El borrador cambió. Vuelve a verificarlo para actualizar.','Verificar de nuevo',"Escribe texto o añade una imagen para verificar.",'El borrador es demasiado largo para verificarlo.',
       'Incluye el contexto de la respuesta','No se pudo completar la verificación.','Abrir ajustes',
       'Solo se envía al pulsar Verificar borrador.','El editor se cerró. La verificación se conserva en esta página.',
       'Modelo y tokens','La conexión cambió. Vuelve a verificar el borrador.','Esta verificación está incompleta.'
     ],
     fr:[
-      'Vérifier le brouillon','Vérification…','SuperX · Vérification du brouillon','Réduire','Voir la vérification','Voir la réponse complète','Voir moins',
+      'Vérifier le brouillon','Vérification…','SideLens · Vérification du brouillon','Réduire','Voir la vérification','Voir la réponse complète','Voir moins',
       'Le brouillon a changé. Relancez la vérification pour actualiser.','Vérifier à nouveau',"Saisissez du texte ou ajoutez une image à vérifier.",'Le brouillon est trop long pour être vérifié.',
       'Contexte de la réponse inclus','La vérification n’a pas pu aboutir.','Ouvrir les paramètres',
       'Envoyé uniquement en cliquant sur Vérifier le brouillon.','L’éditeur est fermé. La vérification reste sur cette page.',
       'Modèle et tokens','La connexion a changé. Vérifiez à nouveau le brouillon.','Cette vérification est incomplète.'
     ],
     de:[
-      'Entwurf prüfen','Wird geprüft…','SuperX · Entwurfsprüfung','Einklappen','Prüfung anzeigen','Ganze Antwort anzeigen','Weniger anzeigen',
+      'Entwurf prüfen','Wird geprüft…','SideLens · Entwurfsprüfung','Einklappen','Prüfung anzeigen','Ganze Antwort anzeigen','Weniger anzeigen',
       'Entwurf geändert. Zum Aktualisieren erneut prüfen.','Erneut prüfen',"Text eingeben oder ein Bild zum Prüfen hinzufügen.",'Der Entwurf ist zu lang zum Prüfen.',
       'Antwortkontext enthalten','Die Prüfung konnte nicht abgeschlossen werden.','Einstellungen öffnen',
       'Wird erst beim Klick auf Entwurf prüfen gesendet.','Der Editor wurde geschlossen. Die Prüfung bleibt auf dieser Seite.',
       'Modell und Tokens','Verbindung geändert. Den Entwurf erneut prüfen.','Diese Prüfung ist unvollständig.'
     ],
     pt:[
-      'Verificar rascunho','Verificando…','SuperX · Verificação do rascunho','Recolher','Ver verificação','Ver resposta completa','Ver menos',
+      'Verificar rascunho','Verificando…','SideLens · Verificação do rascunho','Recolher','Ver verificação','Ver resposta completa','Ver menos',
       'O rascunho mudou. Verifique novamente para atualizar.','Verificar novamente',"Digite texto ou adicione uma imagem para verificar.",'O rascunho é longo demais para verificar.',
       'Contexto da resposta incluído','Não foi possível concluir a verificação.','Abrir configurações',
       'Enviado apenas ao clicar em Verificar rascunho.','O editor foi fechado. A verificação permanece nesta página.',
       'Modelo e tokens','A conexão mudou. Verifique o rascunho novamente.','Esta verificação está incompleta.'
     ],
     ar:[
-      'تحقّق من المسودة','جارٍ التحقق…','SuperX · التحقق من المسودة','طي','عرض التحقق','عرض الإجابة كاملة','عرض أقل',
+      'تحقّق من المسودة','جارٍ التحقق…','SideLens · التحقق من المسودة','طي','عرض التحقق','عرض الإجابة كاملة','عرض أقل',
       'تغيّرت المسودة. تحقّق مجددًا لتحديث النتيجة.','تحقّق مجددًا',"أدخل نصًا أو أضف صورة للتحقق.",'المسودة أطول من أن يتم التحقق منها.',
       'يشمل سياق الرد','تعذّر إكمال التحقق.','فتح الإعدادات',
       'لا يُرسل المحتوى إلا عند الضغط على تحقّق من المسودة.','أُغلق المحرر. تبقى نتيجة التحقق في هذه الصفحة.',
       'النموذج والرموز','تغيّر الاتصال. تحقّق من المسودة مجددًا.','هذا التحقق غير مكتمل.'
     ],
     ru:[
-      'Проверить черновик','Проверка…','SuperX · Проверка черновика','Свернуть','Показать проверку','Показать весь ответ','Показать меньше',
+      'Проверить черновик','Проверка…','SideLens · Проверка черновика','Свернуть','Показать проверку','Показать весь ответ','Показать меньше',
       'Черновик изменён. Повторите проверку для обновления.','Проверить снова',"Введите текст или добавьте изображение для проверки.",'Черновик слишком длинный для проверки.',
       'Контекст ответа включён','Не удалось завершить проверку.','Открыть настройки',
       'Отправляется только после нажатия «Проверить черновик».','Редактор закрыт. Проверка сохранена на этой странице.',
       'Модель и токены','Подключение изменилось. Проверьте черновик снова.','Эта проверка не завершена.'
     ],
     hi:[
-      'ड्राफ़्ट जाँचें','जाँच जारी…','SuperX · ड्राफ़्ट की तथ्य जाँच','समेटें','जाँच देखें','पूरा जवाब देखें','कम दिखाएँ',
+      'ड्राफ़्ट जाँचें','जाँच जारी…','SideLens · ड्राफ़्ट की तथ्य जाँच','समेटें','जाँच देखें','पूरा जवाब देखें','कम दिखाएँ',
       'ड्राफ़्ट बदल गया है। अपडेट करने के लिए फिर जाँचें।','फिर जाँचें',"जाँचने के लिए टेक्स्ट लिखें या इमेज जोड़ें।",'ड्राफ़्ट जाँचने के लिए बहुत लंबा है।',
       'जवाब का संदर्भ शामिल है','जाँच पूरी नहीं हो सकी।','सेटिंग खोलें',
       'ड्राफ़्ट जाँचें दबाने पर ही सामग्री भेजी जाती है।','एडिटर बंद है। जाँच का नतीजा इस पेज पर बना रहता है।',
@@ -1996,6 +1996,23 @@
     "ru": ["{label} (Рекомендуется)","Для просмотра ленты подходит Grok 4.3 без рассуждений: ответы обычно быстрее и короче, расход токенов ниже."],
     "hi": ["{label} (अनुशंसित)","फ़ीड देखते समय Grok 4.3 बिना तर्क-विचार के उपयुक्त है: आम तौर पर तेज़, संक्षिप्त जवाब और कम टोकन।"]
   });
+  // SideLens changes the browsing contract; inherited translations fall back to English.
+  const sideLensCopy={
+    en:{'sidelens.analyze':'Analyze post','sidelens.refresh':'Analyze again','sidelens.generated':'Generated','sidelens.mediaPost':'Media post',
+      'common.enabled':'Click to analyze · enabled','common.paused':'SideLens paused','status.disabled':'SideLens paused',
+      'status.waiting':'Click Analyze post to begin','options.tagline':'Read. Check. Think.',
+      'options.cacheHelp':'Results stay on this device for up to 24 hours (160 results / 4 MB). Reused after reload or browser restart. Clear cached answers here while keeping browsing history, or analyze a post again.',
+      'history.subtitle':'Posts you choose to analyze and their available results stay on this device for 24 hours.'},
+    'zh-CN':{'sidelens.analyze':'开始分析','sidelens.refresh':'重新分析','sidelens.generated':'生成于','sidelens.mediaPost':'媒体推文',
+      'common.enabled':'点击分析 · 已开启','common.paused':'SideLens 已暂停','status.disabled':'SideLens 已暂停',
+      'status.waiting':'点击「开始分析」获取结果','options.tagline':'多一个视角，多一份依据。',
+      'options.cacheHelp':'分析结果在本机保存最多 24 小时（160 条 / 4 MB），刷新页面和重启浏览器后均可复用。可在此清除，或在帖子中重新分析。',
+      'history.subtitle':'只记录你主动分析的推文及已有结果，在本机保留 24 小时。'}
+  };
+  for(const language of SUPPORTED_LANGUAGES){
+    for(const [key,value] of Object.entries(sideLensCopy.en))if(key.startsWith('sidelens.'))catalog[language][key]=value;
+    Object.assign(catalog[language],sideLensCopy[language]||{});
+  }
   const aliases = {'common.auto':'lang.auto','common.failed':'status.failed','tooltip.collapse':'common.collapse','tooltip.expand':'common.expand','build.imageUnavailable':'draft.imageUnavailable','build.imageLimit':'error.mediaLimit'};
   for (const language of SUPPORTED_LANGUAGES) {
     for (const [key, source] of Object.entries(aliases)) catalog[language][key] = catalog[language][source];

@@ -1,5 +1,5 @@
 {
   "extensionDescription": {
-    "message": "Grok prüft X-Posts automatisch gründlich. Post-/Antwortentwürfe prüfen. Quellen, 24h-Verlauf. The X Subscription oder API Key."
+    "message": "X-Beiträge mit Grok prüfen: Quellen, Folgefragen, bearbeitbare Antwortentwürfe und lokaler Cache. Eigene Grok-Verbindung nötig."
   }
 }

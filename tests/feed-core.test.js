@@ -769,24 +769,11 @@ test('applying UI translation updates only marked text and accessibility fields 
   ui.apply(document,'en');assert.equal(document.documentElement.dir,'ltr');
 });
 
-test('Settings author attribution localizes its label and keeps a safe public X profile link', () => {
+test('Settings footer contains only the safe SideLens privacy link', () => {
   const html=fs.readFileSync(path.join(__dirname,'../extension/options.html'),'utf8');
-  const author=html.match(/<p class="settings-author">([\s\S]*?)<\/p>/)?.[1];
-  assert.ok(author);
-  assert.match(author,/<a href="https:\/\/x\.com\/coolish" target="_blank" rel="noopener noreferrer" dir="ltr">PaulWei<\/a>/);
-  const label=new UIElement({'data-i18n':'options.author'});
-  const profile=new UIElement({href:'https://x.com/coolish',target:'_blank',rel:'noopener noreferrer',dir:'ltr'});
-  profile.textContent='PaulWei';
-  const document={documentElement:{},querySelectorAll:()=>[label]};
-  for(const locale of ui.SUPPORTED_LANGUAGES) {
-    ui.apply(document,locale);
-    assert.equal(label.textContent,ui.catalog[locale]['options.author']);
-    assert.ok(label.textContent&&!label.textContent.includes('options.author'));
-    assert.equal(profile.textContent,'PaulWei');
-    assert.equal(profile.getAttribute('href'),'https://x.com/coolish');
-  }
-  assert.equal(ui.t('options.author','en'),'By');
-  assert.equal(ui.t('options.author','zh-CN'),'作者');
+  const footer=html.match(/<footer class="settings-footer">([\s\S]*?)<\/footer>/)?.[1];
+  assert.ok(footer);assert.match(footer,/href="privacy.html" target="_blank" rel="noopener noreferrer"/);
+  assert.match(footer,/options\.privacyLink/);assert.doesNotMatch(footer,/PaulWei|coolish|settings-author|note\.possibleErrors/);
 });
 
 // Synthetic encryption has an opaque local envelope and a separate worker-side

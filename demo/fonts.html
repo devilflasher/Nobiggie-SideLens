@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SideLens · 中文字体对比</title>
+<style>
+@font-face{font-family:'SL Noto Sans';src:local('Noto Sans SC');font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:'SL Noto Serif';src:local('Noto Serif SC');font-style:normal;font-weight:100 900;font-display:swap}
+*{box-sizing:border-box}body{margin:0;background:#f2eedf;color:#181811;font:14px/1.6 'Microsoft YaHei',sans-serif;--reading-size:16px;--reading-leading:1.85}
+button,input,select{font:inherit}button{cursor:pointer;border:2px solid #181811;border-radius:0;background:#faf7eb;color:#181811;padding:7px 13px;font-weight:600}button:hover{background:#e8e1ce}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #bc1723;outline-offset:3px}button[aria-pressed=true],.copy{background:#cf1f2b;color:#fff9ed;box-shadow:3px 3px 0 #181811}
+.masthead{display:flex;align-items:center;gap:24px;justify-content:space-between;max-width:1100px;margin:auto;padding:25px 26px;border-bottom:3px solid #181811}.logo{font:900 28px/1.1 Arial,sans-serif;letter-spacing:-1.4px}.logo small{display:block;font:9px/1.5 monospace;letter-spacing:1.4px;margin-top:10px;color:#6a655a}a{color:#bc1723;text-decoration:none}a:hover{text-decoration:underline}
+main{max-width:1100px;margin:auto;padding:26px}h1{font-size:26px;line-height:1.4;margin:0 0 9px;font-weight:700}p{margin:0}.intro{color:#6a655a;max-width:800px}.controls{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;padding:18px 20px;border:2px solid #181811;background:#faf7eb;margin:22px 0 10px;box-shadow:4px 4px 0 #181811}.control{display:flex;align-items:center;gap:10px;white-space:nowrap}.control output{font:12px/1.5 monospace;min-width:44px}.control input[type=range]{width:116px;accent-color:#bc1723}.control input[type=checkbox]{accent-color:#bc1723;width:16px;height:16px}.hint{color:#6a655a;font-size:12px;margin-bottom:25px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 28px}.choice{min-width:0;border:2px solid #181811;background:#eae4d4;padding:18px;box-shadow:5px 5px 0 #181811}.choice[data-selected=true]{outline:3px solid #bc1723;outline-offset:5px}.choice-head{display:flex;gap:14px;align-items:start;justify-content:space-between;margin-bottom:16px}.choice-title{font-size:18px;font-weight:700;margin:0;line-height:1.5}.choice-title span{font-family:Arial,sans-serif;margin-right:7px}.tag{color:#bc1723;font-size:11px;display:inline-block;margin-left:8px}.description{font-size:12px;color:#6a655a;margin-top:3px}.available{font-size:11px;color:#6a655a;margin-top:3px}.available[data-loaded=false]{color:#bc1723}
+.sample{max-width:430px;margin:auto;background:#f2eedf;border:2px solid #181811;--sample-font:'Microsoft YaHei',sans-serif;font-family:var(--sample-font)}.sample-header{display:flex;align-items:center;justify-content:space-between;padding:17px 19px;border-bottom:3px solid #181811}.sample-logo{font:700 22px/1.1 Arial,sans-serif;letter-spacing:-.8px}.header-mark{font-size:17px;margin-right:6px}.header-tools{font:15px/1.4 Arial,sans-serif;letter-spacing:7px}.sample-content{padding:19px}.eyebrow{font:9px/1.5 monospace;letter-spacing:1.8px;color:#bc1723;margin-bottom:12px}.post{padding:14px;border:2px solid #181811;background:#f8f5e9;box-shadow:4px 4px 0 #181811;margin-bottom:20px}.author{font-size:13px;font-weight:600;color:#bc1723;margin-bottom:8px}.post p{font-size:14px;line-height:1.7;font-weight:400}.meta{font-family:var(--sample-font);font-size:12px;line-height:1.6;color:#6a655a;margin-bottom:15px}.meta span{display:block;margin-top:6px}
+.reading{font-size:var(--reading-size);line-height:var(--reading-leading);font-weight:400;letter-spacing:0}.reading h2{font-size:calc(var(--reading-size) + 2px);line-height:1.55;font-weight:600;margin:0 0 13px}.reading p{margin:0 0 16px}.reading strong{font-weight:600}.reading .citation{font-size:.85em;color:#bc1723;white-space:nowrap}.reading ul{padding-left:20px;margin:0 0 16px}.reading li{margin-bottom:5px}.reading code{font-family:Consolas,monospace;font-size:.9em;background:#e8e1ce;padding:1px 3px}.heavy .reading p,.heavy .reading li,.heavy .reading strong{font-weight:700}.sample-action{margin-top:18px;padding-top:16px;border-top:1px solid #a79e89}.sample-action span{display:inline-block;font-family:var(--sample-font);font-size:12px;font-weight:600;padding:7px 12px;background:#cf1f2b;color:#fff9ed;border:2px solid #181811;box-shadow:3px 3px 0 #181811}
+.summary{position:static;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 19px;margin-top:30px;border:2px solid #181811;box-shadow:4px 4px 0 #181811;background:#faf7eb}.summary p{font-size:13px}.summary small{display:block;color:#6a655a;font-size:11px;margin-top:2px}.summary button{flex:none}footer{font-size:12px;color:#6a655a;padding:30px 0 12px}#copy-status{color:#bc1723;font-size:12px;min-height:19px;margin-top:12px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.masthead{padding:20px}.masthead>a{font-size:12px}main{padding:20px}.choice{padding:13px}.choice-head{flex-wrap:wrap}.sample{max-width:430px}.summary{position:static;flex-wrap:wrap}.controls{gap:16px}.reading{overflow-wrap:anywhere}}
+</style>
+<script src="fonts.js" defer></script>
+</head>
+<body>
+<header class="masthead"><div class="logo">SIDELENS ↗<small>TYPE STUDY / 中文阅读</small></div><a href="options.html?lang=zh-CN">返回设置预览 ↗</a></header>
+<main>
+<h1>先选读起来舒服的字。</h1>
+<p class="intro">四款字体使用相同内容、配色与排版。LOGO 保持原样；正文默认常规字重，只加粗重点。字体选择只记录在本页。</p>
+<section class="controls" aria-label="阅读排版设置">
+<label class="control" for="size">正文字号 <input id="size" type="range" min="14" max="18" step="0.5" value="16"><output id="size-value" for="size">16 px</output></label>
+<label class="control" for="leading">行距 <input id="leading" type="range" min="1.6" max="2.1" step="0.05" value="1.85"><output id="leading-value" for="leading">1.85</output></label>
+<label class="control"><input id="heavy" type="checkbox">模拟整段加粗</label>
+<button id="reset" type="button">恢复推荐排版</button>
+</section>
+<p class="hint">建议先保持 16px / 1.85 行距比较字体，再微调。勾选“模拟整段加粗”，可对比截图里偏粗的阅读效果。</p>
+<div class="grid" id="choices"></div>
+<section class="summary" aria-label="当前选择"><p id="selection" aria-live="polite">尚未选择字体。<small>选好后，可以直接在聊天里告诉我 A、B、C 或 D。</small></p><button class="copy" id="copy" type="button">复制当前方案</button></section>
+<p id="copy-status" role="status"></p>
+<footer>本页仅使用本机字体，不请求在线字体，也不调用 Grok。Noto 字体信息见 <a href="https://github.com/notofonts/noto-cjk" target="_blank" rel="noopener noreferrer">Noto CJK 官方项目 ↗</a>。</footer>
+</main>
+<template id="card">
+<section class="choice">
+<div class="choice-head"><div><h2 class="choice-title"></h2><p class="description"></p><p class="available">正在检测本机字体…</p></div><button type="button" class="select" aria-pressed="false">选这款</button></div>
+<article class="sample">
+<header class="sample-header"><div class="sample-logo"><span class="header-mark">⌗</span>SideLens</div><span class="header-tools" aria-hidden="true">↺ ⚙ ›</span></header>
+<div class="sample-content"><div class="eyebrow">POST / FACT CHECK</div>
+<div class="post"><div class="author">观察笔记 @ReadingNotes</div><p>这篇文章介绍了三个 AI 工具：它们分别适合什么任务，哪些能力还需要进一步核实？</p></div>
+<div class="meta">生成于 2026/10/27 00:37<span>28,416 tokens · Grok</span></div>
+<div class="reading">
+<h2>结论与可核实的信息</h2>
+<p><strong>工具的定位不同，适合的任务也不同。</strong>阅读产品介绍时，可以先区分它是在浏览器里工作，还是需要在本机运行。名称相似，并不代表功能和使用条件相同。<span class="citation"> [1][2]</span></p>
+<p>例如，部分工具支持搜索资料、整理日历和处理文档；另一些工具更侧重代码编辑与终端操作。<strong>“支持某项功能”与“能够稳定完成任务”是两件事。</strong></p>
+<ul><li>先查看官方说明、发布日期和适用版本。</li><li>确认收费方式、权限范围，以及实际需要的配置。</li><li>遇到缺少依据的说法，保留不确定性。</li></ul>
+<p>安装之前，建议检查 <code>README</code> 中的使用方法。尤其要区分“免费试用”“订阅内额度”和“按调用量计费”，避免把宣传用语当作长期承诺。<span class="citation"> [3]</span></p>
+</div><div class="sample-action"><span>重新分析</span></div></div>
+</article></section>
+</template>
+</body></html>

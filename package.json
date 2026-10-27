@@ -1,12 +1,10 @@
 {
-  "name": "superx",
-  "version": "1.0.0",
+  "name": "nobiggie-sidelens",
+  "version": "0.1.6",
   "private": true,
   "license": "MIT",
-  "description": "A Chrome/Edge extension for concise fact-checks beside X posts, using Grok subscription sign-in, an API Key or local Grok Build.",
-  "homepage": "https://superx.vip/",
-  "repository": { "type": "git", "url": "https://github.com/bwjoke/SuperX.git" },
-  "bugs": { "url": "https://github.com/bwjoke/SuperX/issues" },
+  "description": "On-demand X fact checks in a NoBiggie styled drawer, with local result caching.",
+  "homepage": "https://nobiggie.xyz",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node tools/validate.mjs",

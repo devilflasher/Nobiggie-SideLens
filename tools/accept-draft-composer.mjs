@@ -779,7 +779,7 @@ try{
     await modalPage.locator('[role="dialog"] [contenteditable]').fill('The incident in the original post did not happen.');await settle(modalPage);
     await modalPage.locator('[role="dialog"] superx-draft-action').getByRole('button').click();await settle(modalPage);
     const request=await modalPage.evaluate(()=>qa.sent.filter(message=>message.type==='ANALYZE_DRAFT').at(-1)),ids=request.draft.threadContext?.map(value=>value.id)||[];
-    const expectsAncestors=variant==='captured-status'||variant==='own-dialog-chain';
+    const expectsAncestors=variant==='own-dialog-chain';
     check('draft thread: '+variant+' dialog context obeys ancestry boundaries',JSON.stringify(ids)===JSON.stringify(expectsAncestors?['100','101']:[])&&request.draft.context?.id===(variant==='different-parent'?'200':'102'),request.draft);
     if(variant==='captured-status'){
       await modalPage.evaluate(()=>qa.manager.reset());await settle(modalPage);
@@ -815,7 +815,7 @@ try{
   await lateAncestorPage.locator('[contenteditable]').fill('Check the original incident.');await settle(lateAncestorPage);
   await lateAncestorPage.locator('superx-draft-action').getByRole('button').click();await settle(lateAncestorPage);
   const lateAncestorRequest=await lateAncestorPage.evaluate(()=>qa.sent.find(message=>message.type==='ANALYZE_DRAFT').draft);
-  check('draft thread: newly hydrated middle ancestor retains a previously captured virtualized root',JSON.stringify(lateAncestorRequest.threadContext?.map(value=>value.id))===JSON.stringify(['100','101'])&&lateAncestorRequest.context?.id==='102',lateAncestorRequest);
+  check('draft thread: no passive capture of a root removed before the first explicit check',JSON.stringify(lateAncestorRequest.threadContext?.map(value=>value.id))===JSON.stringify(['101'])&&lateAncestorRequest.context?.id==='102',lateAncestorRequest);
   for(const scene of ['new-inline','new-modal']){
     const quotePage=await threadContext.newPage();quotePage.on('pageerror',error=>report.pageErrors.push({label:'draft-post-quote-'+scene,message:error.message}));
     await start(quotePage,scene,'dark',1100,'en','separator',page=>page.locator('.editor-row').evaluate((node,markup)=>node.insertAdjacentHTML('afterend',markup),threadArticle(300,'The user is quoting this source in a new post.')));

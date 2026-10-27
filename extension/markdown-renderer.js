@@ -120,7 +120,12 @@
             case 'space':appendText(parent,token.raw);break;
             case 'def':break; // Definitions are metadata for reference links.
             case 'paragraph': {
-              const node=element('p');inline(node,token.tokens,depth+1);parent.append(node);break;
+              const node=element('p');
+              const meaningful=(token.tokens||[]).filter(item=>item.type!=='text'||item.text?.trim());
+              // Long paragraphs wrapped entirely in bold remain body copy;
+              // short emphasis and real Markdown headings keep their weight.
+              if(meaningful.length===1&&meaningful[0].type==='strong'&&meaningful[0].text.length>40)node.classList.add('md-body-emphasis');
+              inline(node,token.tokens,depth+1);parent.append(node);break;
             }
             case 'heading': {
               const level=Math.max(1,Math.min(6,Number(token.depth)||1)),node=element('h'+level);

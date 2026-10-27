@@ -1,5 +1,5 @@
 name: Usage question
-description: Ask about installation, settings or using SuperX.
+description: Ask about installation, settings or using SideLens.
 title: '[Question] '
 body:
   - type: markdown
@@ -16,4 +16,4 @@ body:
     id: environment
     attributes:
       label: Version and installation source
-      description: If relevant, include SuperX and browser versions and whether you installed from the Chrome Web Store, a GitHub Release or source.
+      description: If relevant, include SideLens and browser versions and whether you installed from the Chrome Web Store, a GitHub Release or source.

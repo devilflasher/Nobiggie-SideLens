@@ -1,3 +1,56 @@
+# SideLens 0.1.6 · 2026-10-27
+
+- Add Settings credits with the explicit acknowledgement “感谢原作者 @coolish 的贡献”, linking the author, SuperX project and retained MIT license.
+- Prepare localized short descriptions, the SideLens product homepage and a public privacy-policy link for the Chrome Web Store listing.
+- Generation logic and permissions remain unchanged from 0.1.5.
+
+# SideLens 0.1.5 · 2026-10-27
+
+- Give each tweet trigger its own theme palette and a masked symbol: dark surface/coral ink in dark themes, paper/deep red in light mode, with 22px geometry preserved.
+- Restore reply drafting below Analyze again with tone, direction and approximate 50/100/300/500/1000-character targets. Generate one editable draft from the original post, analysis and three recent discussion exchanges; display actual character count and copy edited text.
+- Reuse the current API, subscription or local Build connection. Draft only on trusted user clicks, with no search, automatic publishing, history, persistent cache or diagnostic storage. Preserve the separate three-question suggestion behavior.
+- Keep the legacy three-short-comment helpers intact for compatibility; the restored interface uses a dedicated reply prompt and sufficient output allowance for longer drafts.
+
+# SideLens 0.1.4 · 2026-10-27
+
+- Follow X light, dim and black appearance automatically, including triggers, drawer, Markdown and draft results; extension pages use the last observed X appearance.
+- Add streamed follow-up conversations with the original post, initial analysis and up to three recent question/answer pairs, using the configured API, subscription or local Build connection.
+- Generate three clickable, context-specific question suggestions after an analysis and each follow-up answer. Cache only initial suggestions; keep private conversation and subsequent suggestions out of persistent history, caches and diagnostics.
+- Add the supplied NoBiggie community logo and a gently animated footer link to https://nobiggie.xyz/chat, respecting reduced motion.
+- Preserve trusted-click, sender validation, account isolation, request cancellation, bounded inputs and safe Markdown rendering. No new permissions or telemetry.
+
+# SideLens 0.1.3 · 2026-10-27
+
+- Prioritize consequential numerical comparisons, causal explanations and forward-looking implications over routine confirmations. Require relevant source follow-ups, comparable data and explicit evidence gaps without forcing a negative verdict.
+- Add conditional Markdown guidance: concise headings, short bold emphasis, narrow comparison tables when useful and attributed source quotations. Existing styles supply colors; model output never needs HTML or CSS.
+- Apply the shared core across API, subscription and local Build, including draft checks. Preserve model, reasoning, tool and output-limit selections and genuine custom prompts.
+- Upgrade exact copies of the former default and partition answer caches from earlier prompt rules; preserve history and existing records.
+
+# SideLens 0.1.2 · 2026-10-27
+
+- Apply selected Noto Sans SC reading font: 14px, line-height 1.85, regular body and semibold emphasis. Keep Arial wordmarks unchanged.
+- Style Markdown headings, ink/light badges, quotation rules, comparison tables and separators in the paper/ink/red visual system.
+- Long paragraphs entirely wrapped in bold render at body weight, preserving content and short emphasis.
+- Typography applies to the drawer, saved results, draft results and extension UI. Existing cached Markdown benefits without another provider call.
+
+# SideLens 0.1.1 · 2026-10-27
+
+- Smaller 22px anchored tweet actions that stay above post text.
+- Remove comment generation from the analysis panel and hide its settings.
+- Dismiss the drawer by clicking outside; preserve in-drawer interaction.
+- Keep only the privacy link in the Settings footer.
+- Paper, black borders, red accents and hard shadows; preserve wordmark typography.
+
+# SideLens 0.1.0 · 2026-10-27
+
+- Fork of SuperX 1.0.0; existing MIT notices retained.
+- On-demand tweet buttons and a single right-side drawer replace automatic feed analysis.
+- Bounded persistent local cache, explicit regeneration and selected-post history.
+- NoBiggie dark / acid-green theme, custom vector branding, and trusted-click/message hardening.
+- Earlier entries below are upstream historical records, not SideLens acceptance claims.
+
+---
+
 # Changelog
 
 SuperX release history. The extension's `manifest.json` is the authoritative installed version. Test counts below describe those releases' recorded checks, not live provider or browser-store certification.

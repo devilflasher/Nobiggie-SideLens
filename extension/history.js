@@ -205,7 +205,7 @@
       $('history-status').dataset.state = status?.error ? 'error' : 'success';
     }
     function render({forceList = false} = {}) {
-      ui.apply(document,language);document.title = 'SuperX · ' + t('history.title');renderStatus();
+      ui.apply(document,language);document.title = 'SideLens · ' + t('history.title');renderStatus();
       $('history-enabled').checked = enabled;$('history-enabled').disabled = busy || !loaded;
       $('refresh-history').disabled = busy || loading;
       const available = filterEntries(entries,'',now(),ttl),query = $('history-search').value,shown = query.trim() ? filterEntries(entries,query,now(),ttl) : available;

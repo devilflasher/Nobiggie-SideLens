@@ -9,11 +9,11 @@ export const PRODUCTION_FILES = Object.freeze([
   ...MANIFEST_LOCALES.map(locale => `_locales/${locale}/messages.json`),
   'api-provider.js',
   'assets/icon-128.png', 'assets/icon-16.png', 'assets/icon-32.png', 'assets/icon-48.png',
-  'assets/superx-logo.svg', 'assets/superx-symbol.svg',
+  'assets/superx-logo.svg', 'assets/superx-symbol.svg', 'assets/nb-logo.png',
   'background.js', 'build-acp.js', 'build-transport.js', 'build-provider.js', 'build-setup.js', 'content.js', 'draft-composer.js', 'feed-core.js', 'history-store.js', 'history.css', 'history.html', 'history.js', 'key-store.js', 'LICENSE.txt', 'manifest.json',
   'markdown-renderer.js', 'marked-LICENSE.txt', 'marked.umd.js',
   'oauth-provider.js', 'options.css', 'options.html', 'options.js', 'overlay-layout.js',
-  'popup.css', 'popup.html', 'popup.js', 'privacy.html', 'setup.css', 'setup.html', 'setup.js', 'ui-i18n.js',
+  'sidelens-theme.css', 'sidelens-appearance.js', 'sidelens-followup.js', 'popup.css', 'popup.html', 'popup.js', 'privacy.html', 'setup.css', 'setup.html', 'setup.js', 'ui-i18n.js',
 ].sort());
 
 const productionSet = new Set(PRODUCTION_FILES);
@@ -118,7 +118,7 @@ export async function inspectPackage(root = projectRoot, expectedVersion) {
     throw new Error('LICENSE.txt: distribution license must match the repository LICENSE');
   }
   if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)
-    || manifest.manifest_version !== 3 || manifest.name !== 'SuperX') throw new Error('manifest.json: expected SuperX Manifest V3');
+    || manifest.manifest_version !== 3 || manifest.name !== 'Nobiggie SideLens') throw new Error('manifest.json: expected Nobiggie SideLens Manifest V3');
   const localization = validateManifestLocales(manifest, byName);
   validateVersion(manifest.version, 'manifest.json');
   validateVersion(pkg.version, 'package.json');
@@ -212,11 +212,11 @@ export async function packageExtension({ root = projectRoot, outputDir = resolve
   if (!rel || (!isAbsolute(rel) && rel !== '..' && !rel.startsWith(`..${sep}`))) {
     throw new Error('Output directory must be outside the extension directory');
   }
-  const base = `SuperX-${inspected.version}`;
+  const base = `SideLens-${inspected.version}`;
   const archiveName = `${base}.zip`, filesName = `${base}-files.json`, sumsName = `${base}-SHA256SUMS.txt`;
   const archive = createArchive(inspected.files);
   const fileManifest = Buffer.from(`${JSON.stringify({
-    name: 'SuperX', version: inspected.version,
+    name: 'Nobiggie SideLens', version: inspected.version,
     files: inspected.files.map(file => ({ path: file.name, bytes: file.data.length, sha256: sha256(file.data) })),
   }, null, 2)}\n`);
   const checksums = `${sha256(archive)}  ${archiveName}\n${sha256(fileManifest)}  ${filesName}\n`;
@@ -241,7 +241,7 @@ async function main(args) {
   }
   if (check) {
     const result = await inspectPackage(projectRoot, expectedVersion);
-    console.log(`SuperX ${result.version}: ${result.files.length} production files are ready to package.`);
+    console.log(`SideLens ${result.version}: ${result.files.length} production files are ready to package.`);
     return;
   }
   const result = await packageExtension({ expectedVersion, outputDir });

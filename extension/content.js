@@ -7,25 +7,25 @@
   // request after upgrading to the API-only release.
   if (workerNonce) return;
 
-  const Core = XGrokCore, Layout = GrokFirstOverlayLayout, UI = GrokFirstUI;
+  const Core = XGrokCore, UI = GrokFirstUI;
   let xUILanguage = UI.normalizeLanguage(document.documentElement.getAttribute('lang') || navigator.language || 'en');
   let uiLanguage = UI.resolveLanguage('auto',xUILanguage);
   const t = (key, vars) => UI.t(key, uiLanguage, vars);
-  let settings = Core.DEFAULT_SETTINGS, providerReady = false, connected = false, port, used = 0, collapsed = false;
-  let lastPath = location.pathname, scanTimer, reconnectTimer, handshakeTimer, dwellTimer, dwellDeadline=0, needsPageRefresh = false;
+  let settings = Core.DEFAULT_SETTINGS, providerReady = false, connected = false, port, used = 0, collapsed = true;
+  let lastPath = location.pathname, scanTimer, reconnectTimer, handshakeTimer, needsPageRefresh = false;
   let hasConfig=false,workerSleeping=false,awaitingConfig=false,reconnectFailures=0,xModalBlocked=false,pageSuspended=false;
   let oauthState={},credentialIdentity='',taskRevision;
-  let draftComposer;
+  let draftComposer, activeEntry = null, lastTrigger = null, lastSentAppearance;
+  const followups=globalThis.SideLensFollowup?.create({send:message=>post(message),canSend:()=>usableConnection()&&settings.enabled,render:(target,text)=>GrokFirstMarkdown.render(target,text),language:()=>uiLanguage,wake:(entry,action)=>afterWake(entry,'followup',action),cancelWake:entry=>wakeActions.delete(wakeKey(entry,'followup'))});
+  const triggers = new Map();
   const wakeActions=new Map(),wakeControls=new Map();
-  const entries = new Map(), detachedEntries = new Set(), requests = new Map(), visible = new Set();
+  const entries = new Map(), detachedEntries = new Set(), requests = new Map();
   // X virtualizes the timeline. Keep live subscriptions and a bounded set of
   // recent cards when their native article is temporarily removed or recycled.
   const allEntries=()=>[...entries.values(),...detachedEntries];
   const historySeen = new Set(),historyPending=new Map();
   let historyEnabled = true, historyEpoch = 0, historyLoaded = false,historyRetryAt=0;
-  const queue = new Core.BoundedPostQueue({capacity:Infinity});
-  // The full-height rail and aligned rows are out of flow. X's columns and
-  // articles remain untouched.
+  // Results stay in an isolated drawer; native posts receive only a trigger.
   const overlay = document.createElement('grok-first-overlay');
   overlay.id = 'grokfirst-overlay';
   overlay.dataset.version=chrome.runtime.getManifest?.()?.version||'development';
@@ -52,10 +52,28 @@
     grok-first-card{position:absolute;z-index:1;display:block;box-sizing:border-box;pointer-events:auto;overflow:hidden;}
     grok-first-card[hidden]{display:none!important;}
   `;
+  overlayStyle.textContent += `
+    :host{z-index:1000;--gf-bg:#f2eedf;--gf-fg:#181811;--gf-muted:#6a655a;--gf-border:#27251e;--gf-accent:#cf1f2b;--gf-font:'Noto Sans SC','Microsoft YaHei',sans-serif;--gf-size:14px;--gf-leading:1.85;--gf-scheme:light;}
+    .rail{border-left:3px solid var(--gf-fg,#181811);box-shadow:-8px 0 0 var(--gf-fg,#181811);background:var(--gf-bg,#f2eedf);}
+    .rail-head{padding:0 18px;gap:8px;background:var(--sl-surface,#f8f5e9);border-bottom:3px solid var(--gf-fg,#181811);font-size:22px;}
+    .rail-head strong{font-family:Arial,sans-serif;color:var(--gf-fg,#181811);letter-spacing:-.8px;}.brand-symbol{width:24px;height:24px;}
+    .rail-language-control{width:90px;}.rail-language{font-size:12px;color:var(--gf-accent,#cf1f2b);}
+    .rail-head button{color:var(--gf-fg,#181811);border:2px solid var(--gf-fg,#181811);height:30px;width:30px;}
+    .rail-head button:hover{background:var(--sl-soft,#e6dfcc);}.rail-expand,.rail-separators{display:none!important;}
+    .drawer-footer{position:absolute;box-sizing:border-box;height:40px;display:flex;align-items:center;padding:0 20px;border-top:1px solid var(--gf-border,#27251e);background:var(--sl-surface,#f8f5e9);color:var(--gf-muted,#6a655a);font:10px/1.4 monospace;letter-spacing:1.2px;pointer-events:auto;}
+    .drawer-footer{height:56px;justify-content:space-between;gap:8px;padding:0 12px;letter-spacing:.5px;}
+    .footer-brand{font-size:9px;min-width:0;white-space:nowrap;}
+    .community-link{display:flex;align-items:center;gap:7px;flex-shrink:0;min-height:36px;padding:2px 8px 2px 3px;border:1px solid var(--gf-border);background:var(--sl-surface);color:var(--gf-fg);font:600 12px/1.4 var(--gf-font);text-decoration:none;box-shadow:2px 2px 0 var(--sl-ink);}
+    .community-link:hover,.community-link:focus-visible{outline:2px solid #2ddbaa;outline-offset:2px;}
+    .community-logo{display:block;width:30px;height:30px;object-fit:contain;background:#000;animation:community-wave 5s ease-in-out infinite;}
+    .community-arrow{color:var(--gf-accent);font-size:16px;}
+    @keyframes community-wave{0%,70%,100%{transform:rotate(0)}78%{transform:rotate(-8deg)}86%{transform:rotate(7deg)}94%{transform:rotate(-3deg)}}
+    @media(prefers-reduced-motion:reduce){.community-logo{animation:none;}}
+  `;
   overlayShadow.append(overlayStyle);
   const rail=node('aside','rail');
   const railHeader=node('header','rail-head'),railBrand=node('strong','rail-brand'),brandMark=node('span','brand-symbol');
-  brandMark.setAttribute('aria-hidden','true');railBrand.append(brandMark,node('span','rail-brand-name','SuperX'));railHeader.append(railBrand);
+  brandMark.setAttribute('aria-hidden','true');railBrand.append(brandMark,node('span','rail-brand-name','SideLens'));railHeader.append(railBrand);
   const railLanguage=node('select','rail-language');
   for(const item of Core.LANGUAGES){const option=node('option','',item.value==='auto'?t('lang.auto').split(' · ')[0]:item.label);option.value=item.value;railLanguage.append(option);}
   railLanguage.value=settings.language;railLanguage.addEventListener('change',()=>{railLanguage.disabled=true;postControl({type:'SET_LANGUAGE',language:railLanguage.value});});
@@ -64,46 +82,46 @@
   const historyIcon=document.createElementNS('http://www.w3.org/2000/svg','svg');historyIcon.setAttribute('viewBox','0 0 24 24');historyIcon.setAttribute('fill','none');historyIcon.setAttribute('stroke','currentColor');historyIcon.setAttribute('stroke-width','1.7');historyIcon.setAttribute('aria-hidden','true');
   const historyPath=document.createElementNS('http://www.w3.org/2000/svg','path');historyPath.setAttribute('d','M3 11a9 9 0 1 1 2.6 7.3M3 4v7h7M12 7v5l3 2');historyPath.setAttribute('stroke-linecap','round');historyPath.setAttribute('stroke-linejoin','round');historyIcon.append(historyPath);railHistory.append(historyIcon);railHistory.addEventListener('click',()=>openHistory());
   const railLanguageControl=node('div','rail-language-control'),languageChevron=chevron('down');languageChevron.classList.add('language-chevron');railLanguageControl.append(railLanguage,languageChevron);
-  const railCollapse=node('button','rail-collapse');railCollapse.append(chevron('left'));railCollapse.setAttribute('aria-label','收起 SuperX');railCollapse.setAttribute('aria-expanded','true');railCollapse.title='收起右栏，停止新的分析，保留正在生成的结果';railCollapse.addEventListener('click',()=>setCollapsed(true,true));
+  const railCollapse=node('button','rail-collapse');railCollapse.append(chevron('right'));railCollapse.setAttribute('aria-label','收起 SideLens');railCollapse.setAttribute('aria-expanded','true');railCollapse.title='收起右栏，停止新的分析，保留正在生成的结果';railCollapse.addEventListener('click',()=>setCollapsed(true,true));
   const railExpand=node('button','rail-expand'),expandMark=node('span','rail-expand-mark');
-  expandMark.setAttribute('aria-hidden','true');expandMark.append(node('span','brand-symbol'));railExpand.append(expandMark);railExpand.setAttribute('aria-label','展开 SuperX');railExpand.setAttribute('aria-expanded','false');railExpand.title='展开 SuperX';railExpand.hidden=true;railExpand.addEventListener('click',()=>setCollapsed(false,true));
+  expandMark.setAttribute('aria-hidden','true');expandMark.append(node('span','brand-symbol'));railExpand.append(expandMark);railExpand.setAttribute('aria-label','展开 SideLens');railExpand.setAttribute('aria-expanded','false');railExpand.title='展开 SideLens';railExpand.hidden=true;railExpand.addEventListener('click',()=>setCollapsed(false,true));
   const railSeparators=node('div','rail-separators');railSeparators.setAttribute('aria-hidden','true');
   railHeader.append(railLanguageControl,railHistory,railOptions,railCollapse);overlayShadow.append(rail,railHeader,railExpand,railSeparators);
+  const drawerFooter=node('footer','drawer-footer');drawerFooter.append(node('span','footer-brand','NOBIGGIE / SIDELENS'));
+  const community=node('a','community-link');community.href='https://nobiggie.xyz/chat';community.target='_blank';community.rel='noopener noreferrer';
+  const communityLogo=node('img','community-logo');communityLogo.src=chrome.runtime.getURL('assets/nb-logo.png');communityLogo.alt='NoBiggie';
+  const communityLabel=node('span','','加入社区群聊');community.append(communityLogo,communityLabel,node('span','community-arrow','↗'));drawerFooter.append(community);
+  overlayShadow.append(drawerFooter);
+  syncAppearance();
+  overlay.setAttribute('role','dialog');overlay.setAttribute('aria-label','SideLens');
   refreshHeaderLanguage();
   document.body.append(overlay);
-  let layoutFrame = null, themeDirty = true, themeSignature = '', themePrimary = null;
-  const observedNativeCells=new Set(),observedNativeHeaders=new Set();
-  const resizeObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(()=>scheduleLayout()) : null;
-  const observer = new IntersectionObserver(changes=>{
-    for(const change of changes) {
-      if(change.isIntersecting) {
-        const entered=!visible.has(change.target);visible.add(change.target);
-        const entry=entries.get(change.target);
-        if(entered&&entry&&[...requests.values()].some(request=>request.entry===entry&&request.scrollCancellation))entry.since=Date.now();
-      }
-      else {visible.delete(change.target);const entry=entries.get(change.target);if(entry){entry.since=0;entry.pending=false;queue.remove(entry.post.id);if(entry.status==='new')refreshCard(entry);}}
-    }
-    scheduleLayout();
-    tick();
-  },{threshold:0});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!collapsed){setCollapsed(true,true);lastTrigger?.focus();}},true);
+  document.addEventListener('pointerdown',event=>{
+    if(collapsed||overlay.hidden)return;
+    const path=event.composedPath?.()||[];
+    if(path.includes(overlay)||path.some(node=>node.tagName==='SIDELENS-TRIGGER')||event.target?.closest?.('sidelens-trigger'))return;
+    setCollapsed(true,true);
+  },true);
+  let layoutFrame = null;
   const mutations = new MutationObserver(changes=>{
-    changes=changes.filter(change=>change.target!==overlay&&!overlay.contains(change.target)&&!change.target?.closest?.('superx-draft-action, superx-draft-panel, [data-testid="GrokDrawer"], [data-testid="grokDrawer"]'));
+    changes=changes.filter(change=>change.target!==overlay&&!overlay.contains(change.target)&&!change.target?.closest?.('sidelens-trigger, superx-draft-action, superx-draft-panel, [data-testid="GrokDrawer"], [data-testid="grokDrawer"]'));
     if(!changes.length)return;
+    if(changes.some(change=>change.target===document.body||change.target===document.documentElement))syncAppearance();
     syncXModalVisibility();
-    themeDirty=true;
     scheduleLayout();
     if(changes.some(change=>change.type!=='attributes'||
         !['class','style','hidden','aria-hidden'].includes(change.attributeName)||affectsDisplayedPostBody(change.target)))scheduleScan();
   });
   mutations.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['href','src','alt','lang','datetime','data-testid','class','style','hidden','aria-hidden','role','aria-modal','open','inert']});
   const themeObserver=new MutationObserver(changes=>{
-    themeDirty=true;syncUILanguage();draftComposer?.refresh();scheduleLayout();
+    syncAppearance();syncUILanguage();draftComposer?.refresh();scheduleLayout();
     if(changes.some(change=>change.target===document.documentElement&&['class','style','hidden','aria-hidden'].includes(change.attributeName)))scheduleScan();
   });
   themeObserver.observe(document.documentElement,{attributes:true,attributeFilter:['class','style','lang','hidden','aria-hidden']});
   if(document.head)themeObserver.observe(document.head,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['href','media','disabled']});
   window.addEventListener('scroll',onFeedScroll,{passive:true,capture:true});
-  window.addEventListener('resize',()=>{themeDirty=true;scheduleLayout();},{passive:true});
+  window.addEventListener('resize',()=>{scheduleLayout();},{passive:true});
   window.visualViewport?.addEventListener('resize',scheduleLayout,{passive:true});
   window.visualViewport?.addEventListener('scroll',onFeedScroll,{passive:true});
   for(const event of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(event,()=>{syncXModalVisibility();scheduleLayout();tick();});
@@ -113,7 +131,7 @@
   });
   connect();
   scheduleScan();
-  setInterval(tick,100);
+
   // A message, rather than an idle open port, keeps the MV3 worker alive during generation.
   setInterval(()=>{if((requests.size||draftComposer?.activeCount) && connected)post({type:'PING'});},15000);
   document.addEventListener('visibilitychange',()=>{
@@ -136,7 +154,7 @@
   });
   window.addEventListener('pageshow',event=>{
     if(!event.persisted&&!pageSuspended)return;
-    pageSuspended=false;themeDirty=true;
+    pageSuspended=false;
     if(!document.hidden&&!needsPageRefresh)connect();
     scheduleScan();scheduleLayout();tick();
   });
@@ -150,18 +168,23 @@
     const delay=Math.min(30000,3000*2**Math.min(reconnectFailures++,4));
     reconnectTimer=setTimeout(()=>{reconnectTimer=undefined;if(!document.hidden)connect();},delay);
   }
+  function syncAppearance(){
+    const theme=globalThis.SideLensAppearance?.sync(overlay);
+    if(theme)for(const host of triggers.values())globalThis.SideLensAppearance.apply(host,theme);
+    if(theme&&connected&&theme!==lastSentAppearance&&post({type:'SET_APPEARANCE',theme}))lastSentAppearance=theme;
+  }
   function connectionLost(error,sourcePort=port) {
     if(sourcePort && sourcePort!==port)return;
     needsPageRefresh=invalidContext(error);
     // Chrome may suspend an idle MV3 worker. A closed idle port is not an API
     // failure and must not overwrite completed reading or restart paid work.
-    const idle=hasConfig&&!awaitingConfig&&!needsPageRefresh&&!error&&!requests.size&&!draftComposer?.activeCount&&!wakeActions.size&&!wakeControls.size;
-    connected=false;awaitingConfig=false;workerSleeping=idle;
-    resetDwellWaits();
+    const idle=hasConfig&&!awaitingConfig&&!needsPageRefresh&&!error&&!requests.size&&!followups?.activeCount&&!draftComposer?.activeCount&&!wakeActions.size&&!wakeControls.size;
+    connected=false;awaitingConfig=false;workerSleeping=idle;lastSentAppearance=undefined;
+    resetPendingState();
     clearTimeout(handshakeTimer);handshakeTimer=undefined;
     if(!idle)providerReady=false;
     const interruptionKey=needsPageRefresh?'status.refreshRequired':pageSuspended?'status.cancelled':'status.connectionLost';
-    draftComposer?.connectionLost(interruptionKey);
+    draftComposer?.connectionLost(interruptionKey);followups?.disconnect();
     const previousPort=port;port=undefined;
     try {previousPort?.disconnect();}catch{/* The old context may already be gone. */}
     railLanguage.disabled=!idle;
@@ -177,7 +200,7 @@
       refreshCard(entry);refreshComments(entry);
     }
     wakeActions.clear();wakeControls.clear();
-    requests.clear();queue.clear();refreshHeaderLanguage();configureDraft();scheduleLayout();
+    requests.clear();refreshHeaderLanguage();configureDraft();scheduleLayout();
     if(needsPageRefresh){clearTimeout(reconnectTimer);reconnectTimer=undefined;}
     else if(!idle)scheduleReconnect();
   }
@@ -203,9 +226,9 @@
     if(!providerReady||needsPageRefresh)return false;
     const key=wakeKey(entry,task),identity=Core.apiPostIdentity(entry.post,task==='comments'?undefined:settings),path=location.pathname;
     if(!wakeActions.has(key))wakeActions.set(key,()=>{
-      if(entries.get(entry.article)!==entry||path!==location.pathname||
+      if(entries.get(entry.article)!==entry&&!detachedEntries.has(entry)||path!==location.pathname||
           Core.apiPostIdentity(entry.post,task==='comments'?undefined:settings)!==identity||
-          !entry.article.isConnected||!eligibility(entry.article).eligible||document.hidden||collapsed)return;
+          document.hidden||collapsed)return;
       action();
     });
     refreshCard(entry);
@@ -248,6 +271,7 @@
     postControl({type:'OPEN_HISTORY'});
   }
   function refreshHeaderLanguage() {
+    communityLabel.textContent=uiLanguage.startsWith('zh')?'加入社区群聊':'Join community chat';
     const direction=uiLanguage==='ar'?'rtl':'ltr';
     rail.setAttribute('lang',uiLanguage);rail.setAttribute('dir',direction);
     railHeader.setAttribute('lang',uiLanguage);railHeader.setAttribute('dir',direction);
@@ -405,8 +429,8 @@
   function setCollapsed(value,persist=false) {
     collapsed=Boolean(value);
     if(collapsed) {
-      cancelDwellTimer();
-      queue.clear();
+
+
       for(const entry of allEntries()){entry.pending=false;entry.since=0;}
       for(const [id,request] of requests)if(request.task==='comments'?['queued','retry-wait'].includes(request.entry.commentStatus):['queued','retry-wait'].includes(request.entry.status)) {
         post({type:'CANCEL',requestId:id});requests.delete(id);
@@ -434,6 +458,7 @@
     } catch(error){connectionLost(error);}
   }
   function handleMessage(message) {
+    if(followups?.handle(message))return;
     if(message.type==='HISTORY_CONFIG') {configureHistory(message.enabled,message.epoch);return;}
     if(message.type==='HISTORY_ACK') {
       const batch=historyPending.get(message.batchId);if(!batch)return;
@@ -444,6 +469,7 @@
     }
     if(message.type==='RAIL_VISIBILITY'){setCollapsed(message.collapsed);return;}
     if(message.type==='CONFIG') {
+      syncAppearance();
       hasConfig=true;awaitingConfig=true;workerSleeping=false;reconnectFailures=0;
       clearTimeout(handshakeTimer);handshakeTimer=undefined;
       const nextSettings=Core.normalizeSettings(message.settings),previousOptions={...settings},nextOptions={...nextSettings};
@@ -457,16 +483,15 @@
       // terminal until an authoritative identity arrives, with calls blocked.
       const pendingOAuthIdentity=nextSettings.provider==='oauth'&&settings.provider==='oauth'&&message.oauthStatus?.state==='restoring'&&!message.credentialIdentity;
       const nextCredentialIdentity=pendingOAuthIdentity?credentialIdentity:message.credentialIdentity||'';
-      const accountChanged=credentialIdentity!==nextCredentialIdentity;
+      const credentialsReplaced=nextSettings.provider!=='oauth'&&nextSettings.provider===settings.provider&&Number.isSafeInteger(taskRevision)&&Number.isSafeInteger(message.taskRevision)&&message.taskRevision>taskRevision;
+      const accountChanged=credentialIdentity!==nextCredentialIdentity||credentialsReplaced;
       const allChanged=accountChanged||JSON.stringify(previousOptions)!==JSON.stringify(nextOptions);
-      const presentationOrPromptsOnlyChanged=!allChanged&&JSON.stringify(settings)!==JSON.stringify(nextSettings);
       const identity=value=>JSON.stringify([value.provider,value.apiModel,value.apiReasoningEffort,value.oauthModel,value.oauthReasoningEffort,value.buildModel,value.buildReasoningEffort,value.buildTransport,value.buildPort,value.language,value.webSearch,value.xSearch,value.apiVerification,value.explanationMode]);
-      const previous=identity(settings),dwellChanged=settings.dwellMs!==nextSettings.dwellMs;
+      const previous=identity(settings);
       const wasReady=providerReady;
       settings=nextSettings;
       credentialIdentity=nextCredentialIdentity;oauthState=message.oauthStatus||{};
       taskRevision=Number.isSafeInteger(message.taskRevision)?message.taskRevision:undefined;
-      if(dwellChanged)resetDwellWaits();
       configureHistory(message.historyEnabled,message.historyEpoch);
       providerReady=Boolean(message.ready)&&!pendingOAuthIdentity;used=message.used || 0;
       buildErrorCode=typeof message.buildStatus?.errorCode==='string'?message.buildStatus.errorCode:'';
@@ -481,9 +506,8 @@
       const changed=accountChanged||previous!==identity(settings);
       // Per-answer failures never freeze other posts, including legacy
       // worker pause flags restored from an older browser session.
-      if(!presentationOrPromptsOnlyChanged)queue.clear();
       if(allChanged || !settings.enabled || (wasReady&&!providerReady)) {
-        resetDwellWaits();
+        resetPendingState();
         // Security and task-configuration changes cancel every old task.
         // Repeated paused snapshots must not cancel explicit draft checks;
         // actual setting changes are tracked by the worker's taskRevision.
@@ -492,11 +516,11 @@
         requests.clear();
         for(const entry of allEntries()) {
           clearRetries(entry);
-          if(changed||['queued','running','retry-wait'].includes(entry.status)){entry.status='new';entry.pending=false;entry.since=0;entry.result=null;entry.analysisUsage=null;entry.requestDiagnostics=undefined;setVerificationFailure(entry,null,false);renderAnswer(entry,'',true);renderSources(entry,[]);note(entry,'');entry.ui.retry.hidden=true;}
+          if(changed||['queued','running','retry-wait'].includes(entry.status)){entry.status='new';entry.pending=false;entry.since=0;entry.result=null;entry.cached=false;entry.analysisUsage=null;entry.requestDiagnostics=undefined;setVerificationFailure(entry,null,false);renderAnswer(entry,'',true);renderSources(entry,[]);note(entry,'');entry.ui.retry.hidden=true;}
           if(changed||['queued','running','retry-wait'].includes(entry.commentStatus)){entry.commentStatus='idle';entry.comments=[];entry.commentUsage=null;entry.commentRequestDiagnostics=undefined;refreshComments(entry);}
         }
       }
-      if(typeof message.collapsed==='boolean')setCollapsed(message.collapsed);
+      if(typeof message.collapsed==='boolean'&&activeEntry)setCollapsed(message.collapsed);
       awaitingConfig=false;
       for(const [type,control] of wakeControls){
         wakeControls.delete(type);
@@ -515,7 +539,7 @@
       scheduleScan();return;
     }
     if(message.type==='FATAL'){
-      providerReady=false;queue.clear();requests.clear();
+      providerReady=false;requests.clear();
       draftComposer?.connectionLost('status.failed');configureDraft();
       for(const entry of allEntries()){
         clearRetries(entry);entry.status='error';status(entry,'status.failed');entry.ui.retry.hidden=false;
@@ -633,7 +657,7 @@
         entry.ui.diagnosticText.textContent=JSON.stringify({code:message.code,error:message.error,...message.diagnostics,...(message.usage?{usage:message.usage}:{})},null,2).slice(0,4000);
       }
       if(['NEEDS_KEY','KEY_MIGRATION_REQUIRED','BUILD_CONNECTION_REQUIRED','BUILD_CANCEL_UNCONFIRMED','BUILD_NATIVE_MISSING','BUILD_PERMISSION_REQUIRED','BUILD_LOGIN_REQUIRED','BUILD_VERSION_UNSUPPORTED','BUILD_CONFIG_UNSUPPORTED','BUILD_TOOL_POLICY'].includes(message.code)){
-        providerReady=false;queue.clear();
+        providerReady=false;
         for(const pending of allEntries())refreshCard(pending);
       }
       if(isAccountLimit(entry.verificationFailure))note(entry,'note.accountLimit');
@@ -643,7 +667,7 @@
     if(['RESULT','ERROR'].includes(message.type))tick();
   }
   // API launch spacing belongs to the shared background scheduler; this page
-  // submits all visible work without waiting for earlier answers to finish.
+  // accepts explicit work without waiting for earlier answers to finish.
   function finishRequest(message) { if(!['RESULT','ERROR','COMMENT_RESULT','COMMENT_ERROR'].includes(message.type))return;requests.delete(message.requestId);pruneDetachedEntries(); }
   function affectsDisplayedPostBody(target) {
     // X can keep both bodies mounted and switch visibility through their own
@@ -697,206 +721,14 @@
     return blocked;
   }
   function scheduleLayout(){if(layoutFrame!==null)return;layoutFrame=requestAnimationFrame(()=>{layoutFrame=null;positionCards();});}
-  function opaqueColor(value) {
-    if(typeof value!=='string')return null;
-    const parts=value.match(/^rgba?\(([^)]+)\)$/i)?.[1]?.replace(/\//g,' ').split(/[,\s]+/).filter(Boolean).map(Number);
-    return parts&&parts.length>=3&&parts.every(Number.isFinite)&&(parts.length<4||parts[3]>=0.99)?{value,rgb:parts.slice(0,3)}:null;
-  }
-  function syncTheme(primary) {
-    if(!themeDirty&&themePrimary===primary)return;
-    themeDirty=false;themePrimary=primary;
-    const computed=element=>element?getComputedStyle(element):{};
-    let bg;
-    for(let element=primary;element&&!bg;element=element.parentElement)bg=opaqueColor(computed(element).backgroundColor);
-    bg ||= opaqueColor(computed(document.body).backgroundColor)||opaqueColor(computed(document.documentElement).backgroundColor);
-    const light=bg?bg.rgb[0]*0.2126+bg.rgb[1]*0.7152+bg.rgb[2]*0.0722>160:false;
-    const dim=!light&&bg&&Math.max(...bg.rgb)>12;
-    const palette=light?{bg:'#fff',fg:'#0f1419',muted:'#536471',border:'#eff3f4'}:dim?{bg:'#15202b',fg:'#f7f9f9',muted:'#8b98a5',border:'#38444d'}:{bg:'#000',fg:'#e7e9ea',muted:'#71767b',border:'#2f3336'};
-    const article=primary.querySelector('article[data-testid="tweet"]');
-    const text=article?.querySelector('[data-testid="tweetText"]')||article||primary;
-    const type=computed(text), primaryStyle=computed(primary), postStyle=computed(article);
-    const border=parseFloat(primaryStyle.borderRightWidth)>0?opaqueColor(primaryStyle.borderRightColor):parseFloat(postStyle.borderBottomWidth)>0?opaqueColor(postStyle.borderBottomColor):null;
-    const values={
-      '--gf-bg':bg?.value||palette.bg,'--gf-fg':opaqueColor(type.color)?.value||palette.fg,
-      '--gf-muted':opaqueColor(computed(article?.querySelector('time')).color)?.value||palette.muted,
-      '--gf-border':border?.value||palette.border,'--gf-accent':light?'#0072b1':'#1d9bf0',
-      '--gf-font':type.fontFamily||'system-ui,-apple-system,"Segoe UI",sans-serif',
-      '--gf-size':type.fontSize||'15px','--gf-leading':type.lineHeight&&type.lineHeight!=='normal'?type.lineHeight:'1.4',
-      '--gf-scheme':light?'light':'dark'
-    };
-    const signature=JSON.stringify(values);if(signature===themeSignature)return;themeSignature=signature;
-    for(const [name,value] of Object.entries(values))overlay.style.setProperty(name,value);
-  }
-  function rowGeometry(article) {
-    const cell=article.closest('[data-testid="cellInnerDiv"]');
-    const own=cell?Array.from(cell.querySelectorAll('article[data-testid="tweet"]')).filter(node=>!node.parentElement?.closest('article[data-testid="tweet"]')):[];
-    const frame=own.length===1&&own[0]===article?cell:article,rect=frame.getBoundingClientRect();
-    let borderWidth=0,borderColor='var(--gf-border,#2f3336)',borderTop=rect.bottom,borderDistance=Infinity;
-    const sample=node=>{
-      const box=node.getBoundingClientRect();
-      // Full-width native row dividers only; quoted posts and media frames must
-      // not create extra rail lines. Keep the border's own fractional position.
-      if(box.width<rect.width-2||Math.abs(box.bottom-rect.bottom)>2)return;
-      const style=getComputedStyle(node),width=parseFloat(style.borderBottomWidth)||0;
-      if(width<=0||style.borderBottomStyle==='none'||style.borderBottomStyle==='hidden')return;
-      const distance=Math.abs(box.bottom-rect.bottom);
-      if(distance>borderDistance)return;
-      borderWidth=width;borderColor=opaqueColor(style.borderBottomColor)?.value||borderColor;
-      borderTop=box.bottom-width;borderDistance=distance;
-    };
-    // Thread cells can contain several articles. Even when the content frame is
-    // the article, its divider may belong to a parent within that shared cell.
-    for(let node=article;node;node=node.parentElement){sample(node);if(node===(cell||article))break;}
-    if(!borderWidth&&cell){
-      // X may put a divider on a sibling wrapper. A bounded, shallow walk avoids
-      // traversing media/quoted content on every scroll frame.
-      let level=[cell],visited=0;
-      for(let depth=0;depth<4&&level.length&&visited<48;depth++){
-        const next=[];
-        for(const parent of level)for(const child of parent.children){
-          if(++visited>48)break;
-          if(child===article||child.tagName==='ARTICLE')continue;
-          sample(child);next.push(child);
-        }
-        level=next;
-      }
-    }
-    return {rect,borderWidth,borderColor,borderTop};
-  }
-  function nativeCellSeparators(cell,primaryRect,viewport) {
-    const rect=cell.getBoundingClientRect(),lines=[];
-    if(rect.height<=0||rect.bottom<=0||rect.top>=viewport.height)return lines;
-    const sample=element=>{
-      const box=element.getBoundingClientRect();
-      // Only native lines spanning the unmodified center column qualify.
-      if(box.width<=0||Math.abs(box.left-primaryRect.left)>2||Math.abs(box.right-primaryRect.right)>2)return;
-      const style=getComputedStyle(element);
-      if(style.display==='none'||style.visibility==='hidden')return;
-      for(const edge of ['Top','Bottom']) {
-        const width=parseFloat(style['border'+edge+'Width'])||0,color=opaqueColor(style['border'+edge+'Color']);
-        if(width>0&&color&&style['border'+edge+'Style']!=='none'&&style['border'+edge+'Style']!=='hidden')
-          lines.push({top:edge==='Top'?box.top:box.bottom-width,width,color:color.value});
-      }
-      // X also paints dividers as thin filled elements inside padded spacers.
-      // Their own position, not the enclosing cell's bottom, is the boundary.
-      const fill=opaqueColor(style.backgroundColor);
-      if(box.height>0&&box.height<=2&&fill&&!(parseFloat(style.borderTopWidth)||parseFloat(style.borderBottomWidth)))
-        lines.push({top:box.top,width:box.height,color:fill.value});
-    };
-    let level=[cell],visited=0;
-    for(let depth=0;depth<5&&level.length&&visited<64;depth++) {
-      const next=[];
-      for(const element of level) {
-        if(++visited>64)break;
-        if(element!==cell&&(element.tagName==='ARTICLE'||element.getAttribute('data-testid')==='cellInnerDiv'))continue;
-        sample(element);next.push(...element.children);
-      }
-      level=next;
-    }
-    return lines;
-  }
-  function syncNativeCells(primary,primaryRect) {
-    const cells=new Set();
-    if(primary&&primaryRect)for(const cell of primary.querySelectorAll('[data-testid="cellInnerDiv"]')) {
-      if(cell.closest('article[data-testid="tweet"]')||cell.querySelector('article[data-testid="tweet"]')||cell.parentElement?.closest('[data-testid="cellInnerDiv"]'))continue;
-      const rect=cell.getBoundingClientRect();
-      if(rect.width<=0||Math.abs(rect.left-primaryRect.left)>2||Math.abs(rect.right-primaryRect.right)>2)continue;
-      cells.add(cell);if(!observedNativeCells.has(cell))resizeObserver?.observe(cell);
-    }
-    for(const cell of observedNativeCells)if(!cells.has(cell))resizeObserver?.unobserve(cell);
-    observedNativeCells.clear();for(const cell of cells)observedNativeCells.add(cell);
-    return cells;
-  }
-  function positionSeparators(items,bounds,viewport,headerHeight,extraLines=[]) {
-    const ordered=items.slice().sort((a,b)=>a.rect.top-b.rect.top),lines=[...extraLines];
-    for(const item of ordered)if(item.borderWidth>0)lines.push({top:item.borderTop,width:item.borderWidth,color:item.borderColor});
-    // Extend the timeline's first-post boundary across the otherwise empty
-    // rail above its first answer, including at the initial feed position.
-    const first=ordered[0];
-    if(first){const width=first.borderWidth||1;lines.push({top:first.rect.top-width,width,color:first.borderColor});}
-    const visibleLines=Layout.placeRailSeparators(lines,viewport,{headerHeight});
-    const geometry={left:bounds.left,top:headerHeight,width:bounds.width,height:Math.max(0,viewport.height-headerHeight)};
-    for(const [name,value] of Object.entries(geometry))if(railSeparators.style[name]!==value+'px')railSeparators.style[name]=value+'px';
-    while(railSeparators.children.length>visibleLines.length)railSeparators.children[railSeparators.children.length-1].remove();
-    visibleLines.forEach((line,index)=>{
-      let rule=railSeparators.children[index];if(!rule){rule=node('div','rail-separator');railSeparators.append(rule);}
-      const styles={top:line.top-headerHeight+'px',height:line.width+'px',background:line.color};
-      for(const [name,value] of Object.entries(styles))if(rule.style[name]!==value)rule.style[name]=value;
-    });
-  }
-  function syncNativeHeaders(targets=[]) {
-    const next=new Set(targets);
-    for(const node of observedNativeHeaders)if(!next.has(node))resizeObserver?.unobserve(node);
-    for(const node of next)if(!observedNativeHeaders.has(node))resizeObserver?.observe(node,{box:'border-box'});
-    observedNativeHeaders.clear();for(const node of next)observedNativeHeaders.add(node);
-  }
-  function primaryHeaderTabs(primary) {
-    const firstContent=primary.querySelector('[data-testid="cellInnerDiv"], article[data-testid="tweet"], [data-testid="tweetTextarea_0"]');
-    const beforeContent=tabs=>{
-      if(!firstContent)return true;
-      // Compare DOM branches, not viewport coordinates: a real profile/feed
-      // navigation still precedes its posts after those posts scroll above it.
-      const ancestors=new Set();
-      for(let node=tabs;node;node=node.parentElement)ancestors.add(node);
-      let common=firstContent;
-      while(common&&!ancestors.has(common))common=common.parentElement;
-      if(!common||common===tabs||common===firstContent)return false;
-      let tabBranch=tabs,contentBranch=firstContent;
-      while(tabBranch.parentElement!==common)tabBranch=tabBranch.parentElement;
-      while(contentBranch.parentElement!==common)contentBranch=contentBranch.parentElement;
-      for(const child of common.children){if(child===tabBranch)return true;if(child===contentBranch)return false;}
-      return false;
-    };
-    const candidates=Array.from(primary.querySelectorAll('[role="tablist"], [data-testid="grokFirstDemoHeader"]')).filter(tabs=>{
-      // Inline reply media controls also use role=tablist (inside toolBar and
-      // cellInnerDiv). They must never move the header or clip existing answers.
-      if(!tabs.isConnected||tabs.closest('article, [data-testid="cellInnerDiv"], [data-testid="toolBar"], form, [role="textbox"]')||!beforeContent(tabs))return false;
-      for(let node=tabs;node;node=node.parentElement){
-        if(node.hidden||node.hasAttribute('hidden')||node.hasAttribute('inert')||node.getAttribute('aria-hidden')==='true'||
-            node.hasAttribute('contenteditable')&&node.getAttribute('contenteditable')!=='false'||node.getAttribute('data-testid')?.startsWith('tweetTextarea_'))return false;
-        const style=getComputedStyle(node);
-        if(style.display==='none'||['hidden','collapse'].includes(style.visibility)||style.contentVisibility==='hidden'||Number.parseFloat(style.opacity)===0)return false;
-        if(node===primary)break;
-      }
-      return true;
-    });
-    // Fonts and CSS size transitions need not produce a DOM mutation. Observe
-    // navigation containers up to the feed branch, including temporary zero
-    // sizes, so they can recover without waiting for a scroll or resize.
-    const selected=candidates.find(tabs=>{const rect=tabs.getBoundingClientRect();return rect.width>0&&rect.height>=32&&rect.height<=100;});
-    const targets=new Set();
-    for(let node=selected||candidates[0];node&&node!==primary&&!(firstContent&&node.contains(firstContent));node=node.parentElement)targets.add(node);
-    syncNativeHeaders(targets);
-    return selected;
-  }
-  function headerGeometry(primary,viewport) {
-    const tabs=primaryHeaderTabs(primary);
-    let source=tabs,rect=tabs?.getBoundingClientRect(),borderWidth=1;
-    if(rect&&rect.height>=32&&rect.height<=100) {
-      for(let node=tabs;node&&node!==primary;node=node.parentElement) {
-        const candidate=node.getBoundingClientRect(),width=parseFloat(getComputedStyle(node).borderBottomWidth)||0;
-        if(candidate.height>110)break;
-        if(width>0&&Math.abs(candidate.bottom-rect.bottom)<2){source=node;rect=candidate;borderWidth=width;break;}
-      }
-      if(source===tabs)borderWidth=parseFloat(getComputedStyle(source).borderBottomWidth)||0;
-      // A partially clipped tab bar keeps its visible bottom edge. Once the
-      // source bar is entirely offscreen, dock our controls at the viewport top.
-      if(rect.bottom<=0||rect.top>=viewport.height)return {top:0,height:Math.min(53,viewport.height),borderWidth};
-      const top=Math.max(0,rect.top),height=Math.max(0,Math.min(viewport.height,rect.bottom)-top);
-      return {top,height,borderWidth};
-    }
-    return {top:0,height:Math.min(53,viewport.height),borderWidth};
-  }
   function currentRailBounds() {
-    if(syncXModalVisibility())return {hidden:true,reason:'x-modal-open',left:0,top:0,width:0,height:0};
-    const viewport={width:document.documentElement.clientWidth||innerWidth,height:innerHeight};
-    const primary=document.querySelector('[data-testid="primaryColumn"]'),sidebar=document.querySelector('[data-testid="sidebarColumn"]');
-    return Layout.railBounds(primary?.getBoundingClientRect(),sidebar?.getBoundingClientRect(),viewport);
+    const width=document.documentElement.clientWidth||innerWidth;
+    return {hidden:!activeEntry||collapsed||syncXModalVisibility(),left:Math.max(0,width-440),top:0,width:Math.min(440,width),height:innerHeight};
   }
   function pauseUnseenRailQueue({preserveStarted=false}={}) {
     // No room for the result means no new paid work. Preserve requests whose
     // START has arrived, and only cancel work that is still waiting to begin.
-    cancelDwellTimer();queue.clear();
+
     for(const entry of allEntries()){entry.pending=false;entry.since=0;}
     for(const [id,request] of requests)if(request.task==='comments'?['queued','retry-wait'].includes(request.entry.commentStatus):['queued','retry-wait'].includes(request.entry.status)) {
       if(request.railCancellation||preserveStarted&&request.started)continue;
@@ -908,77 +740,31 @@
   }
   function positionCards() {
     const blocked=syncXModalVisibility();
-    overlay.hidden=document.hidden || !settings.enabled || !supportedPage()||blocked;
-    if(overlay.hidden){
-      if(blocked){rail.hidden=railHeader.hidden=railExpand.hidden=railSeparators.hidden=true;for(const entry of allEntries())entry.card.hidden=true;pauseUnseenRailQueue();}
-      syncNativeCells(null,null);syncNativeHeaders();return;
+    overlay.hidden=document.hidden||!settings.enabled||!supportedPage()||blocked||collapsed||!activeEntry;
+    rail.hidden=railHeader.hidden=drawerFooter.hidden=overlay.hidden;
+    railExpand.hidden=railSeparators.hidden=true;
+    for(const entry of allEntries())entry.card.hidden=overlay.hidden||entry!==activeEntry;
+    for(const [article,host] of triggers){host.hidden=!settings.enabled||!supportedPage()||blocked;if(!host.hidden)positionTrigger(article,host);}
+    if(overlay.hidden)return;
+    const bounds=currentRailBounds(),headHeight=68,footerHeight=56;
+    for(const [element,geometry] of [[rail,bounds],[railHeader,{...bounds,height:headHeight}],
+        [activeEntry.card,{...bounds,top:headHeight,height:Math.max(0,bounds.height-headHeight-footerHeight)}],
+        [drawerFooter,{...bounds,top:bounds.height-footerHeight,height:footerHeight}]]) {
+      for(const name of ['left','top','width','height'])element.style[name]=geometry[name]+'px';
     }
-    // Focusing a descendant can scroll an overflow-hidden ancestor. Only each
-    // answer box should scroll; keep the fixed rail and row hosts stationary.
-    if(overlay.scrollTop)overlay.scrollTop=0;
-    if(overlay.scrollLeft)overlay.scrollLeft=0;
-    const items=[],nativeRows=[];
-    const geometryByArticle=new Map();
-    // Decorations follow all native rows, even when a row has no analysis
-    // entry. They never depend on request state or answer content clipping.
-    for(const article of document.querySelectorAll('article[data-testid="tweet"]')){
-      if(article.parentElement?.closest('article[data-testid="tweet"]'))continue;
-      const rect=article.getBoundingClientRect();if(rect.width<=0||rect.height<=0)continue;
-      const geometry=rowGeometry(article);geometryByArticle.set(article,geometry);nativeRows.push(geometry);
-    }
-    for(const entry of entries.values()) {
-      if(entry.card.scrollTop)entry.card.scrollTop=0;
-      if(entry.card.scrollLeft)entry.card.scrollLeft=0;
-      if(!entry.article.isConnected){entry.card.hidden=true;continue;}
-      const geometry=geometryByArticle.get(entry.article)||rowGeometry(entry.article);
-      items.push({id:entry,...geometry});
-    }
-    const viewport={width:document.documentElement.clientWidth||innerWidth,height:innerHeight};
-    const primary=document.querySelector('[data-testid="primaryColumn"]');
-    const sidebar=document.querySelector('[data-testid="sidebarColumn"]');
-    const primaryRect=primary?.getBoundingClientRect(),nativeCells=syncNativeCells(primary,primaryRect);
-    const bounds=Layout.railBounds(primaryRect,sidebar?.getBoundingClientRect(),viewport);
-    rail.hidden=railHeader.hidden=railSeparators.hidden=bounds.hidden||collapsed;railExpand.hidden=bounds.hidden||!collapsed;
-    if(bounds.hidden){syncNativeHeaders();pauseUnseenRailQueue();for(const item of items)item.id.card.hidden=true;return;}
-    syncTheme(primary);
-    const header=headerGeometry(primary,viewport),headerHeight=header.top+header.height;
-    railHeader.dataset.compact=String(bounds.width<310);
-    railHeader.style.borderBottomWidth=header.borderWidth+'px';
-    for(const [element,geometry] of [[rail,bounds],[railHeader,{...bounds,top:header.top,height:header.height}],[railExpand,{left:bounds.left,top:header.top,width:32,height:header.height}]])for(const name of ['left','top','width','height']) {
-      const value=geometry[name]+'px';if(element.style[name]!==value)element.style[name]=value;
-    }
-    if(collapsed){for(const item of items)item.id.card.hidden=true;return;}
-    const extraLines=[];
-    for(const cell of nativeCells)extraLines.push(...nativeCellSeparators(cell,primaryRect,viewport));
-    positionSeparators(nativeRows,bounds,viewport,headerHeight,extraLines);
-    for(const placement of Layout.placeRailRows(items,viewport,{headerHeight})) {
-      const entry=placement.id,card=entry.card;
-      card.hidden=placement.hidden;
-      if(placement.hidden)continue;
-      const geometry={left:bounds.left,top:placement.top,width:bounds.width,height:placement.height};
-      for(const name of ['left','top','width','height']) {
-        const value=geometry[name]+'px';
-        if(card.style[name]!==value)card.style[name]=value;
-      }
-      // Separators live above every card, so a clipped or overlapping card
-      // cannot erase the native row boundary.
-      const native=geometryByArticle.get(entry.article),visibleBorder=native?.borderWidth&&native.borderTop>=placement.visibleTop&&native.borderTop<placement.visibleBottom?Math.min(native.borderWidth,placement.visibleBottom-native.borderTop):0;
-      const offset=placement.contentOffset+'px',height=Math.max(0,placement.contentHeight-visibleBorder)+'px';
-      if(entry.ui.box.style.top!==offset)entry.ui.box.style.top=offset;
-      if(entry.ui.box.style.height!==height)entry.ui.box.style.height=height;
-    }
-    tick();
+    activeEntry.ui.box.style.top='0px';activeEntry.ui.box.style.height='100%';
   }
   function discardEntry(entry) {
+    entry.followup?.reset();
     for(const [id,request] of requests)if(request.entry===entry){post({type:'CANCEL',requestId:id});requests.delete(id);}
     if(entry.answerFrame!==undefined)cancelAnimationFrame(entry.answerFrame);
     detachedEntries.delete(entry);entry.card.remove();
+    if(activeEntry===entry){activeEntry=null;setCollapsed(true);}
   }
   function removeEntry(article,entry,preserve=true) {
-    observer.unobserve(article);resizeObserver?.unobserve(article);resizeObserver?.unobserve(entry.ui.box);
-    visible.delete(article);queue.remove(entry.post.id);
+
     if(entry.answerFrame!==undefined)cancelAnimationFrame(entry.answerFrame);
-    entry.answerFrame=undefined;entry.card.remove();entries.delete(article);
+    entry.answerFrame=undefined;if(activeEntry!==entry)entry.card.remove();entries.delete(article);
     if(!preserve||entry.path!==location.pathname){discardEntry(entry);return;}
     entry.pending=false;entry.since=0;detachedEntries.add(entry);
     // START can be in transit. A conditional cancellation must leave both the
@@ -992,162 +778,96 @@
   function pruneDetachedEntries() {
     const active=new Set([...requests.values()].map(request=>request.entry));
     const completed=[...detachedEntries].filter(entry=>!active.has(entry));
-    for(const entry of completed.slice(0,Math.max(0,completed.length-100)))detachedEntries.delete(entry);
+    for(const entry of completed.filter(item=>item!==activeEntry).slice(0,Math.max(0,completed.length-100)))discardEntry(entry);
+  }
+  function mountTrigger(article) {
+    const existing=triggers.get(article);
+    if(existing?.isConnected)return;
+    const host=node('sidelens-trigger'),shadow=host.attachShadow({mode:'open'}),css=node('style');
+    css.textContent=`:host{all:initial;display:inline-flex;width:22px;height:22px;vertical-align:middle;margin:0;}:host([hidden]){display:none!important;}button{all:initial;display:grid;place-items:center;width:22px;height:22px;box-sizing:border-box;background:var(--sl-trigger-bg,#f8f5e9);color:var(--sl-trigger-fg,#bc1723);border:1px solid var(--sl-trigger-border,#575044);border-radius:3px;cursor:pointer;padding:3px;}button:hover{background:var(--gf-accent,#cf1f2b);}.trigger-glyph{display:block;width:14px;height:14px;background-color:var(--sl-trigger-fg,#bc1723);mask:url(${JSON.stringify(symbolURL)}) center/contain no-repeat;-webkit-mask:url(${JSON.stringify(symbolURL)}) center/contain no-repeat;mask-mode:alpha;}button:hover .trigger-glyph{background-color:var(--sl-button,#fff9ed);}button:focus-visible{outline:2px solid var(--gf-accent,#cf1f2b);outline-offset:2px;}`;
+    globalThis.SideLensAppearance?.apply(host,globalThis.SideLensAppearance.detect(document));
+    const button=node('button');button.type='button';button.title='SideLens';button.setAttribute('aria-label','SideLens · '+t('common.verification'));button.setAttribute('aria-haspopup','dialog');
+    const glyph=node('span','trigger-glyph');glyph.setAttribute('aria-hidden','true');button.append(glyph);
+    button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();if(event.isTrusted===false)return;openPost(article,button);});
+    for(const type of ['pointerdown','keydown'])host.addEventListener(type,event=>event.stopPropagation());
+    shadow.append(css,button);
+    if(getComputedStyle(article).position==='static')article.style.position='relative';
+    host.style.position='absolute';host.style.zIndex='1';
+    article.append(host);triggers.set(article,host);positionTrigger(article,host);
+  }
+  function positionTrigger(article,host) {
+    const rect=article.getBoundingClientRect();
+    const action=Array.from(article.querySelectorAll('[data-testid="GrokButton"], [data-testid="GrokShareButton"], [aria-label="Grok actions"], button[aria-label*="Grok"], [data-testid="caret"]')).find(node=>node.closest('article[data-testid="tweet"]')===article);
+    const anchor=action?.getBoundingClientRect();
+    const header=article.querySelector('[data-testid="User-Name"]')?.getBoundingClientRect();
+    let top=anchor?anchor.top-rect.top+(anchor.height-22)/2:header?header.top-rect.top:8;
+    const body=article.querySelector('[data-testid="tweetText"]')?.getBoundingClientRect();
+    if(body?.height>0&&body.top>rect.top)top=Math.min(top,body.top-rect.top-24);
+    host.style.top=Math.max(0,top)+'px';
+    host.style.left=Math.max(0,anchor?anchor.left-rect.left-28:rect.width-96)+'px';
+  }
+  function openPost(article,button) {
+    if(!settings.enabled||!supportedPage()||syncXModalVisibility())return;
+    const data=Core.extractPost(article);if(!data)return;
+    let entry=entries.get(article);
+    const identity=Core.apiPostIdentity(data,settings);
+    if(entry&&Core.apiPostIdentity(entry.post,settings)!==identity){removeEntry(article,entry);entry=null;}
+    if(!entry){
+      entry=[...detachedEntries].reverse().find(item=>Core.apiPostIdentity(item.post,settings)===identity);
+      if(entry){detachedEntries.delete(entry);entry.article=article;entry.post=data;}
+      else {entry={article,path:location.pathname,post:data,status:'new',since:0,result:null,commentStatus:'idle',comments:[]};Object.assign(entry,createCard(entry));}
+      entries.set(article,entry);overlayShadow.append(entry.card);
+    } else entry.post=data;
+    if(entry.status==='done'&&entry.result?.completedAt&&Date.now()-entry.result.completedAt>=86400000){
+      entry.status='new';entry.result=null;entry.cached=false;entry.analysisUsage=null;clearComments(entry);renderAnswer(entry,'',true);renderSources(entry,[]);
+    }
+    activeEntry=entry;lastTrigger=button;entry.path=location.pathname;
+    setCollapsed(false,true);refreshCard(entry);positionCards();
+    entry.card.focus();
+    recordHistory();
+    if(entry.status==='new')submit(entry,false);
   }
   function scan() {
-    if(syncXModalVisibility()){scheduleLayout();return;}
     if(location.pathname!==lastPath){
-      cancelDwellTimer();historySeen.clear();historyPending.clear();historyRetryAt=0;lastPath=location.pathname;queue.clear();post({type:'CANCEL_ALL'});requests.clear();draftComposer?.reset();
-      for(const entry of allEntries()){
-        clearRetries(entry);entry.since=0;entry.pending=false;
-        if(['queued','running','retry-wait'].includes(entry.status)){entry.status='new';renderAnswer(entry,'',true);refreshCard(entry);}
-        if(['queued','running','retry-wait'].includes(entry.commentStatus)){entry.commentStatus='error';entry.commentError='status.cancelled';refreshComments(entry);}
-      }
-      detachedEntries.clear();
+      lastPath=location.pathname;historySeen.clear();historyPending.clear();
+      // An explicit request can finish while the user navigates within X.
+      draftComposer?.reset();
     }
+    for(const [article,host] of triggers)if(!article.isConnected){host.remove();triggers.delete(article);}
     for(const [article,entry] of entries)if(!article.isConnected)removeEntry(article,entry);
-    if(!supportedPage()){scheduleLayout();return;}
-    for(const article of document.querySelectorAll('article[data-testid="tweet"]')) {
-      const data=Core.extractPost(article);if(!data){const previous=entries.get(article);if(previous)removeEntry(article,previous);continue;}
-      const signature=JSON.stringify([Core.postFingerprint(data),Boolean(data.isPromoted)]);let entry=entries.get(article);
-      if(entry)entry.path=location.pathname;
-      if(entry&&entry.signature===signature&&entry.card.isConnected)continue;
-      if(entry&&entry.post.id===data.id&&(entry.post.text!==data.text||entry.post.language!==data.language))historySeen.delete(data.id);
-      const identity=post=>Core.apiPostIdentity(post,settings);
-      if(entry&&entry.card.isConnected&&
-          Boolean(data.isPromoted)===Boolean(entry.post.isPromoted)&&identity(data)===identity(entry.post)) {
-        // All API analysis uses the original URL and survives preview changes. Comment drafts still use
-        // the supplied text, so cancel/clear only those when their input changes.
-        if(Core.apiPostIdentity(data)!==Core.apiPostIdentity(entry.post)) {
-          for(const [id,request] of requests)if(request.entry===entry&&request.task==='comments'){post({type:'CANCEL',requestId:id});requests.delete(id);}
-          entry.commentStatus='idle';entry.comments=[];entry.commentUsage=null;entry.commentRequestDiagnostics=undefined;refreshComments(entry);refreshVerificationFailure(entry);
-        }
-        entry.post=data;entry.signature=signature;continue;
-      }
-      // A different post can reuse the same native article while scrolling.
-      // Changing this post's Auto language instead invalidates its old input.
-      if(entry)removeEntry(article,entry,entry.post.id!==data.id);
-      for(const previous of detachedEntries)if(previous.post.id===data.id&&identity(previous.post)!==identity(data))discardEntry(previous);
-      entry=[...detachedEntries].reverse().find(previous=>Boolean(previous.post.isPromoted)===Boolean(data.isPromoted)&&identity(previous.post)===identity(data));
-      if(entry){
-        detachedEntries.delete(entry);
-        if(Core.apiPostIdentity(data)!==Core.apiPostIdentity(entry.post))clearComments(entry);
-        entry.article=article;entry.post=data;entry.signature=signature;entry.since=0;
-        renderAnswer(entry,entry.latestText||'',true);
-      }else{
-        entry={article,path:location.pathname,post:data,signature,status:'new',since:0,result:null,commentStatus:'idle',comments:[]};
-        const {card,ui}=createCard(entry);entry.card=card;entry.ui=ui;
-      }
-      overlayShadow.append(entry.card);entries.set(article,entry);observer.observe(article);
-      resizeObserver?.observe(article);resizeObserver?.observe(entry.ui.box);
-      entry.card.hidden=true;refreshCard(entry);
-      if(eligibility(article).eligible)visible.add(article);
+    if(supportedPage()&&!syncXModalVisibility())for(const article of document.querySelectorAll('article[data-testid="tweet"]')) {
+      if(!article.parentElement?.closest('article[data-testid="tweet"]'))mountTrigger(article);
     }
-    scheduleLayout();tick();
+    scheduleLayout();
   }
   function refreshCard(entry) {
     entry.ui.box.setAttribute('aria-label',t('aria.result'));
-    entry.ui.retry.textContent=t('common.retry');entry.ui.generateComments.textContent=t('common.generateComments');
+    entry.ui.retry.textContent=entry.status==='new'?t('sidelens.analyze'):t('sidelens.refresh');
     entry.ui.diagnosticLabel.textContent=t('common.diagnostics');
     if(entry.status==='new') {
       status(entry,!connected&&!workerSleeping?(needsPageRefresh?'status.refreshRequired':'status.connectionLost'):!providerReady?needsProvider():entry.pending?'status.queued':'status.waiting');
       note(entry,'');
-      entry.ui.retry.hidden=true;
+      entry.ui.retry.hidden=!providerReady;
     }
     else if(entry.statusKey)status(entry,entry.statusKey,entry.statusVars);
     if(entry.noteKey)entry.ui.note.textContent=t(entry.noteKey);
-    if(entry.cached)entry.ui.status.prepend(document.createTextNode(t('status.cached')+' · '));
+    entry.ui.cacheMeta.hidden=!entry.result?.completedAt;
+    if(entry.result?.completedAt)entry.ui.cacheMeta.textContent=(entry.cached?t('status.cached')+' · ':'')+t('sidelens.generated')+' '+new Date(entry.result.completedAt).toLocaleString(uiLanguage);
+    entry.ui.original.href=entry.post.url;entry.ui.original.textContent=entry.post.author||t('common.source');
+    entry.ui.postText.textContent=entry.post.text||t('sidelens.mediaPost');
     entry.ui.retry.disabled=!usableConnection()||!settings.enabled||['queued','running','retry-wait'].includes(entry.status)||wakeActions.has(wakeKey(entry,'analysis'));
     if(!providerReady)entry.ui.retry.hidden=true;
     else if(['done','error'].includes(entry.status))entry.ui.retry.hidden=false;
     refreshComments(entry);refreshRetries(entry);syncLoading(entry);refreshUsage(entry);
+    entry.followup?.refresh();if(!entry.result)entry.followup?.reset();if(entry.status==='done')entry.followup?.setAnalysis(entry.result);
   }
-  function eligibility(article) {
-    return Core.visibilityEligibility(article.getBoundingClientRect(),{width:innerWidth,height:innerHeight},{minRatio:0,minVisiblePx:1});
-  }
-  function onFeedScroll(event) {
-    const target=event?.target;
-    // Captured scrolls include X's nested feed containers. A scroll within our
-    // shadow rail is only reading the answer, so it must not postpone a post.
-    const owned=target===overlay||event?.composedPath?.().includes(overlay)||Boolean(target?.nodeType&&overlay.contains(target));
-    if(!owned&&settings.dwellMs>0){
-      cancelDwellTimer();queue.clear();const now=Date.now();
-      for(const entry of allEntries())if(entry.status==='new'){
-        entry.pending=false;
-        entry.since=entry.article.isConnected&&visible.has(entry.article)&&eligibility(entry.article).eligible?now:0;
-      }
-      for(const [id,request] of requests)if(request.task==='analysis'&&['queued','retry-wait'].includes(request.entry.status)&&!request.force){
-        request.scrollCancellation=true;
-        const entry=request.entry;
-        entry.since=entry.article.isConnected&&visible.has(entry.article)&&eligibility(entry.article).eligible?now:0;
-        // A START can already be crossing the port. Keep this subscription
-        // attached and ask the worker to cancel only if it truly has not begun.
-        if(!request.railCancellation){request.railCancellation=true;post({type:'CANCEL_IF_QUEUED',requestId:id});}
-      }
-    }
-    scheduleLayout();
-  }
-  function cancelDwellTimer() {
-    if(dwellTimer!==undefined)clearTimeout(dwellTimer);
-    dwellTimer=undefined;dwellDeadline=0;
-  }
-  function resetDwellWaits() {
-    cancelDwellTimer();queue.clear();
+  function onFeedScroll() { scheduleLayout(); }
+  function resetPendingState() {
+
     for(const entry of allEntries()){entry.since=0;entry.pending=false;}
   }
-  function scheduleDwell(deadline) {
-    if(!deadline){cancelDwellTimer();return;}
-    if(dwellTimer!==undefined&&dwellDeadline===deadline)return;
-    cancelDwellTimer();dwellDeadline=deadline;
-    // One timeout wakes the earliest continuously visible post after scrolling
-    // stops. It exists only while at least one visible post is waiting.
-    dwellTimer=setTimeout(()=>{dwellTimer=undefined;dwellDeadline=0;tick();},Math.max(1,deadline-Date.now()));
-  }
-  function tick() {
-    if(pageSuspended){resetDwellWaits();return;}
-    const blocked=syncXModalVisibility();
-    recordHistory();
-    if(blocked){pauseUnseenRailQueue();return;}
-    if(document.hidden || collapsed || !settings.enabled || !providerReady || !supportedPage()){resetDwellWaits();return;}
-    if(currentRailBounds().hidden){pauseUnseenRailQueue();return;}
-    if(location.pathname!==lastPath){scheduleScan();return;}
-    if(!connected){
-      resetDwellWaits();
-      if(workerSleeping&&[...visible].some(article=>{
-        const entry=entries.get(article);return entry?.status==='new'&&article.isConnected&&eligibility(article).eligible;
-      }))connect();
-      return;
-    }
-    if(awaitingConfig){resetDwellWaits();return;}
-    const now=Date.now();let nextDwell=0;
-    // Scrolling does not abandon a running paid request. Only withdraw work
-    // that the worker confirms has not begun; retain its subscription meanwhile.
-    for(const [id,request] of requests) {
-      const entry=request.entry,queued=request.task==='comments'?['queued','retry-wait'].includes(entry.commentStatus):['queued','retry-wait'].includes(entry.status);
-      if(!queued||request.railCancellation)continue;
-      if(entries.get(entry.article)!==entry||!eligibility(entry.article).eligible){
-        entry.since=0;request.railCancellation=true;post({type:'CANCEL_IF_QUEUED',requestId:id});
-      }
-    }
-    for(const article of visible) {
-      const entry=entries.get(article);if(!entry||!article.isConnected)continue;
-      const visibility=eligibility(article);
-      if(!visibility.eligible){entry.since=0;entry.pending=false;queue.remove(entry.post.id);continue;}
-      if(entry.status!=='new')continue;
-      if(!entry.since)entry.since=now;
-      const deadline=entry.since+settings.dwellMs;
-      if(deadline>now){nextDwell=nextDwell?Math.min(nextDwell,deadline):deadline;continue;}
-      entry.pending=queue.enqueue(entry.post,1/(1+Math.max(0,article.getBoundingClientRect().top)));refreshCard(entry);
-    }
-    let candidate;
-    while((candidate=queue.take())) {
-      const entry=[...entries.values()].find(e=>e.post.id===candidate.id&&e.status==='new'&&visible.has(e.article)&&now-e.since>=settings.dwellMs);
-      if(!entry)continue;
-      if(!eligibility(entry.article).eligible){entry.pending=false;refreshCard(entry);continue;}
-      submit(entry,false);
-    }
-    scheduleDwell(nextDwell);
-  }
+  // No visibility, scroll, timer or CONFIG event may create an analysis.
+  function tick() { if(location.pathname!==lastPath)scheduleScan(); }
   function configureHistory(enabled,epoch) {
     const nextEpoch=Number.isSafeInteger(epoch)?epoch:historyEpoch;
     if(nextEpoch!==historyEpoch){historyPending.clear();historyRetryAt=0;}
@@ -1163,7 +883,7 @@
     for(const [batchId,batch] of historyPending)if(Date.now()-batch.sentAt>=10000){historyPending.delete(batchId);for(const id of batch.ids)historySeen.delete(id);historyRetryAt=Date.now()+5000;}
     if(Date.now()<historyRetryAt)return;
     const displayed=new Map();
-    for(const article of visible){const entry=entries.get(article);if(entry&&article.isConnected&&eligibility(article).eligible)displayed.set(entry.post.id,entry.post);}
+    if(activeEntry)displayed.set(activeEntry.post.id,activeEntry.post);
     for(const id of historySeen)if(!displayed.has(id))historySeen.delete(id);
     const unseen=[...displayed.values()].filter(item=>!historySeen.has(item.id));
     if(!unseen.length)return;
@@ -1176,16 +896,17 @@
     }
   }
   function submit(entry,force) {
-    if(force&&afterWake(entry,'analysis',()=>submit(entry,true)))return;
+    if(afterWake(entry,'analysis',()=>submit(entry,force)))return;
     if(!settings.enabled||!connected||!providerReady||currentRailBounds().hidden)return;
     if(awaitingConfig)return;
     if([...requests.values()].some(r=>r.entry===entry&&r.task==='analysis'))return;
     if(force&&!clearComments(entry))return;
+    entry.followup?.reset();
     // Cancelling a comment can synchronously invalidate the shared port.
     if(!connected||!providerReady)return;
     entry.analysisRetry=null;entry.keepRetryAnswer=false;
     const requestId=crypto.randomUUID();
-    entry.pending=false;entry.since=0;queue.remove(entry.post.id);entry.status='queued';entry.phase='';entry.verificationBase='';entry.verificationStarted=false;entry.verificationStart=undefined;entry.result=null;entry.cached=false;entry.requestDiagnostics=undefined;setVerificationFailure(entry,null,false);status(entry,'status.queued');entry.ui.retry.hidden=true;
+    entry.pending=false;entry.since=0;entry.status='queued';entry.phase='';entry.verificationBase='';entry.verificationStarted=false;entry.verificationStart=undefined;entry.result=null;entry.cached=false;entry.requestDiagnostics=undefined;setVerificationFailure(entry,null,false);status(entry,'status.queued');entry.ui.retry.hidden=true;
     if(force||!entry.ui.answer.textContent)renderAnswer(entry,'',true);
     renderSources(entry,[]);note(entry,'');entry.ui.diagnostics.hidden=true;entry.ui.diagnosticText.textContent='';
     requests.set(requestId,{...requestSnapshot(entry,requestId),force:force===true});
@@ -1200,24 +921,9 @@
     entry.comments=[];entry.commentUsage=null;entry.commentRequestDiagnostics=undefined;entry.commentStatus='idle';entry.commentRetry=null;entry.commentError='';entry.copyStatusKey='';entry.ui.copyStatus.textContent='';refreshComments(entry);refreshVerificationFailure(entry);
     return true;
   }
-  function generateComments(entry) {
-    if(['queued','running','retry-wait'].includes(entry.commentStatus))return;
-    if(collapsed||document.hidden||!supportedPage()||currentRailBounds().hidden||!entry.article.isConnected||!eligibility(entry.article).eligible)return;
-    if(afterWake(entry,'comments',()=>generateComments(entry)))return;
-    if(!connected||!providerReady||awaitingConfig)return;
-    entry.commentRetry=null;
-    const requestId=crypto.randomUUID(),request=requestSnapshot(entry,requestId,'comments');
-    request.analysis={text:entry.latestText||'',verificationStatus:entry.result?.verificationStatus||'unverified',warning:entry.result?.warning||'',sources:entry.result?.sources||[]};
-    const force=entry.commentStatus==='error'||entry.comments.length>0;
-    request.force=force;
-    entry.commentStatus='queued';entry.commentError='';entry.commentRequestDiagnostics=undefined;entry.copyStatusKey='';entry.ui.copyStatus.textContent='';requests.set(requestId,request);captureUsage(entry,'comments',{},request,false,true);refreshComments(entry);refreshVerificationFailure(entry);
-    post({type:'GENERATE_COMMENTS',requestId,post:entry.post,analysis:request.analysis,force});scheduleLayout();
-  }
   function refreshComments(entry) {
     const ui=entry.ui;if(!ui)return;
     const loading=['queued','running','retry-wait'].includes(entry.commentStatus);
-    ui.generateComments.textContent=t(entry.commentStatus==='error'?'common.retryComments':'common.generateComments');
-    ui.generateComments.hidden=!usableConnection()||entry.status==='unsupported';ui.generateComments.disabled=loading||!usableConnection()||wakeActions.has(wakeKey(entry,'comments'));
     ui.comments.setAttribute('aria-label',t('aria.comments'));ui.comments.setAttribute('aria-busy',String(loading));
     ui.commentHeading.textContent=t('common.comments');ui.commentHint.textContent=t('comments.copyHint');ui.commentHeading.hidden=ui.commentHint.hidden=!entry.comments.length;
     if(entry.copyStatusKey)ui.copyStatus.textContent=t(entry.copyStatusKey);
@@ -1343,6 +1049,45 @@
       .diagnostics{font-size:12px;color:var(--gf-muted,#71767b);margin-top:12px}.diagnostics[hidden]{display:none}.diagnostics summary{cursor:pointer}.diagnostics pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
       .token-usage{display:block;color:var(--gf-muted,#71767b);font-size:12px;margin-bottom:10px;overflow-wrap:anywhere;cursor:help}.token-usage[hidden]{display:none}.token-usage:focus-visible{outline:2px solid var(--gf-accent,#1d9bf0);outline-offset:2px}
     `;
+    css.textContent += `
+      .card{padding:22px 22px 32px;background:var(--gf-bg,#f2eedf);scrollbar-color:#938977 var(--gf-bg,#f2eedf);}
+      .post-context{padding:16px;border:2px solid var(--gf-fg,#181811);box-shadow:4px 4px 0 var(--gf-fg,#181811);background:var(--sl-surface,#f8f5e9);margin-bottom:22px;}
+      .post-context a{font:600 13px/1.6 var(--gf-font);letter-spacing:.5px;}.post-context p{font-size:14px;line-height:1.7;color:var(--sl-secondary,#565044);margin:8px 0 0;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+      .eyebrow{font:10px/1.5 monospace;letter-spacing:2px;color:var(--gf-accent,#cf1f2b);margin-bottom:10px;}
+      .cache-meta{font:400 12px/1.6 var(--gf-font);color:var(--gf-muted,#6a655a);margin:0 0 14px;}.cache-meta[hidden]{display:none;}
+      .answer{font-size:14px;line-height:1.85;font-weight:400;letter-spacing:0;}
+      .answer strong{font-weight:600;}.answer .md-body-emphasis>strong{font-weight:400;}
+      .answer h1,.answer h2,.answer h3,.answer h4,.answer h5,.answer h6{font-size:16px;line-height:1.55;font-weight:600;color:var(--gf-fg,#181811);letter-spacing:0;}
+      .answer h1{font-size:18px;}.answer h2{padding-bottom:7px;border-bottom:2px solid var(--gf-fg,#181811);}
+      .answer h3{display:table;max-width:100%;padding:5px 9px;background:var(--sl-ink,#181811);color:#fff9ed;font-size:14px;}
+      .answer h3 a{color:inherit;}.answer blockquote{padding:12px 14px;border-left:3px solid var(--gf-accent,#bc1723);background:var(--sl-soft,#eae4d4);color:var(--sl-secondary,#565044);}
+      .answer blockquote p:last-child{margin-bottom:0;}.answer hr{border-top:1px solid var(--gf-muted,#a79e89);margin:20px 0;}
+      .answer table{font-size:13px;line-height:1.75;border:2px solid var(--gf-fg,#181811);}
+      .answer th{background:var(--sl-ink,#181811);color:#fff9ed;font-weight:600;}.answer th a{color:inherit;}
+      .answer th,.answer td{padding:9px 8px;border-color:var(--gf-muted,#a79e89);}.answer tbody tr:nth-child(even){background:var(--sl-soft,#eae4d4);}
+      .actions{gap:8px;margin-top:24px;padding-top:18px;border-top:1px solid var(--gf-border,#27251e);}
+      .actions button{padding:9px 12px;border:2px solid var(--gf-fg,#181811);background:var(--sl-surface,#f8f5e9);color:var(--gf-accent,#cf1f2b);border-radius:0;font:700 12px/1.5 var(--gf-font);}
+      .actions .retry{background:var(--gf-accent,#cf1f2b);color:var(--sl-button,#fff9ed);border-color:var(--gf-fg,#181811);box-shadow:3px 3px 0 var(--gf-fg,#181811);}.actions button:hover{filter:brightness(1.12);text-decoration:none;}.actions button:disabled{opacity:.45;}
+      .sources a{padding:8px 10px;border:1px solid var(--gf-border,#27251e);background:var(--sl-surface,#f8f5e9);font-size:12px;}
+      .status,.note,.token-usage,.comment-hint{color:var(--gf-muted,#6a655a);}.token-usage{font:400 12px/1.6 var(--gf-font);}
+      .shimmer{background-image:linear-gradient(90deg,#81796b,var(--gf-accent,#cf1f2b),#81796b);}.comment-copy:hover{background:var(--sl-soft,#eee5d2)!important;}
+      .followup{margin-top:24px;padding-top:18px;border-top:2px solid var(--gf-border);}.followup[hidden]{display:none;}
+      .followup-heading{margin:0 0 12px;font-size:15px;line-height:1.5;font-weight:600;color:var(--gf-fg);}
+      .followup-form{display:grid;gap:8px;}.followup-input{width:100%;box-sizing:border-box;resize:vertical;min-height:76px;max-height:240px;padding:10px 12px;border:1px solid var(--gf-border);border-radius:0;background:var(--sl-surface);color:var(--gf-fg);font:400 14px/1.85 var(--gf-font);}
+      .followup-input::placeholder{color:var(--gf-muted);}.followup-input:focus-visible{outline:2px solid var(--gf-accent);outline-offset:2px;}
+      .followup-submit{justify-self:end;padding:8px 14px;border:2px solid var(--gf-border);background:var(--gf-accent);color:var(--sl-button,#fff9ed);font:600 13px/1.5 var(--gf-font);box-shadow:2px 2px 0 var(--sl-ink);}
+      .followup-submit:hover{text-decoration:none;filter:brightness(1.08);}.followup-submit:disabled{opacity:.5;cursor:default;}
+      .followup-status,.followup-usage{margin:9px 0;color:var(--gf-muted);font:400 12px/1.65 var(--gf-font);}.followup-status:empty{display:none;}
+      .followup-suggestions{display:grid;gap:8px;margin-top:12px;}.followup-suggestion{display:block;width:100%;padding:10px 12px;text-align:start;border:1px solid var(--gf-border);background:var(--sl-surface);color:var(--gf-fg);font:400 13px/1.7 var(--gf-font);overflow-wrap:anywhere;}
+      .followup-suggestion:hover{border-color:var(--gf-accent);background:var(--sl-soft);text-decoration:none;}.followup-suggestions-retry{font-size:12px;}
+      .followup-turn{margin:0 0 14px;overflow-wrap:anywhere;}.followup-user{padding:10px 12px;border-left:3px solid var(--gf-accent);background:var(--sl-soft);white-space:pre-wrap;}.followup-assistant{padding-bottom:12px;border-bottom:1px solid var(--gf-border);}
+      .reply-draft{margin-top:22px;padding-top:18px;border-top:1px solid var(--gf-border);}.reply-draft[hidden]{display:none;}.reply-heading{font:600 15px/1.5 var(--gf-font);margin:0 0 8px;color:var(--gf-fg);}
+      .reply-hint,.reply-status{color:var(--gf-muted);font:400 12px/1.65 var(--gf-font);margin:0 0 12px;}.reply-status{margin-top:12px;}.reply-status:empty{display:none;}
+      .reply-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px;}.reply-field{display:grid;gap:5px;min-width:0;font:400 12px/1.5 var(--gf-font);color:var(--gf-muted);}.reply-field select{width:100%;min-width:0;box-sizing:border-box;padding:8px 5px;border:1px solid var(--gf-border);border-radius:0;background:var(--sl-surface);color:var(--gf-fg);font:400 12px/1.5 var(--gf-font);color-scheme:var(--gf-scheme);}
+      .reply-generate,.reply-copy{padding:8px 12px;border:1px solid var(--gf-border);background:var(--sl-surface);color:var(--gf-accent);font:600 13px/1.5 var(--gf-font);}.reply-generate:hover,.reply-copy:hover{background:var(--sl-soft);text-decoration:none;}.reply-generate:disabled,.reply-copy:disabled{opacity:.45;cursor:default;}
+      .reply-output{width:100%;box-sizing:border-box;min-height:200px;max-height:520px;padding:12px;border:1px solid var(--gf-border);border-radius:0;resize:vertical;background:var(--sl-surface);color:var(--gf-fg);font:400 14px/1.85 var(--gf-font);}.reply-output[hidden]{display:none;}.reply-field select:focus-visible,.reply-output:focus-visible{outline:2px solid var(--gf-accent);outline-offset:2px;}
+      .reply-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;}.reply-count{font:400 12px/1.6 var(--gf-font);color:var(--gf-muted);}.reply-count[hidden],.reply-copy[hidden]{display:none;}
+    `;
     const box=node('section','card');box.setAttribute('aria-label',t('aria.result'));
     const status=node('div','status'),answer=node('div','answer'),sources=node('div','sources'),note=node('div','note'),actions=node('div','actions');status.setAttribute('role','status');
     answer.setAttribute('dir','auto');
@@ -1351,18 +1096,21 @@
     const {indicator:verificationThinking,label:verificationThinkingLabel}=waitingIndicator('thinking verification-thinking');
     verificationThinkingLabel.classList.add('shimmer');
     const diagnostics=node('details','diagnostics'),diagnosticText=node('pre'),diagnosticLabel=node('summary','',t('common.diagnostics'));diagnostics.hidden=true;diagnostics.append(diagnosticLabel,diagnosticText);
-    const retry=node('button','retry',t('common.retry'));retry.hidden=true;retry.addEventListener('click',()=>{if(retry.disabled||[...requests.values()].some(r=>r.entry===entry&&r.task==='analysis'))return;for(const pending of allEntries())if(pending.status==='new')refreshCard(pending);submit(entry,true);});
-    const generateButton=node('button','generate-comments',t('common.generateComments'));generateButton.addEventListener('click',()=>generateComments(entry));
+    const retry=node('button','retry',t('common.retry'));retry.hidden=true;retry.addEventListener('click',event=>{if(event.isTrusted===false)return;if(retry.disabled||[...requests.values()].some(r=>r.entry===entry&&r.task==='analysis'))return;for(const pending of allEntries())if(pending.status==='new')refreshCard(pending);submit(entry,entry.status!=='new');});
     const comments=node('div','comments'),commentStatus=node('div','comment-status'),copyStatus=node('div','copy-status');commentStatus.hidden=true;comments.hidden=true;commentStatus.setAttribute('role','status');copyStatus.setAttribute('role','status');
     const commentHeading=node('div','comment-heading'),commentHint=node('div','comment-hint');commentHeading.hidden=commentHint.hidden=true;
     const retryStatus=node('div','retry-status analysis-retry-status'),commentRetryStatus=node('div','retry-status comment-retry-status');
     for(const label of [retryStatus,commentRetryStatus]){label.hidden=true;label.setAttribute('role','status');label.setAttribute('aria-live','polite');}
     const tokenUsage=node('span','token-usage');tokenUsage.hidden=true;tokenUsage.tabIndex=0;
-    actions.append(retry,generateButton);box.append(tokenUsage,status,thinking,answer,verificationThinking,sources,note,diagnostics,retryStatus,actions,commentStatus,commentRetryStatus,commentHeading,commentHint,comments,copyStatus);shadow.append(css,box);
+    const context=node('div','post-context'),original=node('a'),postText=node('p'),eyebrow=node('div','eyebrow','POST / FACT CHECK');
+    original.target='_blank';original.rel='noopener noreferrer';context.append(original,postText);
+    const cacheMeta=node('p','cache-meta');cacheMeta.hidden=true;
+    if(followups)entry.followup=followups.attach(entry);
+    actions.append(retry);box.append(eyebrow,context,cacheMeta,tokenUsage,status,thinking,answer,verificationThinking,sources,note,diagnostics,retryStatus,actions,commentStatus,commentRetryStatus,commentHeading,commentHint,comments,copyStatus);if(entry.followup){box.insertBefore(entry.followup.section,actions);box.insertBefore(entry.followup.reply.section,commentStatus);}shadow.append(css,box);
     // Card controls belong to the overlay, separate from X's navigation handlers.
     for(const type of ['click','pointerdown','keydown'])card.addEventListener(type,event=>event.stopPropagation());
     card.addEventListener('scroll',scheduleLayout,{passive:true});
-    return {card,ui:{box,status,thinking,thinkingLabel,verificationThinking,verificationThinkingLabel,answer,explanationAnswer,verificationAnswer,analysisDivider,sources,note,retry,retryStatus,commentRetryStatus,generateComments:generateButton,comments,commentStatus,commentHeading,commentHint,copyStatus,diagnostics,diagnosticLabel,diagnosticText,tokenUsage}};
+    return {card,ui:{box,original,postText,cacheMeta,status,thinking,thinkingLabel,verificationThinking,verificationThinkingLabel,answer,explanationAnswer,verificationAnswer,analysisDivider,sources,note,retry,retryStatus,commentRetryStatus,comments,commentStatus,commentHeading,commentHint,copyStatus,diagnostics,diagnosticLabel,diagnosticText,tokenUsage}};
   }
   function validVerificationBoundary(text,start) {
     return typeof text==='string'&&Number.isSafeInteger(start)&&start>2&&start<=text.length&&text.slice(start-2,start)==='\n\n'&&Boolean(text.slice(0,start-2).trim());

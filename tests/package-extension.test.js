@@ -138,7 +138,7 @@ test('malformed manifest stops packaging before any output is created', async t 
   const { packageExtension } = await packager;
   await writeFile(join(root, 'extension', 'manifest.json'), '{ invalid JSON');
   await assert.rejects(packageExtension({ root }), /manifest\.json: invalid JSON/);
-  await assert.rejects(readFile(join(root, 'artifacts', 'SuperX-1.2.3.zip')), { code: 'ENOENT' });
+  await assert.rejects(readFile(join(root, 'artifacts', 'SideLens-1.2.3.zip')), { code: 'ENOENT' });
 });
 
 test('store metadata covers all interface languages including both supported Portuguese regions',async()=>{

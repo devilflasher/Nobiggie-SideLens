@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Installation and downloads
-    url: https://github.com/bwjoke/SuperX/releases
+    url: https://github.com/devilflasher/Nobiggie-SideLens/releases
     about: Find installation ZIPs and release notes.
   - name: Private security report
-    url: https://github.com/bwjoke/SuperX/security/advisories/new
+    url: https://github.com/devilflasher/Nobiggie-SideLens/security/advisories/new
     about: Report security vulnerabilities privately.

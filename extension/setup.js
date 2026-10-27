@@ -7,7 +7,7 @@
   async function send(message){const result=await chrome.runtime.sendMessage(message);if(!result?.ok)throw new Error(t(result?.errorKey||'errors.noResponse',result?.vars));return result;}
   function requestLocalAccess(){try{return chrome.permissions?.request({origins:['http://127.0.0.1/*']})||Promise.resolve(false);}catch{return Promise.resolve(false);}}
   function render(){
-    UI.apply(document,locale);document.title=`SuperX · ${t('options.buildSetup')}`;
+    UI.apply(document,locale);document.title=`SideLens · ${t('options.buildSetup')}`;
     $('secret').placeholder=t(configured?'build.savedCode':'build.codePlaceholder');
     $('address').textContent=`ws://127.0.0.1:${$('port').value || 2419}`;
     for(const id of ['generate','check','save','platform','port','secret','model','reasoning'])$(id).disabled=busy;

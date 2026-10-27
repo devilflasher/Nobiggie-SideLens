@@ -15,7 +15,7 @@ export const PUBLIC_SOURCE_DIRECTORIES = Object.freeze([
   '.github', 'demo', 'tests', 'tools', 'docs',
 ]);
 const privateTools = new Set(['tools/check-privacy-site.mjs', 'tools/render-store-assets.mjs']);
-const publicDocuments = new Set(['docs/RELEASE_CHANNELS.md', 'docs/RELEASE_CHECKLIST.md', 'docs/CONNECTIONS.md']);
+const publicDocuments = new Set(['docs/RELEASE_CHANNELS.md', 'docs/RELEASE_CHECKLIST.md', 'docs/CONNECTIONS.md', 'docs/SIDELENS.md', 'docs/SECURITY_REVIEW.md']);
 // Only these two language-specific README screenshots are public and required;
 // obsolete previews and unrelated local screenshots stay out of exports.
 const documentationImages = new Set([
@@ -30,7 +30,7 @@ function isPublicFile(directory, name) {
   if (directory === 'demo') return /\.(?:html|js)$/.test(name);
   if (directory === 'tests') return name.endsWith('.test.js') || name === 'tests/build-ws-fixture.js';
   if (directory === 'tools') return name.endsWith('.mjs') && !privateTools.has(name);
-  if (directory === 'docs') return publicDocuments.has(name) || documentationImages.has(name);
+  if (directory === 'docs') return publicDocuments.has(name) || documentationImages.has(name) || /^docs\/assets\/sidelens-[a-z-]+\.png$/.test(name);
   return false;
 }
 
@@ -65,7 +65,7 @@ export async function inspectSource(root = projectRoot, expectedVersion) {
       }
       data = Buffer.from(text.replace(/\r\n/g, '\n'));
     }
-    entries.push({ name: `SuperX-${release.version}/${name}`, data });
+    entries.push({ name: `SideLens-${release.version}/${name}`, data });
   }
   for (const name of documentationImages) {
     if (!files.includes(name)) throw new Error(`Missing public README image: ${name}`);
@@ -82,9 +82,9 @@ export async function packageSource({ root = projectRoot, outputDir = resolve(ro
     }
   }
   const inspected = await inspectSource(root, expectedVersion);
-  const archiveName = `SuperX-${inspected.version}-source.zip`;
-  const filesName = `SuperX-${inspected.version}-source-files.json`;
-  const sumsName = `SuperX-${inspected.version}-source-SHA256SUMS.txt`;
+  const archiveName = `SideLens-${inspected.version}-source.zip`;
+  const filesName = `SideLens-${inspected.version}-source-files.json`;
+  const sumsName = `SideLens-${inspected.version}-source-SHA256SUMS.txt`;
   const archive = createArchive(inspected.entries);
   const inventory = Buffer.from(`${JSON.stringify({
     version: inspected.version,

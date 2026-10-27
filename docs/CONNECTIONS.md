@@ -1,6 +1,9 @@
-# Connect SuperX
+# Connect SideLens
 
-The **0.9.12 Stable** release offers three independent connections: [Chrome Web Store](https://chromewebstore.google.com/detail/superx/clcflilaihhnnglfamdblhopokpnlioo), [release notes](https://github.com/bwjoke/SuperX/releases/tag/v0.9.12) and [installable ZIP](https://github.com/bwjoke/SuperX/releases/download/v0.9.12/SuperX.zip). **Sign in · The X Subscription** is first and the default for new installations; **Grok API Key** uses a Key you create; **Grok Build · Local CLI / ACP** connects to the official service on your computer. All three initially select **Grok 4.3 / reasoning None** and retain their own choices. Existing selections and settings are preserved. Nonempty older settings without a source keep API; missing/empty settings with legacy credentials also keep that conservative API path. Switching sources never substitutes another credential, changes account budgets or bypasses quotas. Archived 0.7.26 supports API Key mode only.
+SideLens 0.1.6 keeps the upstream three-connection implementation: eligible Grok subscription login, xAI API Key, or optional local Grok Build. Configure one connection in Settings, save and refresh X. Account eligibility, models, quotas and charges follow the provider. See the current [installation guide](../README.md).
+
+The procedural details below are inherited from SuperX. Names, old version references and acceptance records later in this document are upstream history, not live acceptance evidence for SideLens. The original SuperX store listing and release files are not SideLens downloads.
+
 
 | Connection | What you need | Where you sign in / manage usage |
 | --- | --- | --- |

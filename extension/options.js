@@ -412,7 +412,7 @@
     $("api-subscription-before").textContent=subscriptionIndex<0?subscriptionHelp:subscriptionHelp.slice(0,subscriptionIndex);
     $("api-subscription-link").hidden=subscriptionIndex<0;
     $("api-subscription-after").textContent=subscriptionIndex<0?"":subscriptionHelp.slice(subscriptionIndex+subscriptionName.length);
-    document.title = `SuperX · ${ui.t("common.settings",uiLanguage)}`;
+    document.title = `SideLens · ${ui.t("common.settings",uiLanguage)}`;
     $("extension-version").textContent = ui.t("options.version",uiLanguage,{version:chrome.runtime.getManifest().version});
     populateLanguages($("language").value || currentSettings.language);
     populateInterfaceLanguages(interfaceLanguage);

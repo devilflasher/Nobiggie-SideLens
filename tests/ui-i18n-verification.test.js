@@ -57,8 +57,8 @@ test('individual request errors do not claim to pause or resume the shared analy
   }
   assert.equal(ui.t('note.rateLimited','en'),"This request reached the provider's rate limit.");
   assert.match(ui.t('note.rateLimited','zh-CN'),/这条请求.*频率限制/);
-  assert.equal(ui.t('common.paused','en'),'Automatic fact-checking paused');
-  assert.equal(ui.t('status.disabled','en'),'Auto analysis paused');
+  assert.equal(ui.t('common.paused','en'),'SideLens paused');
+  assert.equal(ui.t('status.disabled','en'),'SideLens paused');
 });
 
 test('language mismatch summaries leave retry policy to the separate progress message',()=>{
@@ -232,23 +232,23 @@ test('both providers require scrolling to stop and continuous visibility for the
 test('dwell help explains scroll resets, excludes sidebar scrolling and preserves immediate and manual actions',()=>{
   for(const language of ui.SUPPORTED_LANGUAGES){
     const help=ui.t('options.dwellHelp',language);
-    assert.match(help,/SuperX/,`${language}: help identifies sidebar scrolling separately`);
+    assert.match(help,/SideLens/,`${language}: help identifies sidebar scrolling separately`);
     assert.match(help,/0/,`${language}: zero remains available`);
     assert.doesNotMatch(help,/\b(?:100|200|250|300|500)\s*(?:ms|milliseconds)\b|quiet period/i);
   }
-  assert.match(ui.t('options.dwellHelp','en'),/After feed or page scrolling stops.*stay visible.*Scrolling again resets the timer; scrolling inside the SuperX sidebar does not.*Default: 1 second; 0 starts immediately.*Manual actions do not wait/);
-  assert.match(ui.t('options.dwellHelp','zh-CN'),/停止滚动信息流或页面后.*持续可见.*再次滚动会重新计时.*SuperX 右栏内部不会影响.*默认 1 秒.*0.*立即开始.*手动操作无需等待/);
+  assert.match(ui.t('options.dwellHelp','en'),/After feed or page scrolling stops.*stay visible.*Scrolling again resets the timer; scrolling inside the SideLens sidebar does not.*Default: 1 second; 0 starts immediately.*Manual actions do not wait/);
+  assert.match(ui.t('options.dwellHelp','zh-CN'),/停止滚动信息流或页面后.*持续可见.*再次滚动会重新计时.*SideLens 右栏内部不会影响.*默认 1 秒.*0.*立即开始.*手动操作无需等待/);
 });
 
 test('API access copy separates subscription allowance, metered billing and optional paid priority without performance promises',()=>{
   assert.match(ui.t('options.apiSubscriptionHelp','en'),/eligible API allowance.*The X Subscription.*Grok Dashboard account.*availability and limits/);
   assert.match(ui.t('options.apiMeteredHelp','en'),/API credits.*Tokens and tools.*usage and billing in xAI Console/);
-  assert.match(ui.t('options.apiPriorityHelp','en'),/standard API credits does not enable Priority Processing.*SuperX uses standard requests.*explicit opt-in at an extra cost.*may reduce peak-time latency.*does not guarantee availability/);
-  assert.match(ui.t('options.apiPriorityHelp','zh-CN'),/标准 API credits 不会开启.*SuperX 使用标准请求.*明确选择并额外付费.*可能降低高峰期延迟.*不保证/);
+  assert.match(ui.t('options.apiPriorityHelp','en'),/standard API credits does not enable Priority Processing.*SideLens uses standard requests.*explicit opt-in at an extra cost.*may reduce peak-time latency.*does not guarantee availability/);
+  assert.match(ui.t('options.apiPriorityHelp','zh-CN'),/标准 API credits 不会开启.*SideLens 使用标准请求.*明确选择并额外付费.*可能降低高峰期延迟.*不保证/);
   assert.doesNotMatch([ui.t('options.apiSubscriptionHelp','en'),ui.t('options.apiMeteredHelp','en')].join(' '),/faster|more stable|priority|unlimited|free/i);
   for(const language of ui.SUPPORTED_LANGUAGES){
     assert.match(ui.t('options.apiSubscriptionHelp',language),/Grok Dashboard/);assert.match(ui.t('options.apiMeteredHelp',language),/xAI Console/);
-    assert.match(ui.t('options.apiPriorityHelp',language),/Priority/);assert.match(ui.t('options.apiPriorityHelp',language),/SuperX/);
+    assert.match(ui.t('options.apiPriorityHelp',language),/Priority/);assert.match(ui.t('options.apiPriorityHelp',language),/SideLens/);
   }
 });
 
@@ -263,7 +263,7 @@ test('compact connection and Key guidance is translated without guessing account
       assert.equal(ui.t(key,language),value);assert.doesNotMatch(value,/<\/?[A-Za-z][^>]*>|\{[A-Za-z][A-Za-z0-9_]*\}/,`${language}: ${key}`);
       if(language!=='en'&&!['options.apiKeyLabel','options.apiSubscriptionTitle'].includes(key))assert.notEqual(value,ui.catalog.en[key],`${language}: ${key} is translated`);
     }
-    assert.match(ui.t('options.enable',language),/SuperX/);
+    assert.match(ui.t('options.enable',language),/SideLens/);
     assert.equal(ui.t('options.apiKeyLabel',language),'Grok API Key');
     assert.equal(ui.t('options.apiSubscriptionTitle',language),'grok.com · The X Subscription');
     assert.match(ui.t('options.apiKeyHint',language),/grok\.com/);assert.match(ui.t('options.apiKeyHint',language),/xAI Console/);
@@ -276,7 +276,7 @@ test('compact connection and Key guidance is translated without guessing account
     }
   }
   assert.equal(ui.t('options.source','en'),'Connection');assert.equal(ui.t('options.source','zh-CN'),'连接');
-  assert.equal(ui.t('options.enable','en'),'Enable SuperX');assert.equal(ui.t('options.enable','zh-CN'),'启用 SuperX');
+  assert.equal(ui.t('options.enable','en'),'Enable SideLens');assert.equal(ui.t('options.enable','zh-CN'),'启用 SideLens');
   assert.equal(ui.t('options.keyPlaceholder','en'),'Paste your Grok API Key');
   assert.equal(ui.t('options.apiKeyHint','en'),'Grok API Keys from grok.com and xAI Console both work here.');
   assert.equal(ui.t('options.apiAccess','en'),'Get a Grok API Key or check usage');

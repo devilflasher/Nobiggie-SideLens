@@ -4,8 +4,10 @@
   if(query.get('lang'))document.documentElement.lang=GrokFirstUI.normalizeLanguage(query.get('lang'));
   const keyState=query.get('security')==='migration'?'migration':query.get('security')==='missing'?'missing':'ready';
   const provider=['api','build','oauth'].includes(query.get('provider'))?query.get('provider'):XGrokCore.DEFAULT_SETTINGS.provider;
-  const config={settings:XGrokCore.normalizeSettings({provider,apiVerification:'only',interfaceLanguage:query.get('interface')||'auto'}),ready:provider==='build'?query.get('permission')!=='denied'&&query.get('build')==='ready':keyState==='ready',keyState,buildStatus:provider==='build'?{installed:query.get('build')!=='missing',permission:query.get('permission')==='denied'?'denied':'granted',...(query.get('permission')==='denied'?{errorCode:'BUILD_PERMISSION_REQUIRED'}:{}),available:query.get('build')==='ready',authenticated:query.get('build')==='ready'?true:undefined}:undefined,used:0,collapsed:false};
-  const listeners=[],pending=new Map(),analysisCache=new Map();let calls=0,commentCalls=0,cancelled=0,verificationPreview=false,citationsPreview=false,urlBoundaryPreview=false,markdownPreview=false,verificationFailurePreview='';
+  const config={settings:XGrokCore.normalizeSettings({provider,apiVerification:'only',language:query.get('formatting')==='1'?'zh-CN':'auto',interfaceLanguage:query.get('interface')||'auto'}),ready:provider==='build'?query.get('permission')!=='denied'&&query.get('build')==='ready':keyState==='ready',keyState,buildStatus:provider==='build'?{installed:query.get('build')!=='missing',permission:query.get('permission')==='denied'?'denied':'granted',...(query.get('permission')==='denied'?{errorCode:'BUILD_PERMISSION_REQUIRED'}:{}),available:query.get('build')==='ready',authenticated:query.get('build')==='ready'?true:undefined}:undefined,used:0,collapsed:false};
+  function readDemoCache(){try{return JSON.parse(localStorage.getItem('sidelens-demo-cache')||'[]').filter(([,value])=>Date.now()-value.completedAt<86400000);}catch{return [];}}
+  function cachePreview(key,result){analysisCache.set(key,result);try{localStorage.setItem('sidelens-demo-cache',JSON.stringify([...analysisCache].slice(-160)));}catch{}}
+  const listeners=[],pending=new Map(),analysisCache=new Map(readDemoCache());let calls=0,commentCalls=0,cancelled=0,verificationPreview=false,citationsPreview=false,urlBoundaryPreview=false,markdownPreview=query.get('formatting')==='1',verificationFailurePreview='';
   const simulatedVerificationFailures={
     OUTPUT_LIMIT:{code:'OUTPUT_LIMIT',stage:'verify',errorCode:'API_INCOMPLETE',reason:'max_output_tokens'},
     CONNECTION:{code:'CONNECTION',stage:'verify',errorCode:'API_STREAM_INTERRUPTED'},
@@ -55,10 +57,10 @@
     const citationNames=['扩展概览','开发文档','Manifest V3','API 参考','内容脚本'];
     const citationText='**引用呈现示例。** 正文已提供的出处不再重复列出编号：\n\n'+citationUrls.map((url,index)=>'['+citationNames[index]+']('+url+')').join('\n')+'\n\n额外来源保留页面名称。*本地模拟，未调用 Grok。*';
     const boundaryText='**证据不足。** 附带的链接（https://t.co/dZ1jiqrxX），无法在本地演示中核实，其后的正文保持普通文字。\n\n*只有网址可点击；未联网检索或调用 Grok。*';
-    const markdownText=message.post.id==='10001'?'### 证据不足\n\n**缺少原始数据。** 图表本身不支持向所有任务外推。\n\n- 需要数据的 **来源和时间**\n- 需要独立复现与评测条件 [[1]](https://developer.chrome.com/docs/extensions)\n\n> 待补充的证据，不是已经验证的结论。\n\n*本地模拟核查，未调用 Grok。*':'### 待核实的证据\n\n`URL` 是来源线索，以下代码仅展示安全排版：\n\n```js\nconst source = "https://example.com/evidence";\n```\n\n| 证据 | 状态 |\n| --- | --- |\n| 原始方法 | **待提供** |\n| 演示出处 | [Chrome 文档](https://developer.chrome.com/docs/extensions) |\n\n*本地模拟核查，未调用 Grok。*';
+    const markdownText="## 先看结论\n\n**需要区分功能介绍与实际验证。** 下方仅演示排版：标题、重点、引用和表格按内容选择使用，不强制每条分析都套同一个模板。\n\n### 功能对比\n\n| 项目 | 适合的任务 | 需要确认 |\n| --- | --- | --- |\n| 工具 A | 整理资料 | 来源与时间 |\n| 工具 B | 处理文档 | 权限与费用 |\n\n> 引用区用于放置需要辨别的原话或关键证据，不把作者的说法直接当作已核实结论。\n\n### 使用前检查\n\n- **先看官方说明**，确认当前版本。\n- 区分免费试用、订阅额度与按量计费。\n- 缺少依据的内容保留不确定性。\n\n---\n\n**这是一段被模型整段加粗的较长文本示例。为了避免正文满屏黑重、影响连续阅读，它仍然按常规字重展示，短句重点与真正的标题则保留加粗。**\n\n查看 [Chrome 官方扩展说明](https://developer.chrome.com/docs/extensions)。本页为本地模拟排版，未调用 Grok。";
     const text=markdownPreview?markdownText:urlBoundaryPreview?boundaryText:citationsPreview?citationText:message.post.id==='10004'?'Render test: <img src=x onerror=alert(1)>\nThis is literal text and cannot execute.':sample[language]||sample.en;
     const usage=message.post.id==='10001'?{input_tokens:850,output_tokens:384,total_tokens:1234}:{input_tokens:125,output_tokens:48,total_tokens:173};
-    const resultFor=output=>({text:output,sources,provider,apiVerification:'only',searched:false,verified:false,verificationStatus:'unverified',warning:'Local preview only; no sources were searched.',usage,usageByStage:{verify:{...usage}},model:entry.apiModel,usageComplete:true});
+    const resultFor=output=>({completedAt:Date.now(),text:output,sources,provider,apiVerification:'only',searched:false,verified:false,verificationStatus:'unverified',warning:'Local preview only; no sources were searched.',usage,usageByStage:{verify:{...usage}},model:entry.apiModel,usageComplete:true});
     if(verificationFailureDemo) {
       const partial=text.split('\n\n')[0];
       entry.timers.push(
@@ -67,7 +69,7 @@
         setTimeout(()=>emit({type:'UPDATE',requestId,text:partial,phase:'verify',apiVerification:'only'}),650),
         setTimeout(()=>{
           const result={...resultFor(partial),verificationStatus:'incomplete',verificationFailure:{...simulatedVerificationFailures[verificationFailureDemo]},warning:'Local preview only: Fact Check was interrupted; available partial findings are retained.',usageComplete:verificationFailureDemo!=='CONNECTION'};
-          if(entry.cacheKey)analysisCache.set(entry.cacheKey,result);
+          if(entry.cacheKey)cachePreview(entry.cacheKey,result);
           emit({type:'RESULT',requestId,result,cached:false});finish(entry);
         },1300)
       );return;
@@ -84,7 +86,7 @@
       setTimeout(()=>emit({type:'UPDATE',requestId,text:'',phase:'verify',apiVerification:'only'}),180),
       setTimeout(()=>emit({type:'UPDATE',requestId,text:text.slice(0,70),phase:'verify',apiVerification:'only',...(citationsPreview||urlBoundaryPreview||markdownPreview?{sources}:{})}),380),
       setTimeout(()=>emit({type:'UPDATE',requestId,text,phase:'verify',apiVerification:'only'}),900),
-      setTimeout(()=>{const result=resultFor(text);if(entry.cacheKey)analysisCache.set(entry.cacheKey,result);emit({type:'RESULT',requestId,result,cached:false});finish(entry);},1300)
+      setTimeout(()=>{const result=resultFor(text);if(entry.cacheKey)cachePreview(entry.cacheKey,result);emit({type:'RESULT',requestId,result,cached:false});finish(entry);},1300)
     );
   }
   window.chrome={runtime:{
@@ -105,6 +107,7 @@
         if(message.type==='OPEN_SETTINGS'){
           openPreviewSettings(message.focus);return;
         }
+        if(message.type==='SET_APPEARANCE'){localStorage.setItem('sidelens-appearance',message.theme);return;}
         if(message.type==='SET_ENABLED'){config.settings.enabled=message.enabled;configure();return;}
         if(message.type==='SET_LANGUAGE'){config.settings.language=message.language;configure();return;}
         if(message.type==='SET_RAIL_COLLAPSED'){
@@ -112,9 +115,23 @@
           if(config.collapsed)for(const [id,entry] of pending)if(!entry.started){cancel(id);emit({type:entry.comments?'COMMENT_ERROR':'ERROR',requestId:id,code:'RAIL_COLLAPSED',error:'右栏已收起'});}
           emit({type:'RAIL_VISIBILITY',collapsed:config.collapsed});return;
         }
+        if(message.type==='FOLLOW_UP'){
+          if(config.collapsed)return;
+          (window.sidelensFollowupCalls||=[]).push(structuredClone(message));
+          const entry={requestId:message.requestId,timers:[],started:false};pending.set(entry.requestId,entry);
+          emit({type:'QUEUED',requestId:entry.requestId});
+          const suggestions=['这条结论最需要补充哪一项原始证据？','这些信息在哪些情况下可能不再适用？','能把已证实和仍待验证的内容整理成对比表吗？'];
+          const answer='### 进一步核查\n\n**先核对来源和适用条件。** 这段回答演示连续追问，保留原帖、初次分析及此前对话。\n\n| 维度 | 下一步核对 |\n| --- | --- |\n| 证据 | 原始报告与发布时间 |\n| 口径 | 样本和比较条件 |\n\n*本地模拟回答，未调用 Grok。*';
+          entry.timers.push(setTimeout(()=>{entry.started=true;emit({type:'START',requestId:entry.requestId});},30));
+          entry.timers.push(setTimeout(()=>{
+            const draftReply='这条信息值得关注，不过判断结论还需要看原始来源、发布时间和比较条件。结合前面的分析与讨论，我更想知道哪些结论已有证据支持，哪些还只是推测。';
+            const result={text:message.mode==='reply'?draftReply:message.mode==='suggestions'?JSON.stringify(suggestions):answer,...(message.mode==='suggestions'?{suggestions}:{}),sources:[],verificationStatus:'unverified',usage:{total_tokens:210},completedAt:Date.now()};
+            emit({type:'RESULT',requestId:entry.requestId,result,cached:false});finish(entry);
+          },300));return;
+        }
         if(!['ANALYZE','GENERATE_COMMENTS'].includes(message.type)||config.collapsed)return;
         const comments=message.type==='GENERATE_COMMENTS';
-        const cacheKey=!comments?JSON.stringify([XGrokCore.apiPostIdentity(message.post,config.settings),config.settings,...(verificationFailurePreview?[verificationFailurePreview]:[])]):'';
+        const cacheKey=!comments?JSON.stringify([XGrokCore.apiPostIdentity(message.post,config.settings),config.settings,...(verificationFailurePreview?[verificationFailurePreview]:[]),...(markdownPreview?['typography-demo-v2']:[])]):'';
         if(cacheKey&&!message.force&&analysisCache.has(cacheKey)){emit({type:'RESULT',requestId:message.requestId,result:analysisCache.get(cacheKey),cached:true});return;}
         if(comments)commentCalls++;else{calls++;config.used++;}
         log();
@@ -126,22 +143,22 @@
   }};
   document.getElementById('toggle').onclick=()=>{config.settings.enabled=!config.settings.enabled;configure();};
   document.getElementById('markdown-demo').onclick=()=>{
-    cancelAll();markdownPreview=true;citationsPreview=false;verificationPreview=false;urlBoundaryPreview=false;verificationFailurePreview='';analysisCache.clear();
+    cancelAll();markdownPreview=true;citationsPreview=false;verificationPreview=false;urlBoundaryPreview=false;verificationFailurePreview='';analysisCache.clear();localStorage.removeItem('sidelens-demo-cache');
     config.settings=XGrokCore.normalizeSettings({...config.settings,language:'zh-CN',explanationMode:'preset',enabled:true});configure();
     document.getElementById('message').textContent='模拟 Markdown：标题、粗体、列表、引用、代码和表格直接排版，出处不重复。不调用 Grok。';
   };
   document.getElementById('sources-demo').onclick=()=>{
-    cancelAll();citationsPreview=true;verificationPreview=false;urlBoundaryPreview=false;markdownPreview=false;verificationFailurePreview='';analysisCache.clear();
+    cancelAll();citationsPreview=true;verificationPreview=false;urlBoundaryPreview=false;markdownPreview=false;verificationFailurePreview='';analysisCache.clear();localStorage.removeItem('sidelens-demo-cache');
     config.settings=XGrokCore.normalizeSettings({...config.settings,language:'zh-CN',explanationMode:'preset',enabled:true});configure();
     document.getElementById('message').textContent='模拟引用：正文五个出处不重复列编号，额外来源显示网址名称。不调用 Grok。';
   };
   document.getElementById('url-boundary-demo').onclick=()=>{
-    cancelAll();urlBoundaryPreview=true;citationsPreview=false;verificationPreview=false;markdownPreview=false;verificationFailurePreview='';analysisCache.clear();
+    cancelAll();urlBoundaryPreview=true;citationsPreview=false;verificationPreview=false;markdownPreview=false;verificationFailurePreview='';analysisCache.clear();localStorage.removeItem('sidelens-demo-cache');
     config.settings=XGrokCore.normalizeSettings({...config.settings,language:'zh-CN',explanationMode:'preset',enabled:true});configure();
     document.getElementById('message').textContent='模拟链接边界：中文右括号和后文保持普通正文，出处不重复。不调用 Grok。';
   };
   document.getElementById('verify-wait').onclick=()=>{
-    cancelAll();verificationPreview=true;citationsPreview=false;urlBoundaryPreview=false;markdownPreview=false;verificationFailurePreview='';analysisCache.clear();config.settings=XGrokCore.normalizeSettings({...config.settings,provider:'api',explanationMode:'preset',apiVerification:'only',enabled:true});configure();
+    cancelAll();verificationPreview=true;citationsPreview=false;urlBoundaryPreview=false;markdownPreview=false;verificationFailurePreview='';analysisCache.clear();localStorage.removeItem('sidelens-demo-cache');config.settings=XGrokCore.normalizeSettings({...config.settings,provider:'api',explanationMode:'preset',apiVerification:'only',enabled:true});configure();
     document.getElementById('message').textContent='Fact Check 等待演示：点击「推进模拟 Fact Check」显示首字，再点击一次完成。仅模拟 UI，不调用 Grok。';
   };
   document.getElementById('verify-advance').onclick=()=>{
@@ -153,7 +170,7 @@
     }
   };
   function restartFailurePreview(code) {
-    cancelAll();verificationFailurePreview=code;verificationPreview=false;citationsPreview=false;urlBoundaryPreview=false;markdownPreview=false;analysisCache.clear();
+    cancelAll();verificationFailurePreview=code;verificationPreview=false;citationsPreview=false;urlBoundaryPreview=false;markdownPreview=false;analysisCache.clear();localStorage.removeItem('sidelens-demo-cache');
     // These explicit demo controls reset completed cards through the existing
     // configuration channel. No product setting or real API is involved.
     config.settings=XGrokCore.normalizeSettings({...config.settings,apiVerification:'only',explanationMode:'preset',enabled:false});configure();

@@ -7,6 +7,44 @@ const settings={...Core.DEFAULT_SETTINGS,provider:'build',language:'en'};
 function fixture(behavior={}){const mock=wsFixture(behavior),provider=Build.create({connection,webSocketFactory:mock.factory,requestTimeoutMs:50,openTimeoutMs:50,imageFetcher:behavior.imageFetcher,imageTimeoutMs:behavior.imageTimeoutMs});return {...mock,provider};}
 const prompts=f=>f.messages.filter(message=>message.method==='session/prompt');
 
+test('Build reply drafts use no-search text transport and preserve length, tone and discussion',async()=>{
+  const f=fixture({text:'An editable reply grounded in the discussion.'});
+  try{
+    const reply={...post,kind:'followup',mode:'reply',preferences:{tone:'sharp',direction:'question',length:1000},analysis:{text:'Prior analysis'},turns:[{role:'user',content:'Private discussion question'},{role:'assistant',content:'Private discussion answer'}]};
+    const result=await f.provider.run(reply,{...settings,webSearch:false,xSearch:false});
+    assert.equal(result.text,'An editable reply grounded in the discussion.');
+    const prompt=prompts(f)[0].params.prompt[0].text;assert.match(prompt,/approximately 1000 Unicode characters/);assert.match(prompt,/Requested tone: sharp/);assert.match(prompt,/Private discussion answer/);
+    assert.equal(prompt.includes('exactly three distinct'),false);
+  }finally{await f.provider.close();}
+});
+
+test('Build follow-ups retain context and generate question suggestions without enabling searches',async()=>{
+  for(const mode of ['answer','suggestions']){
+    const questions=['What is the original source?','Are these periods comparable?','What conditions could change this?'];
+    const f=fixture({text:mode==='suggestions'?JSON.stringify(questions):'The comparison needs matching periods.'});
+    const followup={...post,kind:'followup',mode,analysis:{text:'Earlier finding'},question:'What is the comparison based on?',turns:[{role:'user',content:'Previous question'},{role:'assistant',content:'Previous reply'}]};
+    try{
+      const result=await f.provider.run(followup,{...settings,...(mode==='suggestions'?{webSearch:false,xSearch:false}:{})});
+      assert.equal(result.text,mode==='suggestions'?JSON.stringify(questions):'The comparison needs matching periods.');
+      const prompt=prompts(f)[0].params.prompt[0].text;assert.match(prompt,/Earlier finding/);assert.match(prompt,/Previous question/);assert.match(prompt,/Previous reply/);
+      assert.equal(prompt.includes('exactly three distinct'),mode==='suggestions');
+    }finally{await f.provider.close();}
+  }
+});
+
+test('Build receives the same priority and Markdown instructions as the API without changing effort',async()=>{
+  const f=fixture({text:'The comparison uses different time windows.'});
+  try {
+    await f.provider.run(post,settings);
+    const prompt=prompts(f)[0].params.prompt[0].text;
+    const request=API.buildRequest(post,{...settings,provider:'api',apiModel:settings.buildModel,apiReasoningEffort:settings.buildReasoningEffort});
+    assert.equal(prompt,request.instructions+'\n\n'+request.input.map(input=>input.content).join('\n\n'));
+    assert.match(prompt,/consequential numbers, comparisons, causal explanations/);
+    assert.match(prompt,/Use readable Markdown/);
+    assert.equal(f.messages.find(message=>message.params?.configId==='reasoning_effort').params.value,'none');
+  }finally{await f.provider.close();}
+});
+
 test('Build transports real parent and post image content in one model turn instead of object strings',async()=>{
   const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64');
   const source={...post,images:[{url:'https://pbs.twimg.com/media/example?format=png&name=orig',alt:'Words in the original screenshot'}],hasMedia:true};

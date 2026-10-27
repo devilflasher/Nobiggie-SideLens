@@ -32,3 +32,7 @@ tmp/
 /tools/*.py
 /tools/render_superx_*.cjs
 /新建 文本文档.txt
+
+# Local video production projects and delivery files are not extension source.
+/videos/
+/宣传视频/

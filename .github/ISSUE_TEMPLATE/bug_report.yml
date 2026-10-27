@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible SuperX problem.
+description: Report a reproducible SideLens problem.
 title: '[Bug] '
 body:
   - type: markdown
@@ -9,7 +9,7 @@ body:
     id: versions
     attributes:
       label: Versions
-      description: SuperX version, Chrome/Edge version and operating system.
+      description: SideLens version, Chrome/Edge version and operating system.
     validations:
       required: true
   - type: dropdown

@@ -1,6 +1,6 @@
-# Contributing to SuperX
+# Contributing to SideLens
 
-Thank you for helping improve SuperX. Keep changes focused on a concrete user behavior and include enough evidence for another person to assess them.
+Thank you for helping improve SideLens. Keep changes focused on a concrete user behavior and include enough evidence for another person to assess them.
 
 ## Local development
 
@@ -55,7 +55,7 @@ Do not mark paid API, current X integration or Edge scenarios as passed when onl
 
 ## Pull requests and issue reports
 
-Use [Issues](https://github.com/bwjoke/SuperX/issues) for bugs, suggestions and usage questions, and [pull requests](https://github.com/bwjoke/SuperX/pulls) for code changes. Describe the concrete problem, the resulting behavior and the validation performed. Include a redacted screenshot for visual changes. State any untested browser / provider paths and relevant migration or billing risks. Ordinary bug reports should include browser and extension versions, page type, reproduction steps and safe diagnostics. Security reports follow [SECURITY.md](SECURITY.md).
+Use [Issues](https://github.com/devilflasher/Nobiggie-SideLens/issues) for bugs, suggestions and usage questions, and [pull requests](https://github.com/devilflasher/Nobiggie-SideLens/pulls) for code changes. Describe the concrete problem, the resulting behavior and the validation performed. Include a redacted screenshot for visual changes. State any untested browser / provider paths and relevant migration or billing risks. Ordinary bug reports should include browser and extension versions, page type, reproduction steps and safe diagnostics. Security reports follow [SECURITY.md](SECURITY.md).
 
 ## Release preparation
 

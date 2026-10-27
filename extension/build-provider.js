@@ -90,7 +90,7 @@
     }
     const prompt=request.instructions+'\n\n'+text.join('\n\n');
     if(prompt.length>MAX_TEXT)throw errorFor('BUILD_OUTPUT_INVALID');
-    return {type:'RUN',task,...(post?.kind==='draft'&&task==='verify'?{target:'draft'}:{}),transport:settings.buildTransport,model:settings.buildModel,effort:settings.buildReasoningEffort,
+    return {type:'RUN',task,...((post?.kind==='draft'||post?.kind==='followup'&&post.mode==='reply')&&task==='verify'?{target:'draft'}:{}),transport:settings.buildTransport,model:settings.buildModel,effort:settings.buildReasoningEffort,
       webSearch:task==='verify'&&settings.webSearch,xSearch:task==='verify'&&settings.xSearch,prompt,
       ...(images.length?{images}:{}),
       ...(task==='comments'?{outputSchema:request.text.format.schema}:{})};
@@ -143,11 +143,13 @@
     const {signal,onUpdate=()=>{}}=options;
     aborted(signal);
     const settings=normalizedSettings(input,post),labels=API.labels(settings);
+    // Suggestions use the existing no-search structured-text transport policy.
+    const task=post.kind==='followup'&&post.mode==='suggestions'?'comments':'verify';
     // Validate before publishing or connecting to the local runtime.
-    taskRequest(post,settings,'verify');
+    taskRequest(post,settings,task);
     onUpdate({text:'',sources:[],searched:false,phase:'verify',provider:'build',verified:false,apiVerification:'only',verificationStatus:'running',warning:''});
     try {
-      const result=await runStage(post,settings,'verify',undefined,{signal,onUpdate,bridge});
+      const result=await runStage(post,settings,task,undefined,{signal,onUpdate,bridge});
       return resultFor(result,settings,result.searched?'completed':'unverified',result.searched?labels.completed:labels.unverified);
     } catch(error) {
       error.verificationFailure=failureFor(error);

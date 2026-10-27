@@ -1,5 +1,5 @@
 {
   "extensionDescription": {
-    "message": "Grok verifica posts X a fundo automaticamente. Verifique rascunhos/respostas. Fontes, histórico 24h. The X Subscription ou API Key."
+    "message": "Analise publicações do X com Grok: fontes, perguntas, respostas editáveis e cache local. Requer a sua ligação Grok."
   }
 }

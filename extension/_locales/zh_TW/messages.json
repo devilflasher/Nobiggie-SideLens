@@ -1,5 +1,5 @@
 {
   "extensionDescription": {
-    "message": "Grok 自動深入查核 X 貼文，也可查核發文、回覆草稿，附證據來源。查看近 24 小時瀏覽紀錄。支援 The X Subscription 或 API Key。"
+    "message": "點擊查核 X 貼文，附來源與證據；支援連續追問、自訂回覆草稿、本機結果快取，隨 X 切換深淺主題。需自備 Grok 連線。"
   }
 }
